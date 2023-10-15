@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="堆"><meta name="keywords" content="数据结构"><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>堆 | iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?434d6055a3a5266f2c2a21749e588070";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 4.2.1"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1、二叉堆"><span class="toc-text">1、二叉堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、左倾堆"><span class="toc-text">2、左倾堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、斜堆"><span class="toc-text">3、斜堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、二项堆"><span class="toc-text">4、二项堆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）二项树"><span class="toc-text">1）二项树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2）二项堆"><span class="toc-text">2）二项堆</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、斐波那契堆"><span class="toc-text">5、斐波那契堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、索引堆"><span class="toc-text">6、索引堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、Treap-树堆"><span class="toc-text">7、Treap 树堆</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/iMine141" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">75</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">Links</div><a class="author-info-links__name text-center" href="https://github.com/iMine141" target="_blank" rel="noopener">iMine</a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/about">About</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">堆</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-09-02</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.4k</span><span class="post-meta__separator">|</span><span>Reading time: 4 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p><strong>堆(Heap)</strong>是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵<a href="https://baike.baidu.com/item/完全二叉树/7773232" target="_blank" rel="noopener">完全二叉树</a>的数组对象。</p>
+<h2 id="1、二叉堆"><a href="#1、二叉堆" class="headerlink" title="1、二叉堆"></a>1、二叉堆</h2><p>二叉堆是完全二元树或者是近似完全二元树，按照数据的排列方式可以分为两种：最大堆和最小堆。</p>
+<p>二叉堆一般都通过”数组”来实现</p>
+<h2 id="2、左倾堆"><a href="#2、左倾堆" class="headerlink" title="2、左倾堆"></a>2、左倾堆</h2><p>左倾堆(leftist tree 或 leftist heap)，又被成为左偏树、左偏堆，最左堆等。</p>
+<p>它和二叉堆一样，都是优先队列实现方式。可以高效解决”对两个优先队列进行合并”的问题。</p>
+<p><img src="https://imine141.github.io/images/1559037013198.png" alt="img"></p>
+<p>上图是一颗左倾树，它的节点除了和二叉树的节点一样具有左右子树指针外，还有两个属性：键值和零距离。</p>
+<ul>
+<li>键值：作用是来比较节点的大小，从而对节点进行排序。</li>
+<li>零距离：是从一个节点到一个”最近的不满节点”的路径长度。不满节点是指该该节点的左右孩子至少有有一个为NULL。叶节点的NPL为0，NULL节点的NPL为-1。</li>
+</ul>
+<p>左倾堆有以下几个基本性质：</p>
+<ul>
+<li>节点的键值小于或等于它的左右子节点的键值。</li>
+<li>节点的左孩子的NPL &gt;= 右孩子的NPL。</li>
+<li>节点的NPL = 它的右孩子的NPL + 1。</li>
+</ul>
+<p>合并两个左倾堆的基本思想如下：</p>
+<ol>
+<li>如果一个空左倾堆与一个非空左倾堆合并，返回非空左倾堆。</li>
+<li>如果两个左倾堆都非空，那么比较两个根节点，取较小堆的根节点为新的根节点。将”较小堆的根节点的右孩子”和”较大堆”进行合并。</li>
+<li>如果新堆的右孩子的NPL &gt; 左孩子的NPL，则交换左右孩子。</li>
+<li>设置新堆的根节点的NPL = 右子堆NPL + 1</li>
+</ol>
+<h2 id="3、斜堆"><a href="#3、斜堆" class="headerlink" title="3、斜堆"></a>3、斜堆</h2><p>斜堆也叫自适应堆，它是左倾堆的一个变种。和左倾堆一样，它通常也用于实现优先队列；作为一种自适应的左倾堆，它的合并操作的时间复杂度也是O(log n)。</p>
+<p>它与左倾堆的差别是：</p>
+<ol>
+<li>斜堆的节点没有”零距离”这个属性，而左倾堆则有。</li>
+<li>斜堆的合并操作和左倾堆的合并操作算法不同。</li>
+</ol>
+<p>斜堆的合并操作</p>
+<ol>
+<li>如果一个空斜堆与一个非空斜堆合并，返回非空斜堆。</li>
+<li>如果两个斜堆都非空，那么比较两个根节点，取较小堆的根节点为新的根节点。将”较小堆的根节点的右孩子”和”较大堆”进行合并。</li>
+<li>合并后，交换新堆根节点的左孩子和右孩子。</li>
+</ol>
+<p>第 3 步是斜堆和左倾堆的合并操作差别的关键所在，如果是左倾堆，则合并后要比较左右孩子的零距离大小，若右孩子的零距离 &gt; 左孩子的零距离，则交换左右孩子；最后，在设置根的零距离。</p>
+<h2 id="4、二项堆"><a href="#4、二项堆" class="headerlink" title="4、二项堆"></a>4、二项堆</h2><p>二项堆是二项树的集合。在了解二项堆之前，先对二项树进行介绍。</p>
+<h3 id="1）二项树"><a href="#1）二项树" class="headerlink" title="1）二项树"></a>1）二项树</h3><p>二项树是一种递归定义的有序树。它的递归定义如下：</p>
+<ol>
+<li>二项树B0只有一个结点；</li>
+<li>二项树Bk由两棵二项树B(k-1)组成的，其中一棵树是另一棵树根的最左孩子。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/1559037015017.png" alt="img"></p>
+<h3 id="2）二项堆"><a href="#2）二项堆" class="headerlink" title="2）二项堆"></a>2）二项堆</h3><p>二项堆和之前所讲的堆(二叉堆、左倾堆、斜堆)一样，也是用于实现优先队列的。二项堆是指满足以下性质的二项树的集合：</p>
+<ol>
+<li>每棵二项树都满足最小堆性质。即，父节点的关键字 &lt;= 它的孩子的关键字。</li>
+<li>不能有两棵或以上的二项树具有相同的度数(包括度数为0)。换句话说，具有度数k的二项树有0个或1个。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/1559037015069.png" alt="img"></p>
+<h2 id="5、斐波那契堆"><a href="#5、斐波那契堆" class="headerlink" title="5、斐波那契堆"></a>5、斐波那契堆</h2><p>斐波那契堆(Fibonacci heap)是一种可合并堆，可用于实现合并优先队列。它比二项堆具有更好的平摊分析性能，它的合并操作的时间复杂度是O(1)。</p>
+<p>与二项堆一样，它也是由一组堆最小有序树组成，并且是一种可合并堆。</p>
+<p>与二项堆不同的是，斐波那契堆中的树不一定是二项树；而且二项堆中的树是有序排列的，但是斐波那契堆中的树都是有根而无序的。</p>
+<p><img src="https://imine141.github.io/images/1559037015086.png" alt="img"></p>
+<h2 id="6、索引堆"><a href="#6、索引堆" class="headerlink" title="6、索引堆"></a>6、索引堆</h2><p>索引堆是对堆进行了优化。</p>
+<p>索引堆使用了一个新的int类型的数组，用于存放索引信息。</p>
+<p>索引堆的交换操作交换的是元素的索引，而不是直接交换元素。</p>
+<h2 id="7、Treap-树堆"><a href="#7、Treap-树堆" class="headerlink" title="7、Treap 树堆"></a>7、Treap 树堆</h2><p>一棵treap是一棵修改了结点顺序的二叉查找树，如图，显示一个例子，通常树内的每个结点x都有一个关键字值key[x]，另外，还要为结点分配priority[x]，它是一个独立选取的随机数。</p>
+<p><img src="https://imine141.github.io/images/1559037015141.png" alt="img"></p>
+<p>假设所有的优先级是不同的，所有的关键字也是不同的。treap的结点排列成让关键字遵循二叉查找树性质，并且优先级遵循最小堆顺序性质：</p>
+<ol>
+<li>如果v是u的左孩子，则key[v] &lt; key[u].</li>
+<li>如果v是u的右孩子，则key[v] &gt; key[u].</li>
+<li>如果v是u的孩子，则priority[u] &gt; priority[u].</li>
+</ol>
+<p>这两个性质的结合就是为什么这种树被称为“treap”的原因，因为它同时具有二叉查找树和堆的特征。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">iMine</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://imine141.github.io/2020/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86/">https://imine141.github.io/2020/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/06/10/pulsar/pulsar%20%E5%9F%BA%E7%A1%80/"><i class="fa fa-chevron-left">  </i><span>pulsar基础</span></a></div><div class="next-post pull-right"><a href="/2020/09/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%9B%BE/"><span>图</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '316d899c68e414a53017',
+  clientSecret: 'e63edfd4dd96b3b665a0a561e2ce048c2b3f0a3b',
+  repo: 'imine141.github.io',
+  owner: 'imine141',
+  admin: 'imine141',
+  id: md5(decodeURI(location.pathname)),
+  language: 'en'
+})
+gitalk.render('gitalk-container')</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2023 By iMine</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

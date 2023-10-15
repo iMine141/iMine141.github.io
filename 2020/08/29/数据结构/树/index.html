@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="树"><meta name="keywords" content="数据结构"><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>树 | iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?434d6055a3a5266f2c2a21749e588070";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 4.2.1"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、树的基本概念"><span class="toc-text">一、树的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、结点分类"><span class="toc-text">1、结点分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、结点间关系"><span class="toc-text">2、结点间关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、树的其他相关概念"><span class="toc-text">3、树的其他相关概念</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、二叉树"><span class="toc-text">二、二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、二叉树的定义"><span class="toc-text">1、二叉树的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）主要特征"><span class="toc-text">1）主要特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）特殊二叉树"><span class="toc-text">2）特殊二叉树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3）二叉树性质"><span class="toc-text">3）二叉树性质</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、二叉树的存储结构"><span class="toc-text">2、二叉树的存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）顺序存储结构"><span class="toc-text">1）顺序存储结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）链式存储结构"><span class="toc-text">2）链式存储结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、二叉树的遍历"><span class="toc-text">3、二叉树的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）遍历方法"><span class="toc-text">1）遍历方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）遍历推导"><span class="toc-text">2）遍历推导</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3）二叉树的建立"><span class="toc-text">3）二叉树的建立</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、线索二叉树"><span class="toc-text">4、线索二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）基本概念"><span class="toc-text">1）基本概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）构造"><span class="toc-text">2）构造</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、树、森林"><span class="toc-text">三、树、森林</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、树的存储结构"><span class="toc-text">1、树的存储结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-）双亲表示法"><span class="toc-text">1 ）双亲表示法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）孩子表示法"><span class="toc-text">2）孩子表示法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#孩子表示法"><span class="toc-text">孩子表示法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#双亲孩子表示法"><span class="toc-text">双亲孩子表示法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#孩子兄弟表示法"><span class="toc-text">孩子兄弟表示法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、树、森林与二叉树的转换"><span class="toc-text">2、树、森林与二叉树的转换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）树转换为二叉树"><span class="toc-text">1）树转换为二叉树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）森林转换为二叉树"><span class="toc-text">2）森林转换为二叉树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3）二叉树转换为树"><span class="toc-text">3）二叉树转换为树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4）二叉树转换为森林"><span class="toc-text">4）二叉树转换为森林</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、树和森林的遍历"><span class="toc-text">3、树和森林的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）树的遍历"><span class="toc-text">1）树的遍历</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）森林的遍历"><span class="toc-text">2）森林的遍历</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、二叉树的应用"><span class="toc-text">四、二叉树的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、BST（二叉排序树-二叉查找树-二叉搜索树）"><span class="toc-text">1、BST（二叉排序树&#x2F;二叉查找树&#x2F;二叉搜索树）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）定义"><span class="toc-text">1）定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-操作"><span class="toc-text">2)操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、平衡二叉树"><span class="toc-text">2、平衡二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）定义-1"><span class="toc-text">1）定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2）失衡调整"><span class="toc-text">2）失衡调整</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、堆"><span class="toc-text">3、堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、红黑树"><span class="toc-text">4、红黑树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、哈夫曼-Huffman-树和哈夫曼编码"><span class="toc-text">5、哈夫曼(Huffman)树和哈夫曼编码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1）赫夫曼树定义"><span class="toc-text">1）赫夫曼树定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-赫夫曼树构造"><span class="toc-text">2)赫夫曼树构造</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-赫夫曼编码"><span class="toc-text">3)赫夫曼编码</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/iMine141" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">75</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">Links</div><a class="author-info-links__name text-center" href="https://github.com/iMine141" target="_blank" rel="noopener">iMine</a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/about">About</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">树</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-29</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">3.9k</span><span class="post-meta__separator">|</span><span>Reading time: 11 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="一、树的基本概念"><a href="#一、树的基本概念" class="headerlink" title="一、树的基本概念"></a>一、树的基本概念</h2><p>树：是 n ( n&gt;=0 ) 个结点的有限集。</p>
+<ul>
+<li>n = 0 时称为空树。</li>
+<li>在任意一棵非空树中:<ul>
+<li>有且仅有一个根结点</li>
+<li>当 n &gt; 1 时，其余结点可分为一个或多个互不相交的有限集。 其中每一个集合本身又是一棵树，并且称为根的子树。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1、结点分类"><a href="#1、结点分类" class="headerlink" title="1、结点分类"></a>1、结点分类</h3><ul>
+<li>结点的度：结点拥有的子树数</li>
+<li>叶结点：度为 0 的结点</li>
+<li>分支结点：度不为 0 的结点</li>
+<li>树的度：树内各结点的度的最大值</li>
+</ul>
+<h3 id="2、结点间关系"><a href="#2、结点间关系" class="headerlink" title="2、结点间关系"></a>2、结点间关系</h3><ul>
+<li>孩子：结点的子树的根称</li>
+<li>双亲：上一结点</li>
+<li>兄弟：同一个双亲的孩子</li>
+<li>祖先：从根到该结点所经分支上的所有结点</li>
+</ul>
+<h3 id="3、树的其他相关概念"><a href="#3、树的其他相关概念" class="headerlink" title="3、树的其他相关概念"></a>3、树的其他相关概念</h3><ul>
+<li>层次：根开始定义起，根为第一层 ，根的孩子为第二层</li>
+<li>堂兄弟：双亲在同一层的结点</li>
+<li>树的深度：树中结点的最大层次</li>
+<li>有序树：树中结点的各子树从左至右有次序，不能互换</li>
+<li>无序树：非有序树</li>
+<li>森林：m (m&gt;=0) 互不相交的树的集合</li>
+</ul>
+<h2 id="二、二叉树"><a href="#二、二叉树" class="headerlink" title="二、二叉树"></a>二、二叉树</h2><h3 id="1、二叉树的定义"><a href="#1、二叉树的定义" class="headerlink" title="1、二叉树的定义"></a>1、二叉树的定义</h3><p>二叉树：是 n(n &gt;= 0) 个结点的有限集合，该集合或者为空集(称为空二叉树)，或者由一个根结点和两棵互不相交的、分别称为根结点的左子树和右子树的二叉树组成。</p>
+<h4 id="1）主要特征"><a href="#1）主要特征" class="headerlink" title="1）主要特征"></a>1）主要特征</h4><ul>
+<li>每个结点最多有两棵子树，所以二叉树中不存在度大于 2 的结点。</li>
+<li>左子树和右子树是有顺序的，次序不能任意颠倒。</li>
+<li>即使树中某结点只有一棵子树，也要区分它是左子树还是右子树.</li>
+</ul>
+<h4 id="2）特殊二叉树"><a href="#2）特殊二叉树" class="headerlink" title="2）特殊二叉树"></a>2）特殊二叉树</h4><ul>
+<li>斜树：都只有一边子结点<ul>
+<li>左斜树：所有的结点都只有左子树的二叉树</li>
+<li>右斜树：所有结点都是只有右子树的二叉树</li>
+<li>线性表结构可以理解为是树的一种极其特殊的表现形式</li>
+</ul>
+</li>
+<li>满二叉树：每层结点都排满了</li>
+<li>完全二叉树：按层排序，到结尾中间没有漏掉的结点</li>
+</ul>
+<h4 id="3）二叉树性质"><a href="#3）二叉树性质" class="headerlink" title="3）二叉树性质"></a>3）二叉树性质</h4><ul>
+<li><p>在二叉树的第 i 层上至多有 <code>2^{i-1}</code> 个结点 (i &gt;= 1 ) 。</p>
+</li>
+<li><p>深度为 k 的二叉树至多有<code>2^k-1</code>个结点 (k &gt;= l) 。</p>
+</li>
+<li><p>对任何一棵二叉树 T，如果其终端结点数为 <code>n_0</code>，度为 2 的结点数为 <code>n_2</code>，则 <code>n_0 = n_2 +1</code>。</p>
+</li>
+<li><p>具有 n 个结点的完全二叉树的深度为 <code>[log_2n]+1</code> ([x] 表示不大于 x 的最大整数)。</p>
+</li>
+<li><p>如果对一棵有 n 个结点的完全二叉树(其深度为 <code>[log_2n]+1</code> ) 的结点按层序编号(从第 1 层到第<code>[log_2n]+1</code>层，每层从左到右) ，对任一结点 i (1&lt;= i&lt;= n)有:</p>
+<ul>
+<li>如果 i = 1 ，则结点 i 是二叉树的根，无双亲；如果 i &gt; 1 ，则其双亲是结点 [i/2]。</li>
+</ul>
+</li>
+<li><p>如果 2i &gt; n ，则结点 i 无左孩子(结点 i 为叶子结点)；否则其左孩子是结点 2i。</p>
+<ul>
+<li>如果 2i+1 &gt; n ，则结点 i 无右孩子；否则其右孩子是结点 2i+1 。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、二叉树的存储结构"><a href="#2、二叉树的存储结构" class="headerlink" title="2、二叉树的存储结构"></a>2、二叉树的存储结构</h3><h4 id="1）顺序存储结构"><a href="#1）顺序存储结构" class="headerlink" title="1）顺序存储结构"></a>1）顺序存储结构</h4><p>顺序存储结构一般只用于完全二叉树。</p>
+<p>用一维数组存储二叉树中的结点，数组的下标和结点序号一致。没有结点的存空。</p>
+<h4 id="2）链式存储结构"><a href="#2）链式存储结构" class="headerlink" title="2）链式存储结构"></a>2）链式存储结构</h4><p>二叉链表：一个数据域和两个指针域的链表。</p>
+<p>指针域分别存左孩子和右孩子的指针。</p>
+<h3 id="3、二叉树的遍历"><a href="#3、二叉树的遍历" class="headerlink" title="3、二叉树的遍历"></a>3、二叉树的遍历</h3><h4 id="1）遍历方法"><a href="#1）遍历方法" class="headerlink" title="1）遍历方法"></a>1）遍历方法</h4><ul>
+<li>前序遍历：根节点-&gt;左子树-&gt;右子树</li>
+<li>中序遍历：左子树-&gt;根节点-&gt;右子树</li>
+<li>后序遍历：左子树-&gt;右子树-&gt;根节点</li>
+<li>层序（宽度优先、广度优先）遍历：每一层从左向右输出</li>
+</ul>
+<p>前序、中序、后序遍历用迭代很简单。</p>
+<p>层序遍历，元素储存有先进先出的特性，选用队列。</p>
+<h4 id="2）遍历推导"><a href="#2）遍历推导" class="headerlink" title="2）遍历推导"></a>2）遍历推导</h4><ul>
+<li>己知前序遍历序列和中序遍历序列，可以唯一确定一棵二叉树。</li>
+<li>已知后序遍历序列和中序遍历序列，可以唯一确定一棵二叉树 。</li>
+<li>已知前序和后序遍历，是不能确定一棵二叉树的</li>
+</ul>
+<h4 id="3）二叉树的建立"><a href="#3）二叉树的建立" class="headerlink" title="3）二叉树的建立"></a>3）二叉树的建立</h4><p>扩展二叉树：将每个结点的空指针引出一个虚结点，值为特定值（如“#”）</p>
+<p>扩展二叉树可以用递归采用前序、中序、后序遍历的一个遍历序列就确定一颗二叉树。</p>
+<h3 id="4、线索二叉树"><a href="#4、线索二叉树" class="headerlink" title="4、线索二叉树"></a>4、线索二叉树</h3><h4 id="1）基本概念"><a href="#1）基本概念" class="headerlink" title="1）基本概念"></a>1）基本概念</h4><ul>
+<li>线索：指向前驱和后继的指针称为线索</li>
+<li>线索链表：加上线索的二叉链表称为线索链表</li>
+<li>线索化：将二叉链表中的空指针改为指向前驱或后继的线索</li>
+</ul>
+<p>线索二叉树，等于是把一棵二叉树转属变成了一个双向链表，对插入删除结点、查找某个结点都带来了方便</p>
+<h4 id="2）构造"><a href="#2）构造" class="headerlink" title="2）构造"></a>2）构造</h4><p>每个结点增设两个标志域 ltag 和 rtag，区分指针是指向孩子还是指向前驱、后继。</p>
+<p>在遍历的过程中修改空指针。</p>
+<p>如果所用的二叉树需经常遍历或查找结点时需要某种遍历序列中的前驱和后继，那么采用线索二叉链表的存储结构就是非常不错的选择。</p>
+<h2 id="三、树、森林"><a href="#三、树、森林" class="headerlink" title="三、树、森林"></a>三、树、森林</h2><h3 id="1、树的存储结构"><a href="#1、树的存储结构" class="headerlink" title="1、树的存储结构"></a>1、树的存储结构</h3><h4 id="1-）双亲表示法"><a href="#1-）双亲表示法" class="headerlink" title="1 ）双亲表示法"></a>1 ）双亲表示法</h4><p>除了根结点外，其余每个结点，它不一定有孩子，但是一定有且仅有一个双亲。以一组连续空间存储树的结点，同时在每个结点中，附设一个指示器指示其双亲结点到链表中的位置。</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%911" alt=""></p>
+<p>存储结构的设计是一个非常灵活的过程。</p>
+<ul>
+<li>双亲域：增加一个结点指示其双亲结点的域</li>
+<li>长子域：增加一个结点最左边孩子的域</li>
+<li>右兄弟域：增加一个右兄弟域体现兄弟关系</li>
+</ul>
+<p>当算法中需要在树结构中频繁地查找某结点的父结点时，使用双亲表示法最合适。当频繁地访问结点的孩子结点时，双亲表示法就很麻烦，采用孩子表示法就很简单。</p>
+<h4 id="2）孩子表示法"><a href="#2）孩子表示法" class="headerlink" title="2）孩子表示法"></a>2）孩子表示法</h4><p>由于树中每个结点可能有多棵子树，可以考虑用多重链表，即每个结点有多个指针域，其中每个指针指向一棵子树的根结点，我们把这种方法叫做多重链表表示法。</p>
+<ul>
+<li>方案一：指针域的个数就等于树的度<ul>
+<li>树中各结点的度相差很大时，浪费空间</li>
+</ul>
+</li>
+<li>方案二：每个结点指针域的个数等于该结点的度<ul>
+<li>各个结点的链表是不相同的结构，还要维护结点的度的数值，浪费运算时间</li>
+</ul>
+</li>
+</ul>
+<h5 id="孩子表示法"><a href="#孩子表示法" class="headerlink" title="孩子表示法"></a>孩子表示法</h5><p>把每个结点的孩子结点排列起来，以单链表作存储结构，则 n 个结点有 n 个孩子链表，如果是叶子结点则此单链表为空。然后 n 个头指针又组成一个线性表，采用顺序存储结构，存放进一个一维数组中</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%912" alt=""></p>
+<h5 id="双亲孩子表示法"><a href="#双亲孩子表示法" class="headerlink" title="双亲孩子表示法"></a>双亲孩子表示法</h5><p>使用孩子表示法存储的树结构，正好和双亲表示法相反，适用于查找某结点的孩子结点，不适用于查找其父结点。可以将两种表示方法合二为一</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%913" alt=""></p>
+<h5 id="孩子兄弟表示法"><a href="#孩子兄弟表示法" class="headerlink" title="孩子兄弟表示法"></a>孩子兄弟表示法</h5><p>把一棵复杂的树变成一棵二叉树</p>
+<p>链表中每个结点由 3 部分组成：</p>
+<ul>
+<li>孩子指针域：表示指向当前结点的第一个孩子结点</li>
+<li>数据域</li>
+<li>兄弟指针域：表示指向当前结点的下一个兄弟结点</li>
+</ul>
+<p><img src="https://imine141.github.io/images/%E6%A0%914" alt=""></p>
+<h3 id="2、树、森林与二叉树的转换"><a href="#2、树、森林与二叉树的转换" class="headerlink" title="2、树、森林与二叉树的转换"></a>2、树、森林与二叉树的转换</h3><h4 id="1）树转换为二叉树"><a href="#1）树转换为二叉树" class="headerlink" title="1）树转换为二叉树"></a>1）树转换为二叉树</h4><ol>
+<li>加线。在所有兄弟结点之间加一条连线。</li>
+<li>去钱。对树中每个结点，只保留它与第一个孩子结点的连线，删除色与其他孩子结点之间的连线。</li>
+<li>层次调整。以树的根结点为轴心，将整棵树顺时针旋转一定的角度，使之结构层次分明。（注意第一个孩子是结点的左孩子，兄弟转换过来的孩子是结点的右孩子）</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%915" alt=""></p>
+<h4 id="2）森林转换为二叉树"><a href="#2）森林转换为二叉树" class="headerlink" title="2）森林转换为二叉树"></a>2）森林转换为二叉树</h4><ol>
+<li>把每棵树转换为二叉树。</li>
+<li>第一棵二叉树不动，从第二棵二叉树开始，依次把后一棵二叉树的根结点作为前一棵二叉树的根结点的右孩子，用线连接起来。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%916" alt=""></p>
+<h4 id="3）二叉树转换为树"><a href="#3）二叉树转换为树" class="headerlink" title="3）二叉树转换为树"></a>3）二叉树转换为树</h4><ol>
+<li>加线。若某结点X的左孩子结点存在，则将这个左孩子的右孩子结点、右孩子的右孩子结点、右孩子的右孩子的右孩子结点…，都作为结点X的孩子。将结点X与这些右孩子结点用线连接起来。</li>
+<li>去线。删除原二叉树中所有结点与其右孩子结点的连线。</li>
+<li>层次调整。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%917" alt=""></p>
+<h4 id="4）二叉树转换为森林"><a href="#4）二叉树转换为森林" class="headerlink" title="4）二叉树转换为森林"></a>4）二叉树转换为森林</h4><p>假如一棵二叉树的根节点有右孩子，则这棵二叉树能够转换为森林，否则将转换为一棵树。</p>
+<ol>
+<li>从根节点开始，若右孩子存在，则把与右孩子结点的连线删除。再查看分离后的二叉树，若其根节点的右孩子存在，则连线删除…。直到所有这些根节点与右孩子的连线都删除为止。</li>
+<li>将每棵分离后的二叉树转换为树。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%918" alt=""></p>
+<h3 id="3、树和森林的遍历"><a href="#3、树和森林的遍历" class="headerlink" title="3、树和森林的遍历"></a>3、树和森林的遍历</h3><h4 id="1）树的遍历"><a href="#1）树的遍历" class="headerlink" title="1）树的遍历"></a>1）树的遍历</h4><p>分为两种方式</p>
+<ul>
+<li>一种是先根遍历树，即先访问树的根结点，然后依次先根遍历棍的每棵子树。</li>
+<li>另一种是后根遍历，即先依次后根遍历每棵子树，然后再访问根结点</li>
+</ul>
+<h4 id="2）森林的遍历"><a href="#2）森林的遍历" class="headerlink" title="2）森林的遍历"></a>2）森林的遍历</h4><p>也分为两种方式:</p>
+<ul>
+<li>前序遍历: 先访问森林中第一棵树的根结点，然后再依次先根遍历根的每棵子树，再依放用同样方式遍历除去第一棵树的剩余树构成的森林。</li>
+<li>后序遍历: 是先访问森林中第一棵树，后根遍历的方式遍历每棵子树，然后再访问根结点，再依次同样方式遍历除去第一棵树的剩余树构成的森林。</li>
+</ul>
+<p>森林的前序遍历和二叉树的前序遍历结果相同，森林的后序遍历和二叉树的中序遍历结果相同。</p>
+<p>当以二叉链表作树的存储结构时，树的先根遍历和后根遍历完全可以借用二叉树的前序遍历和中序遍历的算法来实现。</p>
+<h2 id="四、二叉树的应用"><a href="#四、二叉树的应用" class="headerlink" title="四、二叉树的应用"></a>四、二叉树的应用</h2><h3 id="1、BST（二叉排序树-二叉查找树-二叉搜索树）"><a href="#1、BST（二叉排序树-二叉查找树-二叉搜索树）" class="headerlink" title="1、BST（二叉排序树/二叉查找树/二叉搜索树）"></a>1、BST（二叉排序树/二叉查找树/二叉搜索树）</h3><h4 id="1）定义"><a href="#1）定义" class="headerlink" title="1）定义"></a>1）定义</h4><p>二叉排序树：又称为二叉查找树、二叉搜索树。它或者是一棵空树，或者是具有下列性质的二叉树。</p>
+<ul>
+<li>若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值;</li>
+<li>若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值;</li>
+<li>它的左、右子树也分别为二叉排序树。</li>
+</ul>
+<p>二叉排序树利于插入和删除的实现。</p>
+<h4 id="2-操作"><a href="#2-操作" class="headerlink" title="2)操作"></a>2)操作</h4><ul>
+<li>查找：查找成功返回ture，指向成功结点；查找失败返回false，指向上一结点。</li>
+<li>插入：查找不成功，则插入到上一节点的子节点</li>
+<li>构建：反复插入</li>
+<li>删除：<ul>
+<li>叶子节点直接删；</li>
+<li>只有左或右子树的，“子继父业”；</li>
+<li>左右子树都有的，找到需要删除的结点 p 的直接前驱(或直接后继) s，用 s 来替换结点 p，然后再删除此结点 s，s 的子结点移到 s 原来的位置</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、平衡二叉树"><a href="#2、平衡二叉树" class="headerlink" title="2、平衡二叉树"></a>2、平衡二叉树</h3><h4 id="1）定义-1"><a href="#1）定义-1" class="headerlink" title="1）定义"></a>1）定义</h4><ul>
+<li>平衡二叉树：是一种二叉排序树，其中每一个节点的左子树和右子树的高度之差的绝对值不超过 1。</li>
+<li>平衡因子：二叉树上结点的左子树深度减去右子树深度的值（只可能是-1 、0 和 1）</li>
+<li>最小失衡子树：在新插入的结点向上查找，以第一个平衡因子的绝对值超过1的结点为根的子树称为最小不平衡子树。</li>
+</ul>
+<h4 id="2）失衡调整"><a href="#2）失衡调整" class="headerlink" title="2）失衡调整"></a>2）失衡调整</h4><p><img src="https://imine141.github.io/images/%E6%A0%919" alt=""></p>
+<ul>
+<li>LL失衡：右旋（Zig）。当传入一个二叉排序树 P，将它的左孩子结点定义为 L ，将 L 的右子树变成 P 的左子树，再将 P 改成 L 的右子树，最后将 L 替换 P 成为根结点。</li>
+<li>RR失衡：左旋（Zag）。与右旋对称。</li>
+<li>LR失衡：先左旋后右旋（Zig-zag）</li>
+<li>RL失衡：先右旋后左旋（Zag-zig）</li>
+</ul>
+<h3 id="3、堆"><a href="#3、堆" class="headerlink" title="3、堆"></a>3、堆</h3><p>最大堆、最小堆</p>
+<h3 id="4、红黑树"><a href="#4、红黑树" class="headerlink" title="4、红黑树"></a>4、红黑树</h3><p>把树中的节点定义为红、黑两种颜色，并通过规则确保从根节点到叶节点的最长路径的长度不超过最短路径的两倍。</p>
+<h3 id="5、哈夫曼-Huffman-树和哈夫曼编码"><a href="#5、哈夫曼-Huffman-树和哈夫曼编码" class="headerlink" title="5、哈夫曼(Huffman)树和哈夫曼编码"></a>5、哈夫曼(Huffman)树和哈夫曼编码</h3><h4 id="1）赫夫曼树定义"><a href="#1）赫夫曼树定义" class="headerlink" title="1）赫夫曼树定义"></a>1）赫夫曼树定义</h4><ul>
+<li>路径长度：从树中一个结点到另一个结点之间的分支构成两个结点之间的路径，路径上的分支数目称做路径长度。</li>
+<li>树的路径长度：就是从树根到每一结点的路径长度之和。</li>
+<li>带权路径长度：结点的带权的路径长度为从该结点到树根之间的路径长度与结点上权的乘积。</li>
+<li>树的带权路径长度：为树中所有叶子结点的带权路径长度之和 。</li>
+</ul>
+<p>赫夫曼树：带权路径长度 WPL 最小的二叉树称做赫夫曼树。</p>
+<h4 id="2-赫夫曼树构造"><a href="#2-赫夫曼树构造" class="headerlink" title="2)赫夫曼树构造"></a>2)赫夫曼树构造</h4><ol>
+<li>根据给定的 n 个权值 {<code>w_1,w_2,...,w_n</code>} 构成 n 棵二叉树的集合 F={ <code>T_1,T_2,...,T_n</code>}，其中每棵二叉树 <code>T_i</code> 中只有一个带权为 <code>w_i</code> 根结点，其左右子树均为空。</li>
+<li>在 F 中选取两棵根结点的权值最小的树作为左右子树构造一棵新的二叉树，且置新的二叉树的根结点的权值为其左右子树上根结点的权值之和。</li>
+<li>在 F 中删除这两棵树，同时将新得到的二叉树加入 F 中 。</li>
+<li>重复 2 和 3 步骤，直到 F 只含一棵树为止。这棵树便是赫夫曼树。</li>
+</ol>
+<h4 id="3-赫夫曼编码"><a href="#3-赫夫曼编码" class="headerlink" title="3)赫夫曼编码"></a>3)赫夫曼编码</h4><p>赫夫曼编码：对需要编码的字符集，统计各个字符出现的次数或频率，作为权值，构造赫夫曼树。规定赫夫曼树的左分支代表0，右分支代表1，从根节点到叶子结点所经过的路径分支组成的 0 和 1 的序列便为该结点对应字符的编码。</p>
+<ul>
+<li>定长编码：像 ASCII 编码</li>
+<li>变长编码：单个编码的长度不一致，可以根据整体出现频率来调节</li>
+<li>前缀码：所谓的前缀码，就是没有任何码字是其他码字的前缀</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">iMine</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://imine141.github.io/2020/08/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/">https://imine141.github.io/2020/08/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/09/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%9B%BE/"><i class="fa fa-chevron-left">  </i><span>图</span></a></div><div class="next-post pull-right"><a href="/2020/08/28/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/"><span>栈与队列</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '316d899c68e414a53017',
+  clientSecret: 'e63edfd4dd96b3b665a0a561e2ce048c2b3f0a3b',
+  repo: 'imine141.github.io',
+  owner: 'imine141',
+  admin: 'imine141',
+  id: md5(decodeURI(location.pathname)),
+  language: 'en'
+})
+gitalk.render('gitalk-container')</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2023 By iMine</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

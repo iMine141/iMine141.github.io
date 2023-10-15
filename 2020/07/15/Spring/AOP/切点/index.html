@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="切点"><meta name="keywords" content="spring"><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>切点 | iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css"><script src="https://cdn.jsdelivr.net/npm/gitalk@latest/dist/gitalk.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?434d6055a3a5266f2c2a21749e588070";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"We didn't find any results for the search: ${query}"}},
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 4.2.1"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-编写切点"><span class="toc-text">1 编写切点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-表示式"><span class="toc-text">1.1 表示式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1）方法"><span class="toc-text">1）方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2）注解"><span class="toc-text">2）注解</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3）bean"><span class="toc-text">3）bean</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-格式"><span class="toc-text">1.2 格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-例子"><span class="toc-text">1.3 例子</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><div class="follow-button"><a href="https://github.com/iMine141" target="_blank" rel="noopener">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">75</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">Links</div><a class="author-info-links__name text-center" href="https://github.com/iMine141" target="_blank" rel="noopener">iMine</a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/about">About</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> Search</span></a></span></div><div id="post-info"><div id="post-title">切点</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-15</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/spring/AOP/">AOP</a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">345</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="1-编写切点"><a href="#1-编写切点" class="headerlink" title="1 编写切点"></a>1 编写切点</h3><p>@Pointcut 定义可重复使用的切点</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Pointcut</span>(<span class="string">"execution(public * com.xxx.mapper.*.*(..))"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pointCut</span><span class="params">()</span> </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-1-表示式"><a href="#1-1-表示式" class="headerlink" title="1.1 表示式"></a>1.1 表示式</h4><p>由下列方式来定义或者通过 &amp;&amp;、 ||、 !、 的方式进行组合：</p>
+<h5 id="1）方法"><a href="#1）方法" class="headerlink" title="1）方法"></a>1）方法</h5><ul>
+<li>execution：匹配方法</li>
+<li>within：限制匹配范围</li>
+<li>this：匹配 AOP 代理类的执行方法</li>
+<li>target：匹配目标类的执行方法</li>
+<li>args：将匹配方法的参数传入通知，名称必须相同</li>
+</ul>
+<h5 id="2）注解"><a href="#2）注解" class="headerlink" title="2）注解"></a>2）注解</h5><ul>
+<li>@within：匹配类注解</li>
+<li>@target：匹配类注解</li>
+<li>@args：匹配参数注解</li>
+<li>@annotation：匹配方法注解</li>
+</ul>
+<h5 id="3）bean"><a href="#3）bean" class="headerlink" title="3）bean"></a>3）bean</h5><ul>
+<li>bean()：匹配制定 bean</li>
+</ul>
+<h4 id="1-2-格式"><a href="#1-2-格式" class="headerlink" title="1.2 格式"></a>1.2 格式</h4><p>“?”代表可选项</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">execution(修饰符? 返回值 类路径? 方法名(参数)异常类型?)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>返回值<br><code>*</code>匹配任意</li>
+<li>方法名<br><code>*</code>匹配任意</li>
+<li>参数<br>指定参数类型，<code>,</code>隔开<br><code>*</code>任意类型<br><code>..</code>任意个数</li>
+</ul>
+<h4 id="1-3-例子"><a href="#1-3-例子" class="headerlink" title="1.3 例子"></a>1.3 例子</h4><ul>
+<li>任意公共方法：<code>execution(public * *(..))</code></li>
+<li>任何“set”开头方法：<code>execution(* set*(..))</code></li>
+<li>某类任意方法：<code>execution(* com.xyz.service.AccountService.*(..))</code></li>
+<li>某包里任意方法： <code>execution(* com.xyz.service.*.*(..))</code></li>
+<li>某包及子包任意方法：<code>execution(* com.xyz.service..*.*(..))</code></li>
+<li>某包任意类： <code>within(com.test.spring.aop.pointcutexp.*)</code></li>
+<li>实现了 Intf 接口的所有类：<code>this(com.abc.Intf)</code></li>
+<li>带有 @xxx 注解的所有类的任意方法：<ul>
+<li><code>@within(org.abc.xxx)</code></li>
+<li><code>@target(org.abc.xxx))</code></li>
+</ul>
+</li>
+<li>带有 @xxx 注解的任意方法：<code>@annotation(org.abc.xxx))</code></li>
+<li>参数带有有 @xxx 注解的方法：<code>@args(org.abc.xxx)</code></li>
+<li>参数类型： <code>args(String)</code></li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">iMine</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://imine141.github.io/2020/07/15/Spring/AOP/%E5%88%87%E7%82%B9/">https://imine141.github.io/2020/07/15/Spring/AOP/%E5%88%87%E7%82%B9/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/spring/">spring</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/07/16/Spring/AOP/%E5%88%87%E9%9D%A2/"><i class="fa fa-chevron-left">  </i><span>切面</span></a></div><div class="next-post pull-right"><a href="/2020/07/15/Spring/AOP/AOP%20%E7%AE%80%E4%BB%8B/"><span>AOP简介</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitalk-container"></div><script>var gitalk = new Gitalk({
+  clientID: '316d899c68e414a53017',
+  clientSecret: 'e63edfd4dd96b3b665a0a561e2ce048c2b3f0a3b',
+  repo: 'imine141.github.io',
+  owner: 'imine141',
+  admin: 'imine141',
+  id: md5(decodeURI(location.pathname)),
+  language: 'en'
+})
+gitalk.render('gitalk-container')</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2023 By iMine</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io" target="_blank" rel="noopener"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody" target="_blank" rel="noopener"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">Local search</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>Powered by</span> <a href="https://github.com/wzpan/hexo-generator-search" target="_blank" rel="noopener" style="color:#49B1F5;">hexo-generator-search</a></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
