@@ -107,7 +107,7 @@
 <p>在遍历的过程中修改空指针。</p>
 <p>如果所用的二叉树需经常遍历或查找结点时需要某种遍历序列中的前驱和后继，那么采用线索二叉链表的存储结构就是非常不错的选择。</p>
 <h2 id="三、树、森林"><a href="#三、树、森林" class="headerlink" title="三、树、森林"></a>三、树、森林</h2><h3 id="1、树的存储结构"><a href="#1、树的存储结构" class="headerlink" title="1、树的存储结构"></a>1、树的存储结构</h3><h4 id="1-）双亲表示法"><a href="#1-）双亲表示法" class="headerlink" title="1 ）双亲表示法"></a>1 ）双亲表示法</h4><p>除了根结点外，其余每个结点，它不一定有孩子，但是一定有且仅有一个双亲。以一组连续空间存储树的结点，同时在每个结点中，附设一个指示器指示其双亲结点到链表中的位置。</p>
-<p><img src="https://imine141.github.io/images/%E6%A0%911" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%911" alt></p>
 <p>存储结构的设计是一个非常灵活的过程。</p>
 <ul>
 <li>双亲域：增加一个结点指示其双亲结点的域</li>
@@ -127,9 +127,9 @@
 </li>
 </ul>
 <h5 id="孩子表示法"><a href="#孩子表示法" class="headerlink" title="孩子表示法"></a>孩子表示法</h5><p>把每个结点的孩子结点排列起来，以单链表作存储结构，则 n 个结点有 n 个孩子链表，如果是叶子结点则此单链表为空。然后 n 个头指针又组成一个线性表，采用顺序存储结构，存放进一个一维数组中</p>
-<p><img src="https://imine141.github.io/images/%E6%A0%912" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%912" alt></p>
 <h5 id="双亲孩子表示法"><a href="#双亲孩子表示法" class="headerlink" title="双亲孩子表示法"></a>双亲孩子表示法</h5><p>使用孩子表示法存储的树结构，正好和双亲表示法相反，适用于查找某结点的孩子结点，不适用于查找其父结点。可以将两种表示方法合二为一</p>
-<p><img src="https://imine141.github.io/images/%E6%A0%913" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%913" alt></p>
 <h5 id="孩子兄弟表示法"><a href="#孩子兄弟表示法" class="headerlink" title="孩子兄弟表示法"></a>孩子兄弟表示法</h5><p>把一棵复杂的树变成一棵二叉树</p>
 <p>链表中每个结点由 3 部分组成：</p>
 <ul>
@@ -137,30 +137,30 @@
 <li>数据域</li>
 <li>兄弟指针域：表示指向当前结点的下一个兄弟结点</li>
 </ul>
-<p><img src="https://imine141.github.io/images/%E6%A0%914" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%914" alt></p>
 <h3 id="2、树、森林与二叉树的转换"><a href="#2、树、森林与二叉树的转换" class="headerlink" title="2、树、森林与二叉树的转换"></a>2、树、森林与二叉树的转换</h3><h4 id="1）树转换为二叉树"><a href="#1）树转换为二叉树" class="headerlink" title="1）树转换为二叉树"></a>1）树转换为二叉树</h4><ol>
 <li>加线。在所有兄弟结点之间加一条连线。</li>
 <li>去钱。对树中每个结点，只保留它与第一个孩子结点的连线，删除色与其他孩子结点之间的连线。</li>
 <li>层次调整。以树的根结点为轴心，将整棵树顺时针旋转一定的角度，使之结构层次分明。（注意第一个孩子是结点的左孩子，兄弟转换过来的孩子是结点的右孩子）</li>
 </ol>
-<p><img src="https://imine141.github.io/images/%E6%A0%915" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%915" alt></p>
 <h4 id="2）森林转换为二叉树"><a href="#2）森林转换为二叉树" class="headerlink" title="2）森林转换为二叉树"></a>2）森林转换为二叉树</h4><ol>
 <li>把每棵树转换为二叉树。</li>
 <li>第一棵二叉树不动，从第二棵二叉树开始，依次把后一棵二叉树的根结点作为前一棵二叉树的根结点的右孩子，用线连接起来。</li>
 </ol>
-<p><img src="https://imine141.github.io/images/%E6%A0%916" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%916" alt></p>
 <h4 id="3）二叉树转换为树"><a href="#3）二叉树转换为树" class="headerlink" title="3）二叉树转换为树"></a>3）二叉树转换为树</h4><ol>
 <li>加线。若某结点X的左孩子结点存在，则将这个左孩子的右孩子结点、右孩子的右孩子结点、右孩子的右孩子的右孩子结点…，都作为结点X的孩子。将结点X与这些右孩子结点用线连接起来。</li>
 <li>去线。删除原二叉树中所有结点与其右孩子结点的连线。</li>
 <li>层次调整。</li>
 </ol>
-<p><img src="https://imine141.github.io/images/%E6%A0%917" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%917" alt></p>
 <h4 id="4）二叉树转换为森林"><a href="#4）二叉树转换为森林" class="headerlink" title="4）二叉树转换为森林"></a>4）二叉树转换为森林</h4><p>假如一棵二叉树的根节点有右孩子，则这棵二叉树能够转换为森林，否则将转换为一棵树。</p>
 <ol>
 <li>从根节点开始，若右孩子存在，则把与右孩子结点的连线删除。再查看分离后的二叉树，若其根节点的右孩子存在，则连线删除…。直到所有这些根节点与右孩子的连线都删除为止。</li>
 <li>将每棵分离后的二叉树转换为树。</li>
 </ol>
-<p><img src="https://imine141.github.io/images/%E6%A0%918" alt=""></p>
+<p><img src="https://imine141.github.io/images/%E6%A0%918" alt></p>
 <h3 id="3、树和森林的遍历"><a href="#3、树和森林的遍历" class="headerlink" title="3、树和森林的遍历"></a>3、树和森林的遍历</h3><h4 id="1）树的遍历"><a href="#1）树的遍历" class="headerlink" title="1）树的遍历"></a>1）树的遍历</h4><p>分为两种方式</p>
 <ul>
 <li>一种是先根遍历树，即先访问树的根结点，然后依次先根遍历棍的每棵子树。</li>
@@ -196,7 +196,7 @@
 <li>平衡因子：二叉树上结点的左子树深度减去右子树深度的值（只可能是-1 、0 和 1）</li>
 <li>最小失衡子树：在新插入的结点向上查找，以第一个平衡因子的绝对值超过1的结点为根的子树称为最小不平衡子树。</li>
 </ul>
-<h4 id="2）失衡调整"><a href="#2）失衡调整" class="headerlink" title="2）失衡调整"></a>2）失衡调整</h4><p><img src="https://imine141.github.io/images/%E6%A0%919" alt=""></p>
+<h4 id="2）失衡调整"><a href="#2）失衡调整" class="headerlink" title="2）失衡调整"></a>2）失衡调整</h4><p><img src="https://imine141.github.io/images/%E6%A0%919" alt></p>
 <ul>
 <li>LL失衡：右旋（Zig）。当传入一个二叉排序树 P，将它的左孩子结点定义为 L ，将 L 的右子树变成 P 的左子树，再将 P 改成 L 的右子树，最后将 L 替换 P 成为根结点。</li>
 <li>RR失衡：左旋（Zag）。与右旋对称。</li>

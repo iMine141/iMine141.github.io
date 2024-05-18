@@ -34,7 +34,7 @@
 <h5 id="2-client"><a href="#2-client" class="headerlink" title="2. client"></a>2. client</h5><p>实现一致性、策略性相关的逻辑</p>
 <h5 id="3-bookie"><a href="#3-bookie" class="headerlink" title="3. bookie"></a>3. bookie</h5><p>存储 ledger 对应的 entry ，所有的 bookie 都会存储到 Bookkeeper 上，让客户端发现</p>
 <p>bookie 可以看做是一个 key-value 数据库。其中 key 就是 （lid + eid），value 就是 ledger 中的 entry 。</p>
-<img src="assets/image-20210615110356991.png" alt="image-20210615110356991" style="zoom: 67%;" />
+<img src="/2021/06/15/pulsar/bookkeeper/image-20210615110356991.png" alt="image-20210615110356991" style="zoom: 67%;">
 
 
 
