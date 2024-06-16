@@ -1,0 +1,628 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 7.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">74</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="site-info"><div id="site-title">iMineのBlog</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/19/Spring/Data/Spring%20Cache/">Spring Cache</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-19</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/Data/">Data</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>Spring 自身并没有实现缓存解决方案， 但是它对缓存功能提供了声明式的支持， 能够与多种流行的缓存实现进行集成。</p>
+<p>Spring 的缓存抽象在很大程度上是围绕切面构建的。 在 Spring 中启用缓存时，会创建一个切面， 它触发一个或更多的 Spring 的缓存注解。</p>
+<h3 id="1-启用对缓存的支持"><a href="#1-启用对缓存的支持" class="headerlink" title="1 启用对缓存的支持"></a>1 启用对缓存的支持</h3><p>配置类上添加<code>@EnableCaching</code>启用 Spring 对注解驱动缓存的支持。</p>
+<p>在方法上添加<code>@Cacheable</code>和<code>@CacheEvict</code>注解使用 Spring 的缓存抽象。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CachingConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> CacheManager <span class="title function_">cacheManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ConcurrentMapCacheManager</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-1-配置缓存管理器"><a href="#1-1-配置缓存管理器" class="headerlink" title="1.1 配置缓存管理器"></a>1.1 配置缓存管理器</h4><p>缓存管理器是 Spring 缓存抽象的核心， 它能够与多个流行的缓存实现进行集成。</p>
+<p>Spring 3.1 内置五个缓存管理器实现</p>
+<ul>
+<li>SimpleCacheManager</li>
+<li>NoOpCacheManager</li>
+<li>ConcurrentMapCacheManager</li>
+<li>CompositeCacheManager</li>
+<li>EhCacheCacheManager</li>
+</ul>
+<p>Spring Data 又提供了两个缓存管理器：</p>
+<ul>
+<li>RedisCacheManager（来自于 Spring Data Redis 项目）</li>
+<li>GemfireCacheManager（来自于 Spring Data GemFire 项目）</li>
+</ul>
+<h5 id="1）使用单个"><a href="#1）使用单个" class="headerlink" title="1）使用单个"></a>1）使用单个</h5><p>Redis 可以用来为 Spring 缓存抽象机制存储缓存条目， Spring Data Redis 提供了 RedisCacheManager， 这是 CacheManager 的一个实现。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableCaching</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CachingConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> CacheManager <span class="title function_">cacheManager</span><span class="params">(RedisTemplate redisTemplate)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RedisCacheManager</span>(redisTemplate);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> JedisConnectionFactory <span class="title function_">redisConnectionFactory</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">JedisConnectionFactory</span> <span class="variable">jedisConnectionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JedisConnectionFactory</span>();</span><br><span class="line">        jedisConnectionFactory.afterPropertiesSet();</span><br><span class="line">        <span class="keyword">return</span> jedisConnectionFactory;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RedisTemplate&lt;String, String&gt; <span class="title function_">redisTemplate</span><span class="params">(RedisConnectionFactory redisCF)</span> &#123;</span><br><span class="line">        RedisTemplate&lt;String, String&gt; redisTemplate = <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;String, String&gt;();</span><br><span class="line">        redisTemplate.setConnectionFactory(redisCF);</span><br><span class="line">        redisTemplate.afterPropertiesSet();</span><br><span class="line">        <span class="keyword">return</span> redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2）使用多个"><a href="#2）使用多个" class="headerlink" title="2）使用多个"></a>2）使用多个</h5><p>CompositeCacheManager 要通过一个或更多的缓存管理器来进行配置， 它会迭代这些缓存管理器， 以查找之前所缓存的值。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> CacheManager <span class="title function_">cacheManager</span><span class="params">(</span></span><br><span class="line"><span class="params">        net.sf.ehcache.CacheManager cm,</span></span><br><span class="line"><span class="params">        javax.cache.CacheManager jcm)</span> &#123;</span><br><span class="line">    <span class="type">CompositeCacheManager</span> <span class="variable">cacheManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CompositeCacheManager</span>();</span><br><span class="line">    List&lt;CacheManager&gt; managers = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;CacheManager&gt;();</span><br><span class="line">    managers.add(<span class="keyword">new</span> <span class="title class_">JCacheCacheManager</span>(jcm));</span><br><span class="line">    managers.add(<span class="keyword">new</span> <span class="title class_">EhCacheCacheManager</span>(cm))</span><br><span class="line">    managers.add(<span class="keyword">new</span> <span class="title class_">RedisCacheManager</span>(redisTemplate()));</span><br><span class="line">    cacheManager.setCacheManagers(managers);</span><br><span class="line">    <span class="keyword">return</span> cacheManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-为方法添加注解以支持缓存"><a href="#2-为方法添加注解以支持缓存" class="headerlink" title="2 为方法添加注解以支持缓存"></a>2 为方法添加注解以支持缓存</h3><p>所有注解都能运用在方法或类上。 放在类上时， 缓存行为会应用到这个类的所有方法上。</p>
+<table>
+<thead>
+<tr>
+<th>注 解</th>
+<th>描 述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Cacheable</td>
+<td>（读）调用前，先在缓存中查找方法的返回值。如有则返回，否则调用，返回值会放到缓存之中</td>
+</tr>
+<tr>
+<td>@CachePut</td>
+<td>（写）方法始终被调用，返回值放到缓存中</td>
+</tr>
+<tr>
+<td>@CacheEvict</td>
+<td>（删）在缓存中清除一个或多个条目</td>
+</tr>
+<tr>
+<td>@Caching</td>
+<td>这是一个分组的注解， 能够同时应用多个其他的缓存注解</td>
+</tr>
+</tbody></table>
+<h4 id="2-1-填充缓存"><a href="#2-1-填充缓存" class="headerlink" title="2.1 填充缓存"></a>2.1 填充缓存</h4><p>@Cacheable 和 @CachePut 都有一个名 value 属性，缓存名称</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Cacheable(&quot;spittleCache&quot;)</span></span><br><span class="line"><span class="keyword">public</span> Spittle <span class="title function_">findOne</span><span class="params">(<span class="type">long</span> id)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.queryForObject(</span><br><span class="line">            SELECT_SPITTLE_BY_ID,</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">SpittleRowMapper</span>(),</span><br><span class="line">            id);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (EmptyResultDataAccessException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="1）将值放到缓存之中"><a href="#1）将值放到缓存之中" class="headerlink" title="1）将值放到缓存之中"></a>1）将值放到缓存之中</h5><p>有 @CachePut 注解的方法始终都会被调用， 而且它的返回值也会放到缓存中。</p>
+<p>适合用在保存、修改操作上，即刻缓存。</p>
+<h5 id="2）自定义缓存-key"><a href="#2）自定义缓存-key" class="headerlink" title="2）自定义缓存 key"></a>2）自定义缓存 key</h5><p>@Cacheable 和 @CachePut 都有一个名为 key 属性， 这个属性能够替换默认的 key， 它是通过一个 SpEL 表达式计算得到的。</p>
+<p>在为缓存编写 SpEL 表达式的时候， Spring 暴露了一些很有用的元数据。</p>
+<table>
+<thead>
+<tr>
+<th>表 达 式</th>
+<th>描 述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#root.args</td>
+<td>传递给缓存方法的参数， 形式为数组</td>
+</tr>
+<tr>
+<td>#root.caches</td>
+<td>该方法执行时所对应的缓存， 形式为数组</td>
+</tr>
+<tr>
+<td>#root.target</td>
+<td>目标对象#root.targetClass 目标对象的类， 是#root.target.class的简写形式</td>
+</tr>
+<tr>
+<td>#root.method</td>
+<td>缓存方法</td>
+</tr>
+<tr>
+<td>#root.methodName</td>
+<td>缓存方法的名字， 是#root.method.name的简写形式</td>
+</tr>
+<tr>
+<td>#result</td>
+<td>方法调用的返回值（不能用在@Cacheable注解上）</td>
+</tr>
+<tr>
+<td>#Argument</td>
+<td>任意的方法参数名（如#argName） 或参数索引（如#a0或#p0）</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CachePut(value=&quot;spittleCache&quot;, key=&quot;#result.id&quot;)</span></span><br><span class="line">Spittle <span class="title function_">save</span><span class="params">(Spittle spittle)</span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3）条件化缓存"><a href="#3）条件化缓存" class="headerlink" title="3）条件化缓存"></a>3）条件化缓存</h5><p>@Cacheable 和 @CachePut 提供了两个属性用以实现条件化缓存： unless 和 condition。</p>
+<p>unless 为 true 阻止添加到缓存中，condition 为 false 缓存被禁用。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Cacheable(value=&quot;spittleCache&quot; unless=&quot;#result.message.contains(&#x27;NoCache&#x27;)&quot;)</span></span><br><span class="line">Spittle <span class="title function_">findOne</span><span class="params">(<span class="type">long</span> id)</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-2-移除缓存条目"><a href="#2-2-移除缓存条目" class="headerlink" title="2.2 移除缓存条目"></a>2.2 移除缓存条目</h4><p>带有 @CacheEvict 注解的方法被调用，在缓存中移除。</p>
+<p>适用于删除操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@CacheEvict(&quot;spittleCache&quot;)</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">remove</span><span class="params">(<span class="type">long</span> spittleId)</span>;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/18/Spring/Data/Spring%20Data%20MongoDB/">Spring Data MongoDB</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/Data/">Data</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>文档数据库适合处理没什么关联关系的独立实体</p>
+<p>Spring Data MongoDB 提供了三种方式在 Spring 应用中使用 MongoDB：</p>
+<ul>
+<li>通过注解实现对象-文档映射；</li>
+<li>使用 MongoTemplate 实现基于模板的数据库访问；</li>
+<li>自动化的运行时 Repository 生成功能。</li>
+</ul>
+<h3 id="1-启用-MongoDB"><a href="#1-启用-MongoDB" class="headerlink" title="1 启用 MongoDB"></a>1 启用 MongoDB</h3><p>@EnableMongoRepositories 注解启用 MongoDB</p>
+<h4 id="1-1-方法一"><a href="#1-1-方法一" class="headerlink" title="1.1 方法一"></a>1.1 方法一</h4><p>MongoFactoryBean、MongoTemplate</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableMongoRepositories(basePackages=&quot;orders.db&quot;)</span><span class="comment">//Enable MongoDB repositories</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MongoConfig</span> &#123;</span><br><span class="line">    <span class="comment">//MongoClient bean</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MongoFactoryBean <span class="title function_">mongo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">MongoFactoryBean</span> <span class="variable">mongo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MongoFactoryBean</span>();</span><br><span class="line">        mongo.setHost(<span class="string">&quot;localhost&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> mongo;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//MongoTemplate bean</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MongoOperations <span class="title function_">mongoTemplate</span><span class="params">(Mongo mongo)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MongoTemplate</span>(mongo, <span class="string">&quot;OrdersDB&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-2-方法二"><a href="#1-2-方法二" class="headerlink" title="1.2 方法二"></a>1.2 方法二</h4><p>配置类扩展 AbstractMongoConfiguration 并重载 getDatabaseName() 和 mongo() 方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableMongoRepositories(&quot;orders.db&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MongoConfig</span> <span class="keyword">extends</span> <span class="title class_">AbstractMongoConfiguration</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> String <span class="title function_">getDatabaseName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;OrdersDB&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Mongo <span class="title function_">mongo</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//认证</span></span><br><span class="line">        <span class="type">MongoCredential</span> <span class="variable">credential</span> <span class="operator">=</span></span><br><span class="line">            MongoCredential.createMongoCRCredential(</span><br><span class="line">                env.getProperty(<span class="string">&quot;mongo.username&quot;</span>),</span><br><span class="line">                <span class="string">&quot;OrdersDB&quot;</span>,</span><br><span class="line">                env.getProperty(<span class="string">&quot;mongo.password&quot;</span>).toCharArray());</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MongoClient</span>(</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">ServerAddress</span>(<span class="string">&quot;localhost&quot;</span>, <span class="number">37017</span>),</span><br><span class="line">                Arrays.asList(credential));</span><br><span class="line">        <span class="comment">//无需认证</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MongoClient</span>(<span class="string">&quot;mongodbserver&quot;</span>, <span class="number">27017</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-注解-MongoDB-持久化"><a href="#2-注解-MongoDB-持久化" class="headerlink" title="2 注解 MongoDB 持久化"></a>2 注解 MongoDB 持久化</h3><p>Spring Data MongoDB 提供了一些将 Java 类型映射为 MongoDB 文档的注解。</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>@Document</td>
+<td>标示映射到 MongoDB 文档上的领域对象</td>
+</tr>
+<tr>
+<td>@Id</td>
+<td>标示某个域为ID域</td>
+</tr>
+<tr>
+<td>@DbRef</td>
+<td>标示某个域要引用其他的文档， 这个文档有可能位于另外一个数据库中</td>
+</tr>
+<tr>
+<td>@Field</td>
+<td>为文档域指定自定义的元数据</td>
+</tr>
+<tr>
+<td>@Version</td>
+<td>标示某个属性用作版本域</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Document</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Order</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Field(&quot;client&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String customer;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Collection&lt;Item&gt; items = <span class="keyword">new</span> <span class="title class_">LinkedHashSet</span>&lt;Item&gt;();</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-使用-MongoTemplate-访问-MongoDB"><a href="#3-使用-MongoTemplate-访问-MongoDB" class="headerlink" title="3 使用 MongoTemplate 访问 MongoDB"></a>3 使用 MongoTemplate 访问 MongoDB</h3><p>MongoOperations 是 MongoTemplate 所实现的接口， 不使用具体实现是一个好的做法， 尤其是在注入的时候</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">MongoOperations mongo;</span><br><span class="line"></span><br><span class="line"><span class="type">long</span> <span class="variable">orderCount</span> <span class="operator">=</span> mongo.getCollection(<span class="string">&quot;order&quot;</span>).count();</span><br><span class="line"></span><br><span class="line"><span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Order</span>();</span><br><span class="line">... <span class="comment">// set properties and add line items</span></span><br><span class="line">mongo.save(order, <span class="string">&quot;order&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="type">String</span> <span class="variable">orderId</span> <span class="operator">=</span> ...;</span><br><span class="line"><span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> mongo.findById(orderId, Order.class);</span><br><span class="line"></span><br><span class="line">List&lt;Order&gt; chucksOrders = mongo.find(Query.query(</span><br><span class="line">Criteria.where(<span class="string">&quot;client&quot;</span>).is(<span class="string">&quot;Chuck Wagon&quot;</span>)), Order.class);</span><br><span class="line"></span><br><span class="line">List&lt;Order&gt; chucksWebOrders = mongo.find(Query.query(</span><br><span class="line">Criteria.where(<span class="string">&quot;customer&quot;</span>).is(<span class="string">&quot;Chuck Wagon&quot;</span>)</span><br><span class="line">.and(<span class="string">&quot;type&quot;</span>).is(<span class="string">&quot;WEB&quot;</span>)), Order.class);</span><br><span class="line"></span><br><span class="line">mongo.remove(order);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-编写-MongoDB-Repository"><a href="#4-编写-MongoDB-Repository" class="headerlink" title="4 编写 MongoDB Repository"></a>4 编写 MongoDB Repository</h3><p>扩展 MongoRepository。任何扩展 Repository 的接口将会在运行时自动生成实现。</p>
+<p>MongoRepository 接口有两个参数， 第一个是带有 @Document 注解的对象类型， 也就是该 Repository 要处理的类型。 第二个参数是带有 @Id 注解的属性类型。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OrderRepository</span> <span class="keyword">extends</span> <span class="title class_">MongoRepository</span>&lt;Order, String&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/18/Spring/Data/Spring%20Data%20Redis/">Spring Data Redis</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-18</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/Data/">Data</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>Spring Data Redis 包含了多个模板实现， 用来完成 Redis 数据库的数据存取功能。</p>
+<h3 id="1-连接到Redis"><a href="#1-连接到Redis" class="headerlink" title="1 连接到Redis"></a>1 连接到Redis</h3><p>Spring Data Redis 为四种 Redis 客户端实现提供了连接工厂：</p>
+<ul>
+<li>JedisConnectionFactory</li>
+<li>JredisConnectionFactory</li>
+<li>LettuceConnectionFactory</li>
+<li>SrpConnectionFactory</li>
+</ul>
+<p>配置为 bean</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> RedisConnectionFactory <span class="title function_">redisCF</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">JedisConnectionFactory</span> <span class="variable">cf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JedisConnectionFactory</span>();</span><br><span class="line">    cf.setHostName(<span class="string">&quot;redis-server&quot;</span>);</span><br><span class="line">    cf.setPort(<span class="number">7379</span>);</span><br><span class="line">    cf.setPassword(<span class="string">&quot;foobared&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> cf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-使用-RedisTemplate"><a href="#2-使用-RedisTemplate" class="headerlink" title="2 使用 RedisTemplate"></a>2 使用 RedisTemplate</h3><p>Spring Data Redis 提供了两个模板：</p>
+<ul>
+<li>RedisTemplate</li>
+<li>StringRedisTemplate</li>
+</ul>
+<p>RedisTemplate 简化 Redis 数据访问， 持久化各种类型的 key 和 value。StringRedisTemplate 扩展了 RedisTemplate，只关注 String 类型。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public RedisTemplate&lt;String, Product&gt; redisTemplate(RedisConnectionFactory cf) &#123;</span><br><span class="line">    RedisTemplate&lt;String, Product&gt; redis = new RedisTemplate&lt;String, Product&gt;();</span><br><span class="line">    redis.setConnectionFactory(cf);</span><br><span class="line">    return redis;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-使用-key-和-value-的序列化器"><a href="#3-使用-key-和-value-的序列化器" class="headerlink" title="3 使用 key 和 value 的序列化器"></a>3 使用 key 和 value 的序列化器</h3><p>Spring Data Redis 提供了多个这样的序列化器， 包括：</p>
+<ul>
+<li>GenericToStringSerializer： 使用 Spring 转换服务进行序列化；</li>
+<li>JacksonJsonRedisSerializer： 使用 Jackson 1， 将对象序列化为 JSON；</li>
+<li>Jackson2JsonRedisSerializer： 使用 Jackson 2， 将对象序列化为 JSON；</li>
+<li>JdkSerializationRedisSerializer： 使用 Java 序列化；</li>
+<li>OxmSerializer： 使用 Spring O&#x2F;X 映射的编排器和解排器（marshaler 和 unmarshaler） 实现序列化， 用于 XML 序列化；</li>
+<li>StringRedisSerializer： 序列化 String 类型的 key 和 value。</li>
+</ul>
+<p>RedisTemplate 会使用 JdkSerializationRedisSerializer，StringRedisTemplate 默认会使用 StringRedisSerializer。setKeySerializer() 和 setValueSerializer() 方法可以分别设置序列化器。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> RedisTemplate&lt;Object, Object&gt; <span class="title function_">redisTemplate</span><span class="params">(RedisConnectionFactory redisConnectionFactory)</span> &#123;</span><br><span class="line">    RedisTemplate&lt;Object, Object&gt; redisTemplate = <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;&gt;();</span><br><span class="line">    redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line">    <span class="comment">// 使用 Jackson2JsonRedisSerialize 替换默认序列化</span></span><br><span class="line">    <span class="type">Jackson2JsonRedisSerializer</span> <span class="variable">jackson2JsonRedisSerializer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonRedisSerializer</span>(Object.class);</span><br><span class="line">    <span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">    objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">    objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">    jackson2JsonRedisSerializer.setObjectMapper(objectMapper);</span><br><span class="line">    <span class="comment">// 设置 value 的序列化规则和 key 的序列化规则</span></span><br><span class="line">    redisTemplate.setKeySerializer(<span class="keyword">new</span> <span class="title class_">StringRedisSerializer</span>());</span><br><span class="line">    redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">    redisTemplate.setHashKeySerializer(<span class="keyword">new</span> <span class="title class_">StringRedisSerializer</span>());</span><br><span class="line">    redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);</span><br><span class="line">    redisTemplate.afterPropertiesSet();</span><br><span class="line">    <span class="keyword">return</span> redisTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/17/Spring/Data/JdbcTemplate/">JdbcTemplate</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-17</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/Data/">Data</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>为了避免业务层模块强依赖于某种类型的数据库，Spring 数据库访问层以接口形式对外提供服务。</p>
+<p>使用 Spring JDBC 的异常体系，描述能力强，且平台无关。</p>
+<h3 id="1-数据访问模板化"><a href="#1-数据访问模板化" class="headerlink" title="1 数据访问模板化"></a>1 数据访问模板化</h3><p>数据访问过程中的固定步骤和变量分为两类：</p>
+<ul>
+<li>模板（templates）：处理数据访问的固定部分——事务控制、 管理资源以及处理异 常。</li>
+<li>回调（callbacks）：处理应用程序相关的数据访问——语句、 绑定参数以及整理结果集</li>
+</ul>
+<p><img src="https://imine141.github.io/images/1545011852055.png"></p>
+<p>针对不同的持久化平台， Spring提供了多个可选的模板。</p>
+<table>
+<thead>
+<tr>
+<th>ORM 持久化技术</th>
+<th>模板类（org.springframework.*）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JDBC</td>
+<td>jdbc.core.JdbcTemplate</td>
+</tr>
+<tr>
+<td>JCA CCI</td>
+<td>jca.cci.core.CciTemplate</td>
+</tr>
+<tr>
+<td>Hibernate</td>
+<td>orm.hibernate5.HibernateTemplate</td>
+</tr>
+<tr>
+<td>iBATIS</td>
+<td>orm.ibatis.SqlMapClientTemplate</td>
+</tr>
+<tr>
+<td>JDO</td>
+<td>orm.jdo.JdoTemplate</td>
+</tr>
+<tr>
+<td>JPA</td>
+<td>orm.jpa.JpaTemplate</td>
+</tr>
+</tbody></table>
+<h3 id="2-配置-DataSource"><a href="#2-配置-DataSource" class="headerlink" title="2 配置 DataSource"></a>2 配置 DataSource</h3><p>使用 JdbcTemplate 需设置 DataSource，提供了多种配置方式：</p>
+<ol>
+<li>JDBC 驱动；</li>
+<li>JNDI 查询；</li>
+<li>数据库连接池；</li>
+</ol>
+<p>生产环境建议使用从连接池获取连接的数据源；如果有可能，倾向于通过应用服务器的 JNDI 来获取数据源。</p>
+<h4 id="2-1-JNDI-数据源"><a href="#2-1-JNDI-数据源" class="headerlink" title="2.1 JNDI 数据源"></a>2.1 JNDI 数据源</h4><p>在 Spring 应用部署的服务器中配置数据源，通过 JNDI 获取。数据源配置在应用外部，允许在访问数据库的时再查找数据源，且支持热切换。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> JndiObjectFactoryBean <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">JndiObjectFactoryBean</span> <span class="variable">jndiObjectFB</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JndiObjectFactoryBean</span>();</span><br><span class="line">    jndiObjectFB.setJndiName(<span class="string">&quot;/jdbc/xxxx&quot;</span>);</span><br><span class="line">    jndiObjectFB.setResourceRef(<span class="literal">true</span>);</span><br><span class="line">    jndiObjectFB.setProxyInterface(javax.sql.DataSource.class);</span><br><span class="line">    <span class="keyword">return</span> jndiObjectFB;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-2-数据库连接池"><a href="#2-2-数据库连接池" class="headerlink" title="2.2 数据库连接池"></a>2.2 数据库连接池</h4><p>有多项开源数据源连接池实现：Apache Commons DBCP、c3p0、BoneCP</p>
+<p>以 <a target="_blank" rel="noopener" href="http://commons.apache.org/proper/commons-dbcp/">DBCP</a> 为例，BasicDataSource 配置连接池</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> BasicDataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">BasicDataSource</span> <span class="variable">ds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BasicDataSource</span>();</span><br><span class="line">  ds.setDriverClassName(<span class="string">&quot;org.h2.Driver&quot;</span>);</span><br><span class="line">  ds.setUrl(<span class="string">&quot;jdbc:h2:tcp://localhost/~/xxxx&quot;</span>);</span><br><span class="line">  ds.setUsername(<span class="string">&quot;sa&quot;</span>);</span><br><span class="line">  ds.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">  ds.setInitialSize(<span class="number">5</span>);</span><br><span class="line">  <span class="keyword">return</span> ds;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-3、JDBC-驱动"><a href="#2-3、JDBC-驱动" class="headerlink" title="2.3、JDBC 驱动"></a>2.3、JDBC 驱动</h4><p>通过 JDBC 驱动定义数据源是最简单的配置方式。 org.springframework.jdbc.datasource 包中提供了三个数据源类：</p>
+<ol>
+<li>DriverManagerDataSource：每次请求连接时都返回新的连接，用过的连接会马上关闭并释放资源；</li>
+<li>SimpleDriverDataSource：与 DriverManagerDataSource 类似，但直接使用JDBC驱动，免去了类在特定环境（如 OSGi 容器）中可能遇到的类加载问题。</li>
+<li>SingleConnectionDataSource：每次都返回同一个连接对象，可以理解为只有 1 个连接的数据源连接池。</li>
+</ol>
+<p>跟之前配置 DBCP 的 BasicDataSource 类似，例如配置 DriverManagerDataSource</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">  <span class="type">DriverManagerDataSource</span> <span class="variable">ds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DriverManagerDataSource</span>();</span><br><span class="line">  ds.setDriverClassName(<span class="string">&quot;org.h2.Driver&quot;</span>);</span><br><span class="line">  ds.setUrl(<span class="string">&quot;jdbc:h2:tcp://localhost/~/xxxx&quot;</span>);</span><br><span class="line">  ds.setUsername(<span class="string">&quot;sa&quot;</span>);</span><br><span class="line">  ds.setPassword(<span class="string">&quot;&quot;</span>);</span><br><span class="line">   <span class="keyword">return</span> ds;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>已上三数据源对多线程支持都不好，强烈建议使用数据库连接池。</p>
+<h4 id="2-4-选择数据源"><a href="#2-4-选择数据源" class="headerlink" title="2.4 选择数据源"></a>2.4 选择数据源</h4><p>借助 Spring 的 bean-profiles 特性，在不同的环境中配置不同的数据源。利用 @Profile 注解，在运行时根据激活的 profile 选择指定的数据源。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfiguration</span> &#123;</span><br><span class="line">    <span class="meta">@Profile(&quot;development&quot;)</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">embeddedDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">EmbeddedDatabaseBuilder</span>()</span><br><span class="line">            ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Profile(&quot;qa&quot;)</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> BasicDataSource <span class="title function_">basicDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">BasicDataSource</span> <span class="variable">ds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BasicDataSource</span>();</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> ds;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Profile(&quot;production&quot;)</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">dataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">JndiObjectFactoryBean</span> <span class="variable">jndiObjectFactoryBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JndiObjectFactoryBean</span>();</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">return</span> (DataSource)jndiObjectFactoryBean.getObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-使用-JdbcTemplate"><a href="#3-使用-JdbcTemplate" class="headerlink" title="3 使用 JdbcTemplate"></a>3 使用 JdbcTemplate</h3><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/aec25eea5c71">JDBC </a>直接操作数据库， 处理与数据库访问相关的所有事情， 样板代码繁琐，但很重要。Spring 的 JDBC 框架承担了资源管理和异常处理的样板代码，开发者只需编写读写数据的必需代码。</p>
+<p><strong>JdbcTemplate</strong> 是最主要的 JDBC 模板，支持简单的 JDBC 数据库访问功能以及基于索引参数的查询；还提供了 NameParameterJdbcTemplate 支持命名参数。</p>
+<h4 id="3-1-CRUD"><a href="#3-1-CRUD" class="headerlink" title="3.1 CRUD"></a>3.1 CRUD</h4><p>使用 JdbcTemplate 前需设置 DataSource</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">JdbcTemplate</span> <span class="variable">jdbcTemplate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JdbcTemplate</span>(dataSource);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>增删改<ul>
+<li>update(final String sql)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;insert into user (username, password) values (?, ?)&quot;</span>;</span><br><span class="line">jdbcTemplate.update(sql, username, password);</span><br></pre></td></tr></table></figure>
+
+<p>当调用 update() 方法时，JdbcTemplate 调用 jdbc 获取一个连接、创建一个 statement，并执行插入语句。内部捕获了可能抛出的 SQLException 异常，然后转为更具体的数据库访问异常，并重新抛出。</p>
+<ul>
+<li>查<ul>
+<li>queryForObject(String sql, RowMapper rowMapper, Object… args)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> jdbcOperations.queryForObject(sql,<span class="keyword">new</span> <span class="title class_">UserMapper</span> (),param);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserMapper</span> <span class="keyword">implements</span> <span class="title class_">RowMapper</span>&lt;User&gt;&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">mapRow</span><span class="params">(ResultSet resultSet, <span class="type">int</span> rows)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUsername(resultSet.getString(<span class="number">1</span>));</span><br><span class="line">        user.setPassword(resultSet.getString(<span class="number">2</span>));</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要实现一个 RowMapper 对象，JdbcTemplate 会调用 mapRow() 方法，从结果集中取出对应属性的值，并构造对象。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/17/Spring/Data/Spring%20Data%20JPA/">Spring Data JPA</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-17</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/Data/">Data</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>Java 持久化 API（Java Persistence API， JPA）基于 POJO 的持久化机制，制定了规范，具体由厂商实现。</p>
+<p>只需按照约定好的【方法命名规则】编写 Repository 接口，不需要实现类，就可实现对数据库的访问和操作。</p>
+<p>hibernate 实现了 JPA 规范，Spring Data JPA 进一步封装了 Hibernate。</p>
+<h3 id="1-配置"><a href="#1-配置" class="headerlink" title="1 配置"></a>1 配置</h3><p>maven</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">spring.jpa.properties.hibernate.hbm2ddl.auto = update</span><br><span class="line">spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL5InnoDBDialect</span><br><span class="line">spring.jpa.show-sql = true</span><br></pre></td></tr></table></figure>
+
+<p>spring.jpa.properties.hibernate.hbm2ddl.auto 有几种配置：</p>
+<ul>
+<li>create：每次加载生成新表。</li>
+<li>create-drop：每次加载生成新表，但当 SessionFactory 关闭时，所生成的表将自动删除。</li>
+<li>update：第一次加载时创建数据表，以后加载根据实体更新，只增不删。</li>
+<li>validate：每次加载验证数据表结构，只会和已经存在的数据表进行比较，根据model修改表结构，但不会创建新表。</li>
+</ul>
+<p>不配置此项，表示禁用自动建表功能</p>
+<h3 id="2-简单使用"><a href="#2-简单使用" class="headerlink" title="2 简单使用"></a>2 简单使用</h3><h4 id="2-1-建立-entity"><a href="#2-1-建立-entity" class="headerlink" title="2.1 建立 entity"></a>2.1 建立 entity</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> id;</span><br><span class="line">    <span class="meta">@Column(nullable = false, unique = true)</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line">    <span class="meta">@Column(nullable = false)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-2-扩展-Repository-接口"><a href="#2-2-扩展-Repository-接口" class="headerlink" title="2.2 扩展 Repository 接口"></a>2.2 扩展 Repository 接口</h4><p>扩展 Repository 接口或其子接口 JpaRepository、 PagingAndSortingRepository 和 CrudRepository</p>
+<p>应用启动后自动生成接口的实现，提供默认通用方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserRepository</span> <span class="keyword">extends</span> <span class="title class_">JpaRepository</span>&lt;User, Long&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-3-启用-Spring-Data-JPA"><a href="#2-3-启用-Spring-Data-JPA" class="headerlink" title="2.3 启用 Spring Data JPA"></a>2.3 启用 Spring Data JPA</h4><p>@EnableJpaRepositories 注解，扫描查找扩展自 Spring Data JPA Repository 接口的所有接口。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableJpaRepositories</span>&#123;basePackages=<span class="string">&quot;com.xxx.xxx&quot;</span>&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JpaConfiguration</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-定义查询方法"><a href="#3-定义查询方法" class="headerlink" title="3 定义查询方法"></a>3 定义查询方法</h3><p>只需使用属性名和关键字构建 Repository 方法签名， 就能让 Spring Data JPA 生成方法实现</p>
+<p>当创建 Repository 实现的时候， Spring Data 会检查 Repository 接口的所有方法， 解析方法的名称， 并基于被持久化的对象来试图推测方法的目的。</p>
+<h4 id="3-1-方法组成"><a href="#3-1-方法组成" class="headerlink" title="3.1 方法组成"></a>3.1 方法组成</h4><p>Repository 方法是由一个动词、 一个可选的主题、 关键词 By 以及一个断言所组成。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">User <span class="title function_">findByUsername</span><span class="params">(String userName)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>findByUsername() 这个样例中， 动词是 find， 断言是 Username， 主题并没有指 定， 暗含的主题是 User。</p>
+<h4 id="3-2-比较操作"><a href="#3-2-比较操作" class="headerlink" title="3.2 比较操作"></a>3.2 比较操作</h4><p>断言中的多个限制条件可以进行比较操作</p>
+<ul>
+<li>IsAfter、 After、 IsGreaterThan、 GreaterThan</li>
+<li>IsGreaterThanEqual、 GreaterThanEqual</li>
+<li>…</li>
+</ul>
+<h3 id="4-声明自定义查询"><a href="#4-声明自定义查询" class="headerlink" title="4 声明自定义查询"></a>4 声明自定义查询</h3><p>如果 Spring Data 的这个小型的 DSL 无法满足需求，还可以通过 @Query 注解来解决问题。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Query(<span class="string">&quot;select * from User where username like &#x27;%abc&#x27;&quot;</span>)</span><br><span class="line">List&lt;User&gt; <span class="title function_">findByAllAbcUser</span><span class="params">()</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5-混合自定义的功能"><a href="#5-混合自定义的功能" class="headerlink" title="5 混合自定义的功能"></a>5 混合自定义的功能</h3><p>当 Spring Data JPA 为 Repository 接口生成实现的时候， 它还会查找名字与接口相同， 并且添加了 Impl 后缀的一个类。 如果这个类存在的话， Spring Data JPA 将会把它的方法与 Spring DataJPA 所生成的方法合并在一起。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/16/Spring/AOP/%E5%88%87%E9%9D%A2/">切面</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/AOP/">AOP</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><h3 id="1-创建切面"><a href="#1-创建切面" class="headerlink" title="1 创建切面"></a>1 创建切面</h3><p>使用 @Aspect 注解创建切面</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect &#123;</span><br><span class="line">    @Pointcut(&quot;execution(* cn.xxx..*ServiceImpl.*(..))&quot;)</span><br><span class="line">    public void printLog() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    @Before(&quot;printLog()&quot;)</span><br><span class="line">    public void before(JoinPoint jp) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    @After(&quot;printLog()&quot;)</span><br><span class="line">    public void after(JoinPoint jp) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    @AfterReturning(pointcut = &quot;execution(* cn.xxx..*ServiceImpl.*(..))&quot;, returning = &quot;returnVal&quot;)</span><br><span class="line">    public void afterReturn(JoinPoint jp, String returnVal) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    @AfterThrowing(value = &quot;printLog()&quot;, throwing = &quot;e&quot;)</span><br><span class="line">    public void afterThrow(JoinPoint jp, Throwable e) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-通知注解"><a href="#2-通知注解" class="headerlink" title="2 通知注解"></a>2 通知注解</h3><ul>
+<li>@After(最终通知)：通知方法会在目标方法返回或抛出异常后调用</li>
+<li>@AfterReturning(后置通知)：通知方法会在目标方法返回后调用</li>
+<li>@AfterThrowing(异常通知)：通知方法会在目标方法抛出异常后调用</li>
+<li>@Around(环绕通知)：通知方法会将目标方法封装起来</li>
+<li>@Before(前置通知)：通知方法会在目标方法调用之前执行</li>
+</ul>
+<h3 id="3-JoinPoint"><a href="#3-JoinPoint" class="headerlink" title="3 JoinPoint"></a>3 JoinPoint</h3><p>常用的方法</p>
+<ul>
+<li>Object[] getArgs：返回目标方法的参数</li>
+<li>Signature getSignature：返回目标方法的签名</li>
+<li>Object getTarget：返回被织入增强处理的目标对象</li>
+<li>Object getThis：返回AOP框架为目标对象生成的代理对象</li>
+</ul>
+<p>当使用 @Around 处理时，需要将第一个参数定义为 ProceedingJoinPoint 类型，该类是 JoinPoint 的子类。</p>
+<h3 id="4-切面执行顺序"><a href="#4-切面执行顺序" class="headerlink" title="4 切面执行顺序"></a>4 切面执行顺序</h3><h4 id="4-1-被一个-Aspect-类拦截"><a href="#4-1-被一个-Aspect-类拦截" class="headerlink" title="4.1 被一个 Aspect 类拦截"></a>4.1 被一个 Aspect 类拦截</h4><p>正常： <img src="https://imine141.github.io/images/1545011851419.jpg" alt="img"></p>
+<p>异常： <img src="https://imine141.github.io/images/1545011851515.jpg" alt="img"></p>
+<h4 id="4-2-被多个-Aspect-类拦截"><a href="#4-2-被多个-Aspect-类拦截" class="headerlink" title="4.2 被多个 Aspect 类拦截"></a>4.2 被多个 Aspect 类拦截</h4><h5 id="1）执行顺序"><a href="#1）执行顺序" class="headerlink" title="1）执行顺序"></a>1）执行顺序</h5><p>优先级高的切面先执行，同一切面增强类型优先的先执行，增强类型相同的随机执行</p>
+<h5 id="2）指定优先级"><a href="#2）指定优先级" class="headerlink" title="2）指定优先级"></a>2）指定优先级</h5><ol>
+<li>让切面类实现 org.springframework.core.Ordered 接口：实现该接口的 int getOrder() 方法，该方法返回值越小，优先级越高</li>
+<li>直接使用 @Order 注解来修饰一个切面类：使用这个注解时可以配置一个 int 类型的 value 属性，该属性值越小，优先级越高</li>
+</ol>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/15/Spring/AOP/AOP%20%E7%AE%80%E4%BB%8B/">AOP简介</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/AOP/">AOP</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><p>AOP 即 Aspect Oriented Programming，面向切面编程。</p>
+<p>AOP 允许程序员模块化横向业务逻辑，或定义核心部分的功能，例如日志管理和事务管理。</p>
+<h3 id="1-AOP-术语"><a href="#1-AOP-术语" class="headerlink" title="1 AOP 术语"></a>1 AOP 术语</h3><p><img src="https://imine141.github.io/images/aopjianjie1.png" alt="img"></p>
+<ul>
+<li>通知（Advice）<ul>
+<li><code>通知</code>表示在方法执行前后需要执行的动作，是<code>切面</code>真正要做的工作。通知负责定义<code>切面</code>的 <code>what</code> 和 <code>when</code>。</li>
+</ul>
+</li>
+<li>连接点（JointPoint）<ul>
+<li><code>连接点</code>表示在应用中可以插入<code>切面</code>，执行<code>通知</code>的地点。</li>
+</ul>
+</li>
+<li>切点（Pointcut）<ul>
+<li><code>切点</code>定义了 <code>where</code>。<code>切点</code>指定一个或者多个<code>连接点</code>，而<code>通知</code>通过切点接入。</li>
+</ul>
+</li>
+<li>切面（Aspect）<ul>
+<li><code>切面</code> &#x3D; <code>通知</code> + <code>切点</code>。定义 <code>what</code>、<code>when</code> 和 <code>where</code>。是 AOP 的核心，将多个类的通用行为封装为可重用的模块。</li>
+</ul>
+</li>
+<li>引入（Introduction）<ul>
+<li><code>引入</code>允许向现有类添加新方法或属性。类似于设计模式中的装饰者模式——在不改变现有类的基础上为之增加属性和方法。</li>
+</ul>
+</li>
+<li>织入（Weaving）<ul>
+<li><code>织入</code>是把<code>切面</code>应用到目标对象并创建新的代理对象的过程。</li>
+<li><code>切面</code>在指定的<code>连接点</code>被织入到目标对象中。</li>
+<li>在目标对象的生命周期里有多个点可以进行织入：编译期（AspectJ）、类加载期（LTW）、运行期（Spring AOP）</li>
+</ul>
+</li>
+<li>目标对象<ul>
+<li>被一个或者多个<code>切面</code>所<code>通知</code>的对象。它通常是一个代理对象。也被称做被通知（advised）对象。</li>
+</ul>
+</li>
+<li>代理<ul>
+<li><code>代理</code>是将<code>通知</code>应用到目标对象后创建的对象。从客户端的角度看，代理对象和目标对象是一样的。</li>
+</ul>
+</li>
+<li>自动代理<ul>
+<li>BeanNameAutoProxyCreator：bean名称自动代理创建器</li>
+<li>DefaultAdvisorAutoProxyCreator：默认通知者自动代理创建器</li>
+<li>Metadata autoproxying：元数据自动代理</li>
+</ul>
+</li>
+<li>Concern（核心逻辑）<ul>
+<li>表示在应用程序中一个模块的行为。Concern 可以定义为我们想要实现的功能。</li>
+</ul>
+</li>
+<li>Cross-cutting concern（横向的通用逻辑）<ul>
+<li>指的是整个应用程序都会用到的功能，它影响整个应用程序。例如，日志管理（Logging）、安全管理（Security）以及数据交互</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-Spring-的-AOP-支持"><a href="#2-Spring-的-AOP-支持" class="headerlink" title="2 Spring 的 AOP 支持"></a>2 Spring 的 AOP 支持</h3><p>Spring 对 AOP 有以下四种支持：</p>
+<ul>
+<li>基于代理的 Spring AOP</li>
+<li>Pure-POJO aspects</li>
+<li>基于 @AspectJ 注解的 aspects</li>
+<li>注入 AspectJ aspects（所有版本的 Spring 都支持）</li>
+</ul>
+<p>前三种属于 Spring AOP 框架，基于动态代理机制构建，<strong>仅支持函数级别的拦截</strong>。如果需要实现更复杂的 AOP 功能，则应使用 <em><strong>AspectJ 框架</strong></em>。</p>
+<p>在 Spring AOP 框架中，通过在 beans 的外围包含一个代理类来将切面织入到这些 beans。调用者跟代理类直接联系，代理类拦截函数调用，然后执行切面逻辑之后再调用真正的目标对象的方法。</p>
+<p><img src="https://imine141.github.io/images/1545011850875.png" alt="img"></p>
+<p>虽然 Spring AOP 能够满足许多应用的切面需求， 但是与 AspectJ 相比， Spring AOP 是一个功能比较弱的 AOP 解决方案。 AspectJ 提供了 Spring AOP 所不能支持的许多类型的切点。</p>
+<p>AOP 的源码中用到了两种动态代理来实现拦截切入功能：</p>
+<ul>
+<li>jdk 动态代理<ul>
+<li>jdk 动态代理是由 java 内部的反射机制来实现的，反射机制在生成类的过程中比较高效</li>
+<li>如果加入容器的目标对象有实现接口,用 JDK 代理；</li>
+</ul>
+</li>
+<li>Cglib 动态代理<ul>
+<li>cglib 动态代理底层则是借助 asm 来实现的，asm 在生成类之后的相关执行过程中比较高效</li>
+<li>如果目标对象没有实现接口，用 Cglib 代理</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-AspectJ"><a href="#3-AspectJ" class="headerlink" title="3 AspectJ"></a>3 AspectJ</h3><p><strong>AspectJ 注解生效</strong></p>
+<p>通过类级别的 @EnableAspectJAutoProxy 注解开启自动代理机制</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableAspectJAutoProxy</span> <span class="comment">//开启AspectJ的自动代理机制</span></span><br><span class="line"><span class="meta">@ComponentScan</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConcertConfig</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/15/Spring/AOP/%E5%88%87%E7%82%B9/">切点</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/AOP/">AOP</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><h3 id="1-编写切点"><a href="#1-编写切点" class="headerlink" title="1 编写切点"></a>1 编写切点</h3><p>@Pointcut 定义可重复使用的切点</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Pointcut(&quot;execution(public * com.xxx.mapper.*.*(..))&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pointCut</span><span class="params">()</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-1-表示式"><a href="#1-1-表示式" class="headerlink" title="1.1 表示式"></a>1.1 表示式</h4><p>由下列方式来定义或者通过 &amp;&amp;、 ||、 !、 的方式进行组合：</p>
+<h5 id="1）方法"><a href="#1）方法" class="headerlink" title="1）方法"></a>1）方法</h5><ul>
+<li>execution：匹配方法</li>
+<li>within：限制匹配范围</li>
+<li>this：匹配 AOP 代理类的执行方法</li>
+<li>target：匹配目标类的执行方法</li>
+<li>args：将匹配方法的参数传入通知，名称必须相同</li>
+</ul>
+<h5 id="2）注解"><a href="#2）注解" class="headerlink" title="2）注解"></a>2）注解</h5><ul>
+<li>@within：匹配类注解</li>
+<li>@target：匹配类注解</li>
+<li>@args：匹配参数注解</li>
+<li>@annotation：匹配方法注解</li>
+</ul>
+<h5 id="3）bean"><a href="#3）bean" class="headerlink" title="3）bean"></a>3）bean</h5><ul>
+<li>bean()：匹配制定 bean</li>
+</ul>
+<h4 id="1-2-格式"><a href="#1-2-格式" class="headerlink" title="1.2 格式"></a>1.2 格式</h4><p>“?”代表可选项</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">execution(修饰符? 返回值 类路径? 方法名(参数)异常类型?) </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>返回值<br><code>*</code>匹配任意</li>
+<li>方法名<br><code>*</code>匹配任意</li>
+<li>参数<br>指定参数类型，<code>,</code>隔开<br><code>*</code>任意类型<br><code>..</code>任意个数</li>
+</ul>
+<h4 id="1-3-例子"><a href="#1-3-例子" class="headerlink" title="1.3 例子"></a>1.3 例子</h4><ul>
+<li>任意公共方法：<code>execution(public * *(..))</code></li>
+<li>任何“set”开头方法：<code>execution(* set*(..))</code></li>
+<li>某类任意方法：<code>execution(* com.xyz.service.AccountService.*(..))</code></li>
+<li>某包里任意方法： <code>execution(* com.xyz.service.*.*(..))</code></li>
+<li>某包及子包任意方法：<code>execution(* com.xyz.service..*.*(..))</code></li>
+<li>某包任意类： <code>within(com.test.spring.aop.pointcutexp.*)</code></li>
+<li>实现了 Intf 接口的所有类：<code>this(com.abc.Intf)</code></li>
+<li>带有 @xxx 注解的所有类的任意方法：<ul>
+<li><code>@within(org.abc.xxx)</code></li>
+<li><code>@target(org.abc.xxx))</code></li>
+</ul>
+</li>
+<li>带有 @xxx 注解的任意方法：<code>@annotation(org.abc.xxx))</code></li>
+<li>参数带有有 @xxx 注解的方法：<code>@args(org.abc.xxx)</code></li>
+<li>参数类型： <code>args(String)</code></li>
+</ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/14/Spring/IoC/%E5%8A%A8%E6%80%81%E6%B3%A8%E5%86%8C%20Bean/">动态注册 Bean</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/IoC/">IoC</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><h3 id="1-注册接口"><a href="#1-注册接口" class="headerlink" title="1 注册接口"></a>1 注册接口</h3><p>有两种接口可动态注册 bean</p>
+<ol>
+<li>BeanDefinitionRegistry<br>注册 Bean 定义，使用<code>BeanDefinitionRegistry</code> 接口 <code>registerBeanDefinition()</code> 方法，根据<code>BeanDefinition</code>实例化 bean 实例</li>
+<li>SingletonBeanRegistry<br>注册 bean 实例，使用<code>SingletonBeanRegistry</code> 接口<code>registerSingleton()</code> 方法，注册单例 bean。</li>
+</ol>
+<p><strong>DefaultListableBeanFactory</strong> 接口同时实现了这两个接口</p>
+<h3 id="2-普通注册"><a href="#2-普通注册" class="headerlink" title="2 普通注册"></a>2 普通注册</h3><p>如果是在普通 Bean 中注册，那么该 bean 则无法被<strong>BeanPostProcessor</strong>处理，没有 AOP 的支持。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PersonManagerRegisterController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    GenericApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    ConfigurableBeanFactory beanFactory;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerPersonManager</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">PersonDao</span> <span class="variable">personDao</span> <span class="operator">=</span> applicationContext.getBean(PersonDao.class);</span><br><span class="line">        <span class="type">PersonManager</span> <span class="variable">personManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PersonManager</span>();</span><br><span class="line">        personManager.setPersonDao(personDao);</span><br><span class="line">        beanFactory.registerSingleton(<span class="string">&quot;personManager&quot;</span>, personManager);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-BeanFactoryPostProcessor-注册"><a href="#3-BeanFactoryPostProcessor-注册" class="headerlink" title="3 BeanFactoryPostProcessor 注册"></a>3 BeanFactoryPostProcessor 注册</h3><p>在 Spring 容器的启动过程中，BeanFactory 载入 bean 的定义后会立刻执行 BeanFactoryPostProcessor，此时动态注册 bean，则可以保证动态注册的 bean 被 BeanPostProcessor 处理，并且可以保证其的实例化和初始化总是先于依赖它的 bean。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyBeanFactoryPostProcessor</span> <span class="keyword">implements</span> <span class="title class_">BeanFactoryPostProcessor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">        <span class="type">DefaultListableBeanFactory</span> <span class="variable">defaultListableBeanFactory</span></span><br><span class="line">                <span class="operator">=</span> (DefaultListableBeanFactory) beanFactory;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//注册 Bean 定义</span></span><br><span class="line">        <span class="type">BeanDefinitionBuilder</span> <span class="variable">beanDefinitionBuilder</span> <span class="operator">=</span></span><br><span class="line">                BeanDefinitionBuilder.genericBeanDefinition(PersonManager.class);</span><br><span class="line">        beanDefinitionBuilder.addPropertyReference(<span class="string">&quot;personDao&quot;</span>, <span class="string">&quot;personDao&quot;</span>);</span><br><span class="line">        <span class="type">BeanDefinition</span> <span class="variable">personManagerBeanDefinition</span> <span class="operator">=</span> beanDefinitionBuilder.getRawBeanDefinition();</span><br><span class="line">        defaultListableBeanFactory.registerBeanDefinition(<span class="string">&quot;personManager1&quot;</span>, personManagerBeanDefinition);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//注册 bean 实例</span></span><br><span class="line">        <span class="type">PersonDao</span> <span class="variable">personDao</span> <span class="operator">=</span> beanFactory.getBean(PersonDao.class);</span><br><span class="line">        <span class="type">PersonManager</span> <span class="variable">personManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PersonManager</span>();</span><br><span class="line">        personManager.setPersonDao(personDao);</span><br><span class="line">        beanFactory.registerSingleton(<span class="string">&quot;personManager2&quot;</span>, personManager);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-Spring-官方实现"><a href="#4-Spring-官方实现" class="headerlink" title="4 Spring 官方实现"></a>4 Spring 官方实现</h3><h4 id="4-1-ImportBeanDefinitionRegistrar"><a href="#4-1-ImportBeanDefinitionRegistrar" class="headerlink" title="4.1 ImportBeanDefinitionRegistrar"></a>4.1 ImportBeanDefinitionRegistrar</h4><p>Spring 官方在动态注册 bean 时，大多使用 ImportBeanDefinitionRegistrar 接口。</p>
+<p>所有实现了该接口的类的都会被 ConfigurationClassPostProcessor 处理，ConfigurationClassPostProcessor 实现了 BeanFactoryPostProcessor 接口，所以 ImportBeanDefinitionRegistrar 中动态注册的 bean 是优先与依赖其的 bean 初始化的，也能被 aop、validator 等机制处理。</p>
+<h4 id="4-2-BeanDefinitionRegistryPostProcessor"><a href="#4-2-BeanDefinitionRegistryPostProcessor" class="headerlink" title="4.2 BeanDefinitionRegistryPostProcessor"></a>4.2 BeanDefinitionRegistryPostProcessor</h4><p>Spring 官方另一个大量使用的动态注册接口是 BeanDefinitionRegistryPostProcessor，这个接口扩展自 BeanFactoryPostProcessor，专门用于动态注册 Bean。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PersonBeanDefinitionRegistryPostProcessor</span></span><br><span class="line">		<span class="keyword">implements</span> <span class="title class_">BeanDefinitionRegistryPostProcessor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册 Bean 定义</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanDefinitionRegistry</span><span class="params">(BeanDefinitionRegistry registry)</span></span><br><span class="line">			<span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">		<span class="comment">// 构造 bean 定义</span></span><br><span class="line">		<span class="type">BeanDefinitionBuilder</span> <span class="variable">beanDefinitionBuilder</span> <span class="operator">=</span> BeanDefinitionBuilder</span><br><span class="line">				.genericBeanDefinition(PersonManager.class);</span><br><span class="line">		<span class="comment">//设置依赖</span></span><br><span class="line">		beanDefinitionBuilder.addPropertyReference(<span class="string">&quot;personDao&quot;</span>, <span class="string">&quot;personDao&quot;</span>);</span><br><span class="line">		<span class="type">BeanDefinition</span> <span class="variable">personManagerBeanDefinition</span> <span class="operator">=</span> beanDefinitionBuilder</span><br><span class="line">				.getRawBeanDefinition();</span><br><span class="line">		<span class="comment">//注册bean定义</span></span><br><span class="line">		registry.registerBeanDefinition(<span class="string">&quot;personManager1&quot;</span>, personManagerBeanDefinition);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 注册 Bean 实例</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory beanFactory)</span></span><br><span class="line">			<span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">			</span><br><span class="line">		<span class="type">BeanDefinitionBuilder</span> <span class="variable">beanDefinitionBuilder</span> <span class="operator">=</span> BeanDefinitionBuilder</span><br><span class="line">				.genericBeanDefinition(PersonManager.class, () -&gt; &#123;</span><br><span class="line">					<span class="type">PersonDao</span> <span class="variable">personDao</span> <span class="operator">=</span> beanFactory.getBean(PersonDao.class);</span><br><span class="line">					<span class="type">PersonManager</span> <span class="variable">personManager</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PersonManager</span>();</span><br><span class="line">					personManager.setPersonDao(personDao);</span><br><span class="line">					<span class="keyword">return</span> personManager;</span><br><span class="line">				&#125;);</span><br><span class="line">		<span class="type">BeanDefinition</span> <span class="variable">personManagerBeanDefinition</span> <span class="operator">=</span> beanDefinitionBuilder</span><br><span class="line">				.getRawBeanDefinition();</span><br><span class="line">		((DefaultListableBeanFactory) beanFactory)</span><br><span class="line">				.registerBeanDefinition(<span class="string">&quot;personManager2&quot;</span>, personManagerBeanDefinition);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/13/Spring/IoC/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">依赖注入</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/spring/IoC/">IoC</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/spring/">spring</a></span><div class="content"><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p><strong>IoC</strong>（Inversion of Control，控制反转 ）：控制权由应用代码中转到了外部容器，控制权的转移，所谓控制反转。</p>
+<p><strong>依赖注入</strong>：依赖注入是控制反转(IOC)的一个层面，用创建对象而只需要描述如何创建它们。</p>
+<p>IoC 负责装配 Bean，即创建应用对象之间协作关系，是<strong>依赖注入</strong>（DI，Dependency injection）的本质。</p>
+<p>装配方式优先级：自动装配 &gt; Java 配置文件 &gt; XML 配置文件</p>
+<h3 id="1-自动装配"><a href="#1-自动装配" class="headerlink" title="1 自动装配"></a>1 自动装配</h3><p>Spring 容器可以自动配置相互协作 beans 之间的关联关系。这意味着 Spring 可以自动配置一个 bean 和其他协作 bean 之间的关系。</p>
+<p>Spring 从两个角度来实现自动装配</p>
+<h4 id="1-1-组件扫描"><a href="#1-1-组件扫描" class="headerlink" title="1.1 组件扫描"></a>1.1 组件扫描</h4><p>Spring 自动发现 ApplicationContext 中所创建的 bean</p>
+<h5 id="1）-Component"><a href="#1）-Component" class="headerlink" title="1）@Component"></a>1）@Component</h5><p>让 Spring 为类自动创建 bean，默认 ID 是类名称的首字母小写。也可给注解传入指定的参数指定名字。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Component</span>  </span><br><span class="line"><span class="meta">@Component(&quot;lonelyHeartsClub&quot;)</span></span><br></pre></td></tr></table></figure>
+
+<p>还有 @Repository、@Service、@Controller 等</p>
+<h5 id="2）-ComponentScan"><a href="#2）-ComponentScan" class="headerlink" title="2）@ComponentScan"></a>2）@ComponentScan</h5><p>开启 Component 扫描，默认设置该目录以及子目录下所有被 @Component 注解修饰的类。也可指定扫描的包。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ComponentScan(&quot;soundsystem&quot;)</span><span class="comment">//扫描指定包  </span></span><br><span class="line"><span class="meta">@ComponentScan(basePackages = &quot;soundsystem&quot;)</span></span><br><span class="line"><span class="meta">@ComponentScan(basePackages = &#123;&quot;soundsystem&quot;, &quot;video&quot;&#125;)</span></span><br><span class="line"><span class="meta">@ComponentScan(basePackageClasses = &#123;CDPlayer.class, DVDPlayer.class&#125;)</span><span class="comment">//扫描指定类所属的包</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="1-2-自动装配"><a href="#1-2-自动装配" class="headerlink" title="1.2 自动装配"></a>1.2 自动装配</h4><p>Spring 自动满足 bean 之间的依赖</p>
+<p><strong>@Autowired</strong>：声明自动装配，可用在构造器、方法、成员变量上。</p>
+<p>只要对应类型的 bean 有且只有一个，则会自动装配。推荐通过构造器注入以避免 NullPointerException 问题。</p>
+<h5 id="1）注入到-Java-集合类"><a href="#1）注入到-Java-集合类" class="headerlink" title="1）注入到 Java 集合类"></a>1）注入到 Java 集合类</h5><p>@Autowired 可直接将接口的实现 Bean 注入到如下几种类型的集合中</p>
+<ul>
+<li>list：用来注入一系列的值，允许有相同的值。</li>
+<li>set：用来注入一些列的值，不允许有相同的值。</li>
+<li>map：用来注入一组”键-值”对，key 必须为 String。</li>
+<li>props：也可以用来注入一组”键-值”对，这里的键、值都字符串类型。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> List&lt;BeanInterface&gt; list;</span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> Map&lt;String,Interface&gt; map;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">table-info.list[0]=list_value1</span><br><span class="line">table-info.list[1]=list_value2</span><br><span class="line">table-info.map.map_key1=map_value1</span><br><span class="line">table-info.map.map_key2=map_value2</span><br><span class="line">table-info.maplist.map_key1[0]=maplist_value1</span><br><span class="line">table-info.maplist.map_key1[1]=maplist_value2</span><br><span class="line">table-info.maplist.map_key2[0]=maplist_value3</span><br></pre></td></tr></table></figure>
+
+<p>TableConfig</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;table-info&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TableConfig</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; list;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, String&gt; map;</span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, List&lt;String&gt;&gt; maplist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2）允许-null-值"><a href="#2）允许-null-值" class="headerlink" title="2）允许 null 值"></a>2）允许 null 值</h5><p>默认要求依赖对象必须存在，如允许 null 值，可设置 @Autowired(required&#x3D;false)</p>
+<p>还有 @Resource 等</p>
+<h5 id="3）推荐对构造函数进行注释"><a href="#3）推荐对构造函数进行注释" class="headerlink" title="3）推荐对构造函数进行注释"></a>3）推荐对构造函数进行注释</h5><p>由</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> EnterpriseDbService service;</span><br></pre></td></tr></table></figure>
+
+<p>改为</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> EnterpriseDbService service;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">EnterpriseDbController</span><span class="params">(EnterpriseDbService service)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.service = service;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以明确成员变量的加载顺序</p>
+<h3 id="2-Java-配置文件"><a href="#2-Java-配置文件" class="headerlink" title="2 Java 配置文件"></a>2 Java 配置文件</h3><p>想要装配第三方库中的组件时，因为没办法在它的类上添加 @Component 和 @Autowired 注解，不能自动化配置，必须要采用显式装配。</p>
+<h4 id="2-1-创建配置类"><a href="#2-1-创建配置类" class="headerlink" title="2.1 创建配置类"></a>2.1 创建配置类</h4><p>@Configuration：表明是配置类</p>
+<h4 id="2-2-声明-bean"><a href="#2-2-声明-bean" class="headerlink" title="2.2 声明 bean"></a>2.2 声明 bean</h4><p><strong>@Bean</strong>：声明 bean，需编写方法创建所需类型实例， 注解 @Bean。默认 ID 是方法名，也可通过 name 属性指定名字。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean(name = &quot;lonelyHeartsClub&quot;)</span></span><br><span class="line"><span class="keyword">public</span> CompactDisc <span class="title function_">sgtPeppers</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">SgtPeppers</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2-3-装配-bean"><a href="#2-3-装配-bean" class="headerlink" title="2.3 装配 bean"></a>2.3 装配 bean</h4><p>在 JavaConfig 中装配 bean 的最简单方式就是引用创建 bean 的方法。</p>
+<p>默认情况下，Spring 中所有的 bean 都是<strong>单例模式</strong>，Spring 会拦截 @Bean 注解的函数调用，并返回之前创建好的 bean。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> CDPlayer <span class="title function_">cdPlayer</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CDPlayer</span>(sgtPeppers());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-XML-配置文件"><a href="#3-XML-配置文件" class="headerlink" title="3 XML 配置文件"></a>3 XML 配置文件</h3><p>维护已有的 XML 配置， 在完成新的 Spring 工作时， 使用自动化配置和 JavaConfig。</p>
+<p>创建一个 XML 文件， 并且以 元素为根。使用 元素声明 bean 并指定 class 属性。 元素注入构造器</p>
+<p>可以同时使用两种方式的依赖注入，最好的选择是使用构造器参数实现强制依赖注入，使用 setter 方法实现可选的依赖关系。</p>
+<h4 id="3-1-set-注入"><a href="#3-1-set-注入" class="headerlink" title="3.1 set 注入"></a>3.1 set 注入</h4><p>首先容器会触发一个无参构造函数或无参静态工厂方法实例化对象，之后容器调用 bean 中的setter 方法完成 Setter 方法依赖注入。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> OrderServiceImp orderService;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setOrderService</span><span class="params">(OrderServiceImp orderService)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.orderService = orderService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Spring 配置 XML 文件：其中配置声明 OrderAction 类存在属性 orderService。程式运行时候，会将已经实例化的 orderService 对象调用 setOrderService 方式注入。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">&quot;orderAction&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.pec.action.OrderAction&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;orderService&quot;</span> <span class="attr">ref</span>=<span class="string">&quot;orderService&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">&quot;orderService&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.pec.service.imp.OrderServiceImp&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3-2-构造器注入"><a href="#3-2-构造器注入" class="headerlink" title="3.2 构造器注入"></a>3.2 构造器注入</h4><p>构造器依赖注入在容器触发构造器的时候完成，该构造器有一系列的参数，每个参数代表注入的对象。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> OrderServiceImp orderService;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">OrderAction</span><span class="params">(OrderServiceImp orderService)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.orderService = orderService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Spring 配置 XML 文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">&quot;orderAction&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.pec.action.OrderAction&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">constructor-arg</span> <span class="attr">ref</span>=<span class="string">&quot;orderService&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">constructor-arg</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">name</span>=<span class="string">&quot;orderService&quot;</span> <span class="attr">class</span>=<span class="string">&quot;com.pec.service.imp.OrderServiceImp&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="4-多种配置方法混用"><a href="#4-多种配置方法混用" class="headerlink" title="4 多种配置方法混用"></a>4 多种配置方法混用</h3><p>通常的做法是：无论使用 JavaConfig 或者 XML 装配，都要创建一个 root configuration；并且在这个配置文件中开启自动扫描机制</p>
+<h4 id="4-1-JavaConfig-中引用"><a href="#4-1-JavaConfig-中引用" class="headerlink" title="4.1 JavaConfig 中引用"></a>4.1 JavaConfig 中引用</h4><ul>
+<li>@Import：导入其他的 JavaConfig</li>
+<li>@ImportResource：导入 XML 配置文件</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Import(&#123;CDPlayerConfig.class, CDConfig.class&#125;)</span></span><br><span class="line"><span class="meta">@ImportResource(&quot;classpath: cd-config.xml&quot;)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="4-2-XML-配置中引用"><a href="#4-2-XML-配置中引用" class="headerlink" title="4.2 XML 配置中引用"></a>4.2 XML 配置中引用</h4><p>标签引入其他的 XML 配置文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">import</span> <span class="attr">resource</span>=<span class="string">&quot;classpath:/spring/calculate-web.xml&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>标签导入 Java 配置文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;soundsystem.CDConfig&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+<h3 id="5-BeanFactory-和-FactoryBean的区别"><a href="#5-BeanFactory-和-FactoryBean的区别" class="headerlink" title="5 BeanFactory 和 FactoryBean的区别"></a>5 BeanFactory 和 FactoryBean的区别</h3><h4 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a><strong>BeanFactory</strong></h4><p>BeanFactory，以Factory结尾，表示它是一个工厂类(接口)， 它负责生产和管理bean的一个工厂。在Spring中，BeanFactory是IOC容器的核心接口，它的职责包括：实例化、定位、配置应用程序中的对象及建立这些对象间的依赖。</p>
+<h4 id="FactoryBean"><a href="#FactoryBean" class="headerlink" title="FactoryBean"></a><strong>FactoryBean</strong></h4><p>一般情况下，Spring通过反射机制利用<bean>的class属性指定实现类实例化Bean，在某些情况下，实例化Bean过程比较复杂，如果按照传统的方式，则需要在<bean>中提供大量的配置信息。配置方式的灵活性是受限的，这时采用编码的方式可能会得到一个简单的方案。Spring为此提供了一个org.springframework.bean.factory.FactoryBean的工厂类接口，用户可以通过实现该接口定制实例化Bean的逻辑。FactoryBean接口对于Spring框架来说占用重要的地位，Spring自身就提供了70多个FactoryBean的实现。它们隐藏了实例化一些复杂Bean的细节，给上层应用带来了便利。从Spring3.0开始，FactoryBean开始支持泛型，即接口声明改为FactoryBean<T>的形式</p>
+<p>以Bean结尾，表示它是一个Bean，不同于普通Bean的是：它是实现了FactoryBean<T>接口的Bean，根据该Bean的ID从BeanFactory中获取的实际上是FactoryBean的getObject()返回的对象，而不是FactoryBean本身，如果要获取FactoryBean对象，请在id前面加一个&amp;符号来获取。</p>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/8/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2024 By iMine</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

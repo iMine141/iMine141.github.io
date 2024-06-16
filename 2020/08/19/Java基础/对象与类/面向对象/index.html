@@ -1,0 +1,58 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="面向对象"><meta name="keywords" content="java"><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>面向对象 | iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 7.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%8A%BD%E8%B1%A1"><span class="toc-text">1 抽象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%B0%81%E8%A3%85"><span class="toc-text">2 封装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%BB%A7%E6%89%BF"><span class="toc-text">3 继承</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E6%85%8E%E7%94%A8%E7%BB%A7%E6%89%BF"><span class="toc-text">3.1 慎用继承</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-text">3.2 强制类型转换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E9%87%8D%E5%86%99%EF%BC%88override%EF%BC%89"><span class="toc-text">3.3 重写（override）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E9%87%8D%E8%BD%BD%EF%BC%88overload%EF%BC%89"><span class="toc-text">3.4 重载（overload）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%A4%9A%E6%80%81"><span class="toc-text">4 多态</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E5%8A%A8%E6%80%81%E7%BB%91%E5%AE%9A"><span class="toc-text">4.1 动态绑定</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E9%9D%99%E6%80%81%E7%BB%91%E5%AE%9A"><span class="toc-text">4.2 静态绑定</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">74</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">面向对象</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-19</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/">java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/java%E5%9F%BA%E7%A1%80/">java基础</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/java/java%E5%9F%BA%E7%A1%80/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/">对象与类</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="1-抽象"><a href="#1-抽象" class="headerlink" title="1 抽象"></a>1 抽象</h3><p>抽象是将一类对象的共同特征总结出来构造类的过程，包括数据抽象和行为抽象两方面。抽象只关注对象有哪些属性和行为，并不关注这些行为的细节是什么。</p>
+<h3 id="2-封装"><a href="#2-封装" class="headerlink" title="2 封装"></a>2 封装</h3><p>把数据和行为隐藏，只能通过暴露的接口访问数据。</p>
+<h3 id="3-继承"><a href="#3-继承" class="headerlink" title="3 继承"></a>3 继承</h3><p>通过扩展一个类来建立另一个新的类。</p>
+<h4 id="3-1-慎用继承"><a href="#3-1-慎用继承" class="headerlink" title="3.1 慎用继承"></a>3.1 慎用继承</h4><ol>
+<li>将公共操作和域放在超类。</li>
+<li>不要使用受保护的域。</li>
+<li>使用继承实现”is-a”。</li>
+<li>除非所有继承的方法都有意义，否则不要使用继承。</li>
+<li>在覆盖方法时，不要改变预期的行为。</li>
+<li>使用多态，而非类型信息。</li>
+<li>不要过多地使用反射。</li>
+</ol>
+<h4 id="3-2-强制类型转换"><a href="#3-2-强制类型转换" class="headerlink" title="3.2 强制类型转换"></a>3.2 强制类型转换</h4><p>只能在继承层次内进行类型转换。</p>
+<p>在将超类转换成子类之前，应该使用 instanceof 进行检查。</p>
+<ul>
+<li>上溯造型（Upcasting）：把衍生类型当作它的基本类型处理</li>
+<li>下溯造型（Downcasting）：向下转型，超类可用子类置换。</li>
+</ul>
+<h4 id="3-3-重写（override）"><a href="#3-3-重写（override）" class="headerlink" title="3.3 重写（override）"></a>3.3 重写（override）</h4><p>存在于继承体系中，指子类实现了一个与父类在方法声明上完全相同的一个方法。</p>
+<p>为了满足里式替换原则，重写有以下三个限制：</p>
+<ul>
+<li>子类方法的访问权限必须大于等于父类方法；</li>
+<li>子类方法的返回类型必须是父类方法返回类型或为其子类型。</li>
+<li>子类方法抛出的异常类型必须是父类抛出异常类型或为其子类型。</li>
+</ul>
+<p>使用 @Override 注解，可以让编译器帮忙检查是否满足上面的三个限制条件。</p>
+<p>在调用一个方法时，先从本类中查找看是否有对应的方法，如果没有再到父类中查看，看是否从父类继承来。否则就要对参数进行转型，转成父类之后看是否有对应的方法。总的来说，方法调用的优先级为：</p>
+<ul>
+<li>this.func(this)</li>
+<li>super.func(this)</li>
+<li>this.func(super)</li>
+<li>super.func(super)</li>
+</ul>
+<h4 id="3-4-重载（overload）"><a href="#3-4-重载（overload）" class="headerlink" title="3.4 重载（overload）"></a>3.4 重载（overload）</h4><p>存在于同一个类中，指一个方法与已经存在的方法名称上相同，但是参数类型、个数、顺序至少有一个不同。</p>
+<p>应该注意的是，返回值不同，其它都相同不算是重载。</p>
+<h3 id="4-多态"><a href="#4-多态" class="headerlink" title="4 多态"></a>4 多态</h3><p>一个对象变量可以指示多种实际类型的现象被称为多态（polymorphism）。</p>
+<p>Java 实现多态有三个必要条件：继承、重写、上溯造型。</p>
+<p>虚拟机预先为每个类创建了一个方法表（method table），其中列出了所有方法的签名和实际调用的方法。</p>
+<h4 id="4-1-动态绑定"><a href="#4-1-动态绑定" class="headerlink" title="4.1 动态绑定"></a>4.1 动态绑定</h4><p>在运行时能够自动选择调用哪个方法的现象称为动态绑定。</p>
+<ol>
+<li>编译器会列举类方法表中同名方法，和超类方法表中同名且为 public 的方法。</li>
+<li>编译器重载匹配参数类型，若有完全匹配的就选择，没有就匹配允许类型转换的方法，如果这样还是不能找到匹配项，编译器就会报错；同时如果找到多于一个匹配项，编译器也会报错。</li>
+</ol>
+<h4 id="4-2-静态绑定"><a href="#4-2-静态绑定" class="headerlink" title="4.2 静态绑定"></a>4.2 静态绑定</h4><p>如果是 private,static,final 方法或者构造器，那么编译器可以明确地知道该调用哪个方法，这种调用方式成为静态绑定。</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">iMine</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://imine141.github.io/2020/08/19/Java%E5%9F%BA%E7%A1%80/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">https://imine141.github.io/2020/08/19/Java%E5%9F%BA%E7%A1%80/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/08/19/Java%E5%9F%BA%E7%A1%80/%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB/%E7%B1%BB/"><i class="fa fa-chevron-left">  </i><span>类</span></a></div><div class="next-post pull-right"><a href="/2020/08/18/Java%E5%9F%BA%E7%A1%80/%E5%9F%BA%E7%A1%80%E8%AE%BE%E8%AE%A1/%E8%BF%90%E7%AE%97%E7%AC%A6/"><span>运算符</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2024 By iMine</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

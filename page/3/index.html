@@ -1,0 +1,966 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 7.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">74</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="site-info"><div id="site-title">iMineのBlog</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/15/pulsar/bookkeeper/">bookkeeper</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h3 id="一、概念"><a href="#一、概念" class="headerlink" title="一、概念"></a>一、概念</h3><p>bookkeeper 类似于一个日志存储系统。</p>
+<h5 id="1-Ledger"><a href="#1-Ledger" class="headerlink" title="1. Ledger"></a>1. Ledger</h5><p>Ledger 创建了之后，进行写数据、关闭和删除操作。</p>
+<p><img src="/../../images/image-20210615103446035.png" alt="image-20210615103446035"></p>
+<p>Legder 元数据的存储。结构如上图</p>
+<p><strong>参数的含义</strong></p>
+<p>state ：Ledger 的开关状态，open、close</p>
+<p>last entry id  : 上一次确认的entry id， entry id 是从 0 开始递增的</p>
+<p>ensemble &#x2F; write quorum &#x2F; ack quorum ：ledger 存放位置的复制信息</p>
+<h5 id="2-Entry"><a href="#2-Entry" class="headerlink" title="2. Entry"></a>2. Entry</h5><p>entry 的元数据信息</p>
+<p><img src="/../../images/image-20210615104115039.png" alt="image-20210615104115039"></p>
+<p><strong>参数的含义</strong></p>
+<p>Lid 和 Eid ： 记录的是 entry 的key</p>
+<p>LAC : 最后一条已经添加的记录</p>
+<p>Digest ：记录字节的数据，用于完整性校验</p>
+<p>上面介绍的 entry 和 Ledger 的元数据都会存入 Zookeeper 中。</p>
+<h3 id="二、架构"><a href="#二、架构" class="headerlink" title="二、架构"></a>二、架构</h3><p><img src="/../../images/image-20210615105211046.png" alt="image-20210615105211046"></p>
+<p><strong>3大组件</strong></p>
+<h5 id="1-zookeeper"><a href="#1-zookeeper" class="headerlink" title="1. zookeeper"></a>1. zookeeper</h5><p>存储元数据信息</p>
+<h5 id="2-client"><a href="#2-client" class="headerlink" title="2. client"></a>2. client</h5><p>实现一致性、策略性相关的逻辑</p>
+<h5 id="3-bookie"><a href="#3-bookie" class="headerlink" title="3. bookie"></a>3. bookie</h5><p>存储 ledger 对应的 entry ，所有的 bookie 都会存储到 Bookkeeper 上，让客户端发现</p>
+<p>bookie 可以看做是一个 key-value 数据库。其中 key 就是 （lid + eid），value 就是 ledger 中的 entry 。</p>
+<img src="assets/image-20210615110356991.png" alt="image-20210615110356991" style="zoom: 67%;" />
+
+
+
+<p>bookie 的实现是依靠 journal 和 ledger storage。</p>
+<h6 id="3-1-journal"><a href="#3-1-journal" class="headerlink" title="3.1 journal"></a>3.1 journal</h6><p>journal 只有写操作，bookie 负责顺序把 entry 写到 journal 文件里，不会进行随机访问。 </p>
+<p>写满了一个 journal 之后，bookie 就会开启一个新的 journal 文件，继续按照顺序写 entry。</p>
+<p><strong>索引 write cache</strong></p>
+<p>journal 中的 entry 是没办法查询的，这个时候就需要索引来达到高效查询了。</p>
+<p>write cache：bookie 端每次在写 entry 进 journal 的时候，会进行一个写缓存的操作。</p>
+<p>写缓存的操作时，bookie 会对 entry 进行排序， 按 ledger 的来源进行划分，为了 entry 可以按照 ledger 进行排序。</p>
+<p>当缓存写满时，bookie 会把 write cache 刷到磁盘中。flush 的过程中会进行重新整理成几个目录。一个是 ledger index，用来存储 entry key，一个是 entry log，用来存储 value。</p>
+<h6 id="3-2-ledger-storage"><a href="#3-2-ledger-storage" class="headerlink" title="3.2 ledger storage"></a>3.2 ledger storage</h6><p>两种方式，DB ledger storage 和 Sorted ledger storage，实现途径是一样的，就是索引存储的时候不太一样。</p>
+<h3 id="三、数据流动"><a href="#三、数据流动" class="headerlink" title="三、数据流动"></a>三、数据流动</h3><p>bookie 的操作基本都是再客户端完成和实现的，比如副本复制、读写 entry 等操作。</p>
+<p>data flow 是如何在客户端中实现的。</p>
+<p>ledger 元数据中的几个参数</p>
+<ul>
+<li><strong>Ensemble</strong> —— 用哪几台 bookie 去存储 ledger 对应的 entry</li>
+<li><strong>Write Quorum</strong> ——对于一条 entry，需要存多少副本</li>
+<li><strong>Ack Quorum</strong> —— 在写 entry 时，要等几个 response</li>
+</ul>
+<p>默认情况下是（3,3,3），一共三个 bookie 去存储 ledger 对应的 entry，对于一个 entry，需要 3 个副本， 只有当3个 bookie 返回 response，才会确认。 </p>
+<h3 id="四、恢复"><a href="#四、恢复" class="headerlink" title="四、恢复"></a>四、恢复</h3><h5 id="1-Ledger-Recovery"><a href="#1-Ledger-Recovery" class="headerlink" title="1. Ledger Recovery"></a>1. Ledger Recovery</h5><p>假设有一个 broker1 去写数据，不断地 append entry 到 ledger x ，当 T0 时间点更新 LAC 为 2， 这时发出的 entry3 是还没有得到请求回复的。这时的 entry3 的状态时 outstanding</p>
+<p><img src="/../../images/image-20210615190010277.png" alt="image-20210615190010277"></p>
+<p>此时因为脑裂，broker2 去接管这个 topic 的写入， 尝试打开 ledger x 却发现他是 open 状态。 这个状态是无法继续进行读写操作的，那么 broker2 就对 ledger x 进行恢复操作 – Ledger Recovery</p>
+<p><strong>Ledger Recovery 流程</strong></p>
+<ol>
+<li>此时返回当前 ledger 里最大的 LAC 数值，然后进行 recovery 的操作执行</li>
+<li>开始 recovery 操作之后，如果 broker1 还打算继续操作 ledger ，会收到 【操作失败】提醒，此时 broker1 知道当前这个 ledger 被其他 broker 使用后，会放弃所属权。</li>
+<li>由于 entry3 处于 outstanding 的状态， 还没有被写到 bookie 上。 继续往下读，发现没有 bookie 对下面的数据读写，就会采取关闭的操作，并将最后一条 entry 写回去。</li>
+<li>开启一个新的 ledger ，开始写入</li>
+</ol>
+<h5 id="2-Bookie-Recovery"><a href="#2-Bookie-Recovery" class="headerlink" title="2. Bookie Recovery"></a>2. Bookie Recovery</h5><p>todo。。。。。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/15/pulsar/pulsar%20%E8%AF%BB%E5%86%99%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/">pulsar 读写性能调优</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h3 id="一、缓存概念"><a href="#一、缓存概念" class="headerlink" title="一、缓存概念"></a>一、缓存概念</h3><h5 id="1-broker层面缓存"><a href="#1-broker层面缓存" class="headerlink" title="1. broker层面缓存"></a>1. broker层面缓存</h5><p>在 broker 层面里，存在一个 <strong>managed ledger</strong> 库，也就相当于 topic。也就是说每一个 topic 后边都有一个 managed ledger 进行服务存储等。</p>
+<p>它会把 topic 里用到的所有 ledger 进行管理，并记录到元数据里。同时在消费订阅层面，也会将其订阅进度、消息签收进度等进行记录。</p>
+<p><strong>managed ledger cache</strong>  ：新写入的数据会进行缓存</p>
+<h5 id="2-bookkeeper层面缓存"><a href="#2-bookkeeper层面缓存" class="headerlink" title="2. bookkeeper层面缓存"></a>2. bookkeeper层面缓存</h5><p>entry 写入 journal log 时，同时也会写入到 memory table 里，这时客户端认定为写入成功。这时会提出一个 check point，当满足 checkpoint 后，会把一段时间内的 journal log 数据放置到 entry log 里。而 index DB 则主要是记录 entry 放置在 entry log 的位置信息。</p>
+<h3 id="二、写入时优化"><a href="#二、写入时优化" class="headerlink" title="二、写入时优化"></a>二、写入时优化</h3><h5 id="1-开启分片"><a href="#1-开启分片" class="headerlink" title="1. 开启分片"></a>1. 开启分片</h5><h5 id="2-加大内存"><a href="#2-加大内存" class="headerlink" title="2. 加大内存"></a>2. 加大内存</h5><p>producer 生产消息时，是先把消息放到队列中的，如果队列满了，消息是会被阻塞的。</p>
+<h5 id="3-批量消息"><a href="#3-批量消息" class="headerlink" title="3.  批量消息"></a>3.  批量消息</h5><p>开启 batched 后，调动的 broker 数量减少，调用 bookie 次数也减少了，从而可以减少客户端和服务端的cpu使用，提升消息发送和读取的吞吐量。</p>
+<h5 id="4-数据压缩"><a href="#4-数据压缩" class="headerlink" title="4. 数据压缩"></a>4. 数据压缩</h5><h5 id="5-bookie-写入优化"><a href="#5-bookie-写入优化" class="headerlink" title="5. bookie 写入优化"></a>5. bookie 写入优化</h5><p>消息持久化配置的选项，5-3-2 模式，会比 5-5-5的模式有更高的性能</p>
+<h5 id="6-优化参数参考"><a href="#6-优化参数参考" class="headerlink" title="6. 优化参数参考"></a>6. 优化参数参考</h5><p><strong>Broker 端</strong></p>
+<ol>
+<li><p>managedLedgerDefaultEnsembleSize</p>
+</li>
+<li><p>managedLedgerDefaultWriteQuorum</p>
+</li>
+<li><p>managedLedgerDefaultAckQuorum</p>
+</li>
+<li><p>managedLedgerNumWorkerThreads</p>
+</li>
+<li><p>numIOThreads</p>
+</li>
+<li><p>Dorg.apache.bookkeeper.conf.readsystemproperties&#x3D;true -DnumIOThreads&#x3D;8</p>
+</li>
+</ol>
+<p><strong>Bookie 端</strong></p>
+<ol>
+<li><p>Journal Directories</p>
+</li>
+<li><p>Ledger Directories</p>
+</li>
+<li><p>Journal sync data</p>
+</li>
+<li><p>Journal group commit</p>
+</li>
+<li><p>Write cache</p>
+</li>
+<li><p>Flush interval</p>
+</li>
+<li><p>Add worker threads and max pending add requests</p>
+</li>
+<li><p>Journal pagecache flush interval</p>
+</li>
+</ol>
+<h3 id="三、读取时优化"><a href="#三、读取时优化" class="headerlink" title="三、读取时优化"></a>三、读取时优化</h3><h5 id="1-加大内存"><a href="#1-加大内存" class="headerlink" title="1. 加大内存"></a>1. 加大内存</h5><p>消息读取其实跟写入差不多，也有一个 queue</p>
+<h5 id="2-批量读取数据"><a href="#2-批量读取数据" class="headerlink" title="2. 批量读取数据"></a>2. 批量读取数据</h5><h5 id="3-多consumer"><a href="#3-多consumer" class="headerlink" title="3. 多consumer"></a>3. 多consumer</h5><h5 id="4-优化参数参考"><a href="#4-优化参数参考" class="headerlink" title="4. 优化参数参考"></a>4. 优化参数参考</h5><p><strong>Bookie 端</strong></p>
+<ol>
+<li><p>dbStorage_rocksDB_blockCacheSize</p>
+</li>
+<li><p>dbStorage_readAheadCacheMaxSizeMb</p>
+</li>
+<li><p>dbStorage_readAheadCacheBatchSize</p>
+</li>
+<li><p>Read worker threads</p>
+</li>
+</ol>
+<p><strong>Broker 端</strong></p>
+<ol>
+<li><p>Managed ledger cache</p>
+</li>
+<li><p>Dispatcher max read batch size</p>
+</li>
+<li><p>Bookkeeper sticky reads</p>
+</li>
+</ol>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/12/pulsar/Topic%20Discovery,%20ServiceURL%20and%20Cluster/">Topic Discovery, ServiceURL and Cluster</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h3 id="一、Topic-Discovery"><a href="#一、Topic-Discovery" class="headerlink" title="一、Topic Discovery"></a>一、Topic Discovery</h3><h5 id="1-Topic-Assignment"><a href="#1-Topic-Assignment" class="headerlink" title="1. Topic Assignment"></a>1. Topic Assignment</h5><p>首先看一下层次化结构</p>
+<p><img src="/../../images/image-20210613110219438.png" alt="image-20210613110219438"></p>
+<p>根据图上所示，topic 的分配是按照 namespace 来划分的</p>
+<p>一个 namespace 下面会有很多个 topic，namespace 会把所有的 topic 组成一个环（<strong>namespace hash ring</strong>）。在 topic 分配之前，会把 topic 的名字 hash 到 namespace hash ring 里。然后根据不同 topic 的 hash 值 又会分为几个小组， 也就是 <strong>namespace bundle</strong>， bundle 的数量可以在创建 namespace 时就可以指定确认了。</p>
+<p>topic 映射 到 bundle 后，接下来就会将 bundle 分配给 broker。 也就是 topic 的分配不在于 topic 本身，而是 bundle 操作。处理过程依靠 <strong>load Maneger</strong> 进行，对 bundle 进行分配。</p>
+<p>load manager 是从 broker 中选出来的一台。 topic 分配到 broker 的过程，全程是由 load manager 来执行的。</p>
+<p><img src="/../../images/image-20210613132008908.png" alt="image-20210613132008908"></p>
+<h5 id="2-Topic-lookup"><a href="#2-Topic-lookup" class="headerlink" title="2. Topic lookup"></a>2. Topic lookup</h5><p>topic 如何找到对应的那台 broker呢？</p>
+<p>先介绍一个概念：Topic owner ，又可以称为 namespace bundle owner 。</p>
+<p>topic 与 broker 的映射关系，存储在 owner 中， owner存储在zookeeper中，任何一个 broker 都可以获取到 topic 到 owner 的映射关系。 </p>
+<p>lookup 流程：</p>
+<p>pulsar 客户端发起 topic lookup 请求给 broker，broker 开启 lookup模式，根据 namespace 去检测出映射的 bundle， 然后将此反馈发给 zookeeper 去查找对应，最后将请求结果返回给客户端。</p>
+<p>客户端这时， 会根据请求结果和目标 broker 进行 tcp 长链接。</p>
+<p><img src="/../../images/image-20210613134047938.png" alt="image-20210613134047938"></p>
+<p>有个问题，这个时候如果目标 broker 的地址不能直接链接，该怎么办？</p>
+<p>解决方案：</p>
+<p>使用 pulsar proxy 。它提供了 topic 查询路由功能，可以作为 tcp 反向代理来使用</p>
+<h3 id="二、ServiceURL"><a href="#二、ServiceURL" class="headerlink" title="二、ServiceURL"></a>二、ServiceURL</h3><p>知道了整个 topic discovery 之后。对 service URL 的使用就会更加准确了</p>
+<p>service URL 高可用的几种方式</p>
+<p>DNS：在 broker 之前配置一个 DNS，落实到 broker 里。 缺点是 过期时间和缓存限制</p>
+<p>Load Balance：可以探测活跃的 broker，可以及时清理 broker。</p>
+<p>Multi-Hosts：把所有机器当做一个列表，pulsar客户端进行负载均衡，第一次用第一个broker，链接失败用第二个，以此类推</p>
+<h3 id="三、Clusters"><a href="#三、Clusters" class="headerlink" title="三、Clusters"></a>三、Clusters</h3><p>部署 pulsar 集群的时候，需要制定 cluster name， 集群配置信息作为元数据保存到 zookeeper 上。</p>
+<p>在 cluster 配置文件里，主要是四个接入端口，分为两大类。</p>
+<p><strong>HTTP service</strong>：即提供 admin 操作的接口</p>
+<ul>
+<li>Web service URL (http:&#x2F;&#x2F;)</li>
+<li>Web service URL TLS (https:&#x2F;&#x2F;)</li>
+</ul>
+<p><strong>Broker service</strong>：即客户端、producer、consumer 等需要连接的 6650 端口。</p>
+<ul>
+<li>Broker service URL (pulsar:&#x2F;&#x2F;)</li>
+<li>Broker service URL TLS (pulsar+ssl:&#x2F;&#x2F;)</li>
+</ul>
+<p>这几个参数只有在进行跨机房复制时才使用。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/11/pulsar/pulsar%20messager%20lifecicle/">pulsar messager lifecycle</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><p>在介绍消息的生命周期之前，先看一下 pulsar 的架构</p>
+<h3 id="一、pulsar-集群"><a href="#一、pulsar-集群" class="headerlink" title="一、pulsar 集群"></a>一、pulsar 集群</h3><h5 id="1-Brokers-Bookies"><a href="#1-Brokers-Bookies" class="headerlink" title="1. Brokers + Bookies"></a>1. Brokers + Bookies</h5><p>broker 是各个组件之间进行交互的对象。pulsar 是分层架构模式，使用 Bookkeeper 作为额外的存储系统， bookies 就是 Bookkeeper 里的存储节点。</p>
+<p>Brokers + Bookies 构成 pulsar 的两个层次， 共同完成 pulsar 的数据服务</p>
+<p>Broker： 整个消息层的生产和消费，无存储状态</p>
+<p>Bookie： 数据持久化保存的节点，有存储状态</p>
+<h5 id="2-Zookeeper"><a href="#2-Zookeeper" class="headerlink" title="2. Zookeeper"></a>2. Zookeeper</h5><p>Zookeeper 在 Pulsar 里的作用是存储 Pulsar 系统里的元数据和集群的管理以及节点的发现等，节点发现就是发现集群中有哪些 broker 哪些 bookie 。</p>
+<p>以上的三个组件，构成了 Pulsar 的集群。Brokers + bookies 为数据服务，Zookeeper 为元数据服务。</p>
+<p><img src="/../../images/image-20210611184242420.png" alt="image-20210611184242420"></p>
+<h3 id="二、message-lifecycle"><a href="#二、message-lifecycle" class="headerlink" title="二、message lifecycle"></a>二、message lifecycle</h3><h5 id="1-producer-生产消息（写过程）"><a href="#1-producer-生产消息（写过程）" class="headerlink" title="1. producer 生产消息（写过程）"></a>1. producer 生产消息（写过程）</h5><p>producer 通过生产消息到一个 topic， 一个 topic 中可能有 N 个 partition， 每个 partition 给一个 broker 服务。</p>
+<p>生产者内部有一个 MessageWriter 的类， 这个 MessageWriter 默认是 round-robin 的过程，就是发送每条消息的时候回去轮训找到一个 partition 进行发送，但为了提高效率，在一段时间内只会选择一个 partition 进行发送。如果 message 指定了 key，那么会根据 key 的hash去找到对应的 partition 进行发送。</p>
+<p>之后 Broker 收到消息后会调用 BookKeeper 的客户端并发去写多个 bookie 副本。当 broker 收到一定数量的 ACK 后，他会认为消息已经写入成功，broker 返回客户端，告知这条消息已经被持久化完成。</p>
+<p>整个写的过程消息是从 producer 到 broker，broker 到 Bookkeeper 上。 整个过程中客户端都不会跟Zookeeper打交道，也不会和 Bookkeeper打交道， 只和 Broker 打交道。</p>
+<h5 id="2-consumer-消费消息（读过程）"><a href="#2-consumer-消费消息（读过程）" class="headerlink" title="2. consumer 消费消息（读过程）"></a>2. consumer 消费消息（读过程）</h5><h6 id="2-1-broker-有缓存的情况下"><a href="#2-1-broker-有缓存的情况下" class="headerlink" title="2.1 broker 有缓存的情况下"></a>2.1 broker 有缓存的情况下</h6><p>Broker 可能已经缓存了部分信息，consumer 在连接到 broker 后建立长链接， broker 把消息从内存里拿出来通过推得方式 dispatch 给 consumer， consumer 收到消息后会放到消费端的 receiver queue 中，consumer 就可以消费了，完了发送确认ack给broker。</p>
+<h6 id="2-2-broker-没有缓存的情况下"><a href="#2-2-broker-没有缓存的情况下" class="headerlink" title="2.2 broker 没有缓存的情况下"></a>2.2 broker 没有缓存的情况下</h6><p>broker 没有缓存这部分数据，需要去 bookie 去读取数据， 数据读取出来后再 dispatch 给 consumer，读取是选择任意一个存储节点读取的，整个存储架构没有主节点的说法。</p>
+<h5 id="3-Data-Retention"><a href="#3-Data-Retention" class="headerlink" title="3. Data Retention"></a>3. Data Retention</h5><h6 id="3-1-Subscription-Initial-Position"><a href="#3-1-Subscription-Initial-Position" class="headerlink" title="3.1 Subscription Initial Position"></a>3.1 Subscription Initial Position</h6><p>之前整理了 subscription 和 cursor 的概念。如果有个新的订阅是pulsar中没有的，那么如何创建 cursor？</p>
+<p>这里就有两个概念</p>
+<p>earliest：放到整个流中第一条有效数据</p>
+<p>latest: 放到整个流中最后一条有效数据 (默认的)</p>
+<p>Cursor 放置的位置，决定了最终消费了什么数据</p>
+<p><img src="/../../images/image-20210611195453885.png" alt="image-20210611195453885"></p>
+<h6 id="3-2-Message-Retention"><a href="#3-2-Message-Retention" class="headerlink" title="3.2 Message Retention"></a>3.2 Message Retention</h6><p>消费位置最早的订阅决定了你能保留消息多久，订阅之前的消息可以被删除。这是 pulsar 的默认行为， 即消费完就可以被删除， 释放空间留给之后的消息使用。</p>
+<p>由于流计算的需求，有些数据消费完还不能删除，需要再额外保留个三五天。就需要 retention 来进行数据的保留设置</p>
+<p><img src="/../../images/image-20210611200055467.png" alt="image-20210611200055467"></p>
+<p>添加后 retention 后, 紫色部分的内容就是该保留的数据，可以配置多大内存&#x2F;多少天。但前提是被所有订阅消费完了</p>
+<h6 id="3-3-TTL"><a href="#3-3-TTL" class="headerlink" title="3.3 TTL"></a>3.3 TTL</h6><p>还有一种情况就是，生产者一直在生产消息，但是消费者一直没有处理，那么消息永远不会被确认，那么这个消息会被一直累积。</p>
+<p>为了保障消息不会被一只累加下去，可以在这写橘色消息部分加上TTL，TTL作用范围是没被确认的消息。</p>
+<p><img src="/../../images/image-20210611200532518.png" alt="image-20210611200532518"></p>
+<p>在TTL之后，消息会到Retention中，然后再经理过Retention中设置的时间，进行最后的数据清除。</p>
+<h6 id="3-4-Message-Deletion"><a href="#3-4-Message-Deletion" class="headerlink" title="3.4 Message Deletion"></a>3.4 Message Deletion</h6><p>正常理解是，消息过期后就会被删除，但是在pulsar中，消息的删除是按照 片（segment） 进行的。</p>
+<p><img src="/../../images/image-20210611200921982.png" alt="image-20210611200921982"></p>
+<p>例如上图，删除的是 S1 这个分片，而S2 不会被删除，因为只有分片中所有的消息是待删除状态，才会去删除这个分片。</p>
+<h6 id="3-5-storage-size"><a href="#3-5-storage-size" class="headerlink" title="3.5 storage size"></a>3.5 storage size</h6><p>storage size是计算所有没被删除的 segment 所占用的存储空间。</p>
+<p>整个存储空间是按照 segment 之间的存储力度进行计算的，同时 garbage collector 是定时执行的，所有有时候可以发现 segement 已经被清空了，但是 storage size 仍然没有变化。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/10/pulsar/pulsar%20%E5%9F%BA%E7%A1%80/">pulsar基础</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-10</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><p>Pulsar 是一个用于服务器到服务器的消息系统，具备高吞吐，低延迟，计算存储分离，多租户，异地复制等特性，这些特性也使得Pulsar成为kafka的有力竞争者</p>
+<h3 id="二、Pub-Sub"><a href="#二、Pub-Sub" class="headerlink" title="二、Pub&#x2F;Sub"></a>二、Pub&#x2F;Sub</h3><p>下面介绍pulsar做为一个发布订阅消息中间件的一些主要概念</p>
+<ul>
+<li>Message</li>
+<li>Producer</li>
+<li>Consumer</li>
+<li>Broker</li>
+<li>Topic</li>
+<li>Subscription</li>
+</ul>
+<h5 id="1-Message"><a href="#1-Message" class="headerlink" title="1. Message"></a>1. Message</h5><p>消息是 Pulsar 的基础单元，Producer 发送消息，Consumer 消费消息，Broker 保存消息。</p>
+<h6 id="1-1-消息的组成"><a href="#1-1-消息的组成" class="headerlink" title="1.1 消息的组成"></a>1.1 消息的组成</h6><ol>
+<li>data：数据</li>
+<li>key：消息键，非常重要的一个概念，消息的发送和路由都与它有关</li>
+<li>property：键值对，存放一些主数据之外的额外消息</li>
+<li>producer name：消费者名</li>
+<li>sequence id:   序列号。消息去重会使用到这个参数，相同的序列号只会发送一次</li>
+<li>publish time：发布时间</li>
+<li>event time:  事件事件</li>
+<li>TypedMessageBuilder:  用于构建消息</li>
+</ol>
+<h5 id="2-Producer"><a href="#2-Producer" class="headerlink" title="2. Producer"></a>2. Producer</h5><p>Producer 可以发送消息到指定的 topic。往 Pulsar 里发送消息时，相应的数据会带上 schema 的信息。Pulsar 会确保一个 producer 往 topic 发送的消息是满足一定的 schema 格式。</p>
+<h6 id="2-1-发送模式"><a href="#2-1-发送模式" class="headerlink" title="2.1 发送模式"></a>2.1 发送模式</h6><p>同步发送send，异步发送sendAsync</p>
+<h6 id="2-2-批量处理"><a href="#2-2-批量处理" class="headerlink" title="2.2 批量处理"></a>2.2 批量处理</h6><p>通过设置enableBatching、batchingMaxMessages、maxPendingMessages等，来设置批量消息的发送规则。</p>
+<h6 id="2-3-消息压缩"><a href="#2-3-消息压缩" class="headerlink" title="2.3 消息压缩"></a>2.3 消息压缩</h6><p>通过设置compressionType，来指定压缩类型</p>
+<h6 id="2-4-分块"><a href="#2-4-分块" class="headerlink" title="2.4 分块"></a>2.4 分块</h6><p>分块的前提是禁用批量处理</p>
+<h5 id="3-Consumer"><a href="#3-Consumer" class="headerlink" title="3. Consumer"></a>3. Consumer</h5><p>consumer与broker建立TCP长链接，然后开始接受从broker的推送来的消息。同时也会根据schema来格式化消息</p>
+<h6 id="3-1-接收模式"><a href="#3-1-接收模式" class="headerlink" title="3.1 接收模式"></a>3.1 接收模式</h6><p>同步接收</p>
+<p>异步接收，返回一个CompletableFuture</p>
+<h6 id="3-2-ACK"><a href="#3-2-ACK" class="headerlink" title="3.2 ACK"></a>3.2 ACK</h6><p>确认消息&#x2F;取消确认：消费者成功&#x2F;失败消费一条消息，这条消费者会发送一个确认消息&#x2F;取消确认给broker。成功的话，这条消息会根据消息保留策略来进行删除。</p>
+<h6 id="3-3-监听器"><a href="#3-3-监听器" class="headerlink" title="3.3 监听器"></a>3.3 监听器</h6><p>通过MesssageListener可以监听接受的每条消息，通过received方法进行逻辑处理</p>
+<h6 id="3-4-死信、重试队列"><a href="#3-4-死信、重试队列" class="headerlink" title="3.4 死信、重试队列"></a>3.4 死信、重试队列</h6><p>设置了死信队列，消费者消费一条消息时，当超时或者否定确认，这条消息会被重新传递，当多次的重新传递后，这条消息会被放入到指定的死信topic中。</p>
+<p>重试队列，当消费者消费一条消息时，当超时或者否定确认，默认会进行重试。</p>
+<h6 id="3-5-Cursor-和-Reader"><a href="#3-5-Cursor-和-Reader" class="headerlink" title="3.5 Cursor 和 Reader"></a>3.5 Cursor 和 Reader</h6><p>Cursor 在消费者端，代表了每组订阅组的消费状态。 broker 的 cursor 会追踪每个订阅消费到了哪里，然后记录下来。</p>
+<p>Reader 和 Cursor 不同， cursor 是 pulsar帮你管理消费状态信息，但是 Reader 是一个没有状态的，消息被消费了，它消费状态不会持久化。也就是下次再读取的时候还是能读取到。</p>
+<h5 id="4-Broker"><a href="#4-Broker" class="headerlink" title="4. Broker"></a>4. Broker</h5><p>分区落靠的服务器，就是 Broker。Broker 用来接收与发送消息，生产方连接到 broker 去生产消息，消费方连接到 broker 去消费消息。</p>
+<p>数据不会存储在 Broker 上，是放在 Bookkeeper 中。这也是 Pulsar 与其他中间件的区别。</p>
+<h5 id="5-Topic"><a href="#5-Topic" class="headerlink" title="5. Topic"></a>5. Topic</h5><p>topic是消息的集合，所有的producer的消息，都会归属到指定的topic里。所有topic里的消息，会按照一定的规则，被切分成不同的分区（Partition）。一个分区会落到一台broker上。</p>
+<p>topic格式：{persistent|non-persistent}:&#x2F;&#x2F;tenant&#x2F;namespace&#x2F;topic</p>
+<p>pulsar层级化的管理，使用 Tenant 和 namespace。 </p>
+<h5 id="6-Subscription"><a href="#6-Subscription" class="headerlink" title="6. Subscription"></a>6. Subscription</h5><p>consumer 连接到 broker，需要定义自己的 Subscription ，一个订阅的所有 consumer 会作为一个整体去消费 topic 里的所有消息。</p>
+<h6 id="6-1-订阅模式"><a href="#6-1-订阅模式" class="headerlink" title="6.1 订阅模式"></a>6.1 订阅模式</h6><p>四种模式：Exclusive、Failover、Shared、Key_Shared</p>
+<p>Exclusive：只有一个 consumer 可以消费消息。</p>
+<p>Failover：一个消费者作为一个主题分区( partition, 一个 topic 会有多个 partition ) 的主使用者，其他消费者被作为故障转移备用。</p>
+<p>Shared:  消息会轮训发送给该订阅下的所有 consumer 。</p>
+<p>Key_Shared：消息按照 key 进行分发给 consumer。融合了 Failover 和 Shared 的特性。</p>
+<h3 id="三、schema"><a href="#三、schema" class="headerlink" title="三、schema"></a>三、schema</h3><p>Schema 的作用就是如何序列化反序列化数据，不用在客户端另外去做处理。</p>
+<p><strong>schema 的格式</strong></p>
+<ul>
+<li>type：schema类型</li>
+<li>schema：schema 定义，和数据</li>
+<li>properties：跟 schema 关联的部分属性</li>
+</ul>
+<p><strong>两类 schema</strong></p>
+<ul>
+<li>key-value：要同时定义 key schema 和 value schema，将这两者的信息组合在一起放置在 schema 信息文件内</li>
+<li>struct ：AVRO、JSON、Protobuf 三种类型</li>
+</ul>
+<p><strong>schema 的兼容性检查</strong></p>
+<img src="assets/image-20210615194709854.png" alt="image-20210615194709854" style="zoom: 50%;" />
+
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/09/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%A0%86/">堆</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-09-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><div class="content"><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>**堆(Heap)**是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%AE%8C%E5%85%A8%E4%BA%8C%E5%8F%89%E6%A0%91/7773232">完全二叉树</a>的数组对象。</p>
+<h2 id="1、二叉堆"><a href="#1、二叉堆" class="headerlink" title="1、二叉堆"></a>1、二叉堆</h2><p>二叉堆是完全二元树或者是近似完全二元树，按照数据的排列方式可以分为两种：最大堆和最小堆。</p>
+<p>二叉堆一般都通过”数组”来实现</p>
+<h2 id="2、左倾堆"><a href="#2、左倾堆" class="headerlink" title="2、左倾堆"></a>2、左倾堆</h2><p>左倾堆(leftist tree 或 leftist heap)，又被成为左偏树、左偏堆，最左堆等。</p>
+<p>它和二叉堆一样，都是优先队列实现方式。可以高效解决”对两个优先队列进行合并”的问题。</p>
+<p><img src="https://imine141.github.io/images/1559037013198.png" alt="img"></p>
+<p>上图是一颗左倾树，它的节点除了和二叉树的节点一样具有左右子树指针外，还有两个属性：键值和零距离。</p>
+<ul>
+<li>键值：作用是来比较节点的大小，从而对节点进行排序。</li>
+<li>零距离：是从一个节点到一个”最近的不满节点”的路径长度。不满节点是指该该节点的左右孩子至少有有一个为NULL。叶节点的NPL为0，NULL节点的NPL为-1。</li>
+</ul>
+<p>左倾堆有以下几个基本性质：</p>
+<ul>
+<li>节点的键值小于或等于它的左右子节点的键值。</li>
+<li>节点的左孩子的NPL &gt;&#x3D; 右孩子的NPL。</li>
+<li>节点的NPL &#x3D; 它的右孩子的NPL + 1。</li>
+</ul>
+<p>合并两个左倾堆的基本思想如下：</p>
+<ol>
+<li>如果一个空左倾堆与一个非空左倾堆合并，返回非空左倾堆。</li>
+<li>如果两个左倾堆都非空，那么比较两个根节点，取较小堆的根节点为新的根节点。将”较小堆的根节点的右孩子”和”较大堆”进行合并。</li>
+<li>如果新堆的右孩子的NPL &gt; 左孩子的NPL，则交换左右孩子。</li>
+<li>设置新堆的根节点的NPL &#x3D; 右子堆NPL + 1</li>
+</ol>
+<h2 id="3、斜堆"><a href="#3、斜堆" class="headerlink" title="3、斜堆"></a>3、斜堆</h2><p>斜堆也叫自适应堆，它是左倾堆的一个变种。和左倾堆一样，它通常也用于实现优先队列；作为一种自适应的左倾堆，它的合并操作的时间复杂度也是O(log n)。</p>
+<p>它与左倾堆的差别是：</p>
+<ol>
+<li>斜堆的节点没有”零距离”这个属性，而左倾堆则有。</li>
+<li>斜堆的合并操作和左倾堆的合并操作算法不同。</li>
+</ol>
+<p>斜堆的合并操作</p>
+<ol>
+<li>如果一个空斜堆与一个非空斜堆合并，返回非空斜堆。</li>
+<li>如果两个斜堆都非空，那么比较两个根节点，取较小堆的根节点为新的根节点。将”较小堆的根节点的右孩子”和”较大堆”进行合并。</li>
+<li>合并后，交换新堆根节点的左孩子和右孩子。</li>
+</ol>
+<p>第 3 步是斜堆和左倾堆的合并操作差别的关键所在，如果是左倾堆，则合并后要比较左右孩子的零距离大小，若右孩子的零距离 &gt; 左孩子的零距离，则交换左右孩子；最后，在设置根的零距离。</p>
+<h2 id="4、二项堆"><a href="#4、二项堆" class="headerlink" title="4、二项堆"></a>4、二项堆</h2><p>二项堆是二项树的集合。在了解二项堆之前，先对二项树进行介绍。</p>
+<h3 id="1）二项树"><a href="#1）二项树" class="headerlink" title="1）二项树"></a>1）二项树</h3><p>二项树是一种递归定义的有序树。它的递归定义如下：</p>
+<ol>
+<li>二项树B0只有一个结点；</li>
+<li>二项树Bk由两棵二项树B(k-1)组成的，其中一棵树是另一棵树根的最左孩子。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/1559037015017.png" alt="img"></p>
+<h3 id="2）二项堆"><a href="#2）二项堆" class="headerlink" title="2）二项堆"></a>2）二项堆</h3><p>二项堆和之前所讲的堆(二叉堆、左倾堆、斜堆)一样，也是用于实现优先队列的。二项堆是指满足以下性质的二项树的集合：</p>
+<ol>
+<li>每棵二项树都满足最小堆性质。即，父节点的关键字 &lt;&#x3D; 它的孩子的关键字。</li>
+<li>不能有两棵或以上的二项树具有相同的度数(包括度数为0)。换句话说，具有度数k的二项树有0个或1个。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/1559037015069.png" alt="img"></p>
+<h2 id="5、斐波那契堆"><a href="#5、斐波那契堆" class="headerlink" title="5、斐波那契堆"></a>5、斐波那契堆</h2><p>斐波那契堆(Fibonacci heap)是一种可合并堆，可用于实现合并优先队列。它比二项堆具有更好的平摊分析性能，它的合并操作的时间复杂度是O(1)。</p>
+<p>与二项堆一样，它也是由一组堆最小有序树组成，并且是一种可合并堆。</p>
+<p>与二项堆不同的是，斐波那契堆中的树不一定是二项树；而且二项堆中的树是有序排列的，但是斐波那契堆中的树都是有根而无序的。</p>
+<p><img src="https://imine141.github.io/images/1559037015086.png" alt="img"></p>
+<h2 id="6、索引堆"><a href="#6、索引堆" class="headerlink" title="6、索引堆"></a>6、索引堆</h2><p>索引堆是对堆进行了优化。</p>
+<p>索引堆使用了一个新的int类型的数组，用于存放索引信息。</p>
+<p>索引堆的交换操作交换的是元素的索引，而不是直接交换元素。</p>
+<h2 id="7、Treap-树堆"><a href="#7、Treap-树堆" class="headerlink" title="7、Treap 树堆"></a>7、Treap 树堆</h2><p>一棵treap是一棵修改了结点顺序的二叉查找树，如图，显示一个例子，通常树内的每个结点x都有一个关键字值key[x]，另外，还要为结点分配priority[x]，它是一个独立选取的随机数。</p>
+<p><img src="https://imine141.github.io/images/1559037015141.png" alt="img"></p>
+<p>假设所有的优先级是不同的，所有的关键字也是不同的。treap的结点排列成让关键字遵循二叉查找树性质，并且优先级遵循最小堆顺序性质：</p>
+<ol>
+<li>如果v是u的左孩子，则key[v] &lt; key[u].</li>
+<li>如果v是u的右孩子，则key[v] &gt; key[u].</li>
+<li>如果v是u的孩子，则priority[u] &gt; priority[u].</li>
+</ol>
+<p>这两个性质的结合就是为什么这种树被称为“treap”的原因，因为它同时具有二叉查找树和堆的特征。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/09/01/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E5%9B%BE/">图</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-09-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><div class="content"><h2 id="一、图的基本概念"><a href="#一、图的基本概念" class="headerlink" title="一、图的基本概念"></a>一、图的基本概念</h2><p>图：由顶点的有穷非空集合和顶点之间边的集合组成，通常表示为: G(V,E)，其中，G 表示一个图，V 是图 G 中顶点的集合。E 是图 G 中边的集合。</p>
+<h3 id="1、各种图定义"><a href="#1、各种图定义" class="headerlink" title="1、各种图定义"></a>1、各种图定义</h3><ul>
+<li><strong>无向边</strong>：若顶点 <code>V_i</code> 到 <code>V_j</code>，之间的边没有方向，则称这条边为无向边(Edge)。<ul>
+<li>用无序偶对 (<code>V_i</code>，<code>V_j</code>) 来表示。</li>
+</ul>
+</li>
+<li><strong>有向边</strong>：若从顶点 <code>V_i</code> 到 <code>V_j</code>的边有方向，则称这条边为有向边，也称为弧（Arc）。<ul>
+<li>用有序偶&lt;<code>V_i</code>，<code>V_j</code>&gt;来表示 . <code>V_i</code>称为弧尾，<code>V_j</code>称为弧头。</li>
+</ul>
+</li>
+<li><strong>无向图</strong>：如果图中任意两个顶点之间的边都是无向边，则称该图为无向图(Undirected graphs)。</li>
+<li><strong>有向图</strong>：如果图中任意两个顶点之间的边都是有向边，则称该图为有向图(Directed graphs)。</li>
+<li><strong>无向完全图</strong>：在无向图中，如果任意两个顶点之间都存在边，则称该因为无向完全图。<ul>
+<li>含有 n 个顶点的无向完全图有  n(n-1)&#x2F;2  条边。</li>
+</ul>
+</li>
+<li><strong>有向完全图</strong>：在有向图中，如果任意两个顶点之间都存在方向互为相反的两条弧，则称该图为有向完全图。<ul>
+<li>含有 n 个顶点的有向完全图有 <code>n*(n-1)</code> 条边</li>
+</ul>
+</li>
+<li><strong>权</strong>：与图的边或弧相关的数叫做权(Weight)</li>
+<li><strong>网</strong>：带权的图通常称为网 (Network) 。</li>
+<li><strong>简单图</strong>：在图中，若不存在顶点到其自身的边，且同一条边不重复出现，则称这样的图为简单图。</li>
+<li>有很少条边或弧的图称为<strong>稀疏图</strong>，反之称为<strong>稠密图</strong>。稀疏、稠密是相对的。</li>
+<li><strong>子图</strong>：假设有两个图 G&#x3D; (V,{E}) 和 G’&#x3D; (V’,{E’}) ，如果 <code>V&#39;为 V的子图</code> 且 <code>E&#39;为 E的子图</code>，则称 G’ 为 G 的子图。</li>
+</ul>
+<h3 id="2、图的顶点与边间关系"><a href="#2、图的顶点与边间关系" class="headerlink" title="2、图的顶点与边间关系"></a>2、图的顶点与边间关系</h3><ul>
+<li><strong>邻接点</strong>：无向图中，顶点之间如有边相连，则互为邻接点</li>
+<li><strong>顶点的度</strong>：记为TD(v)<ul>
+<li>无向图中，和顶点相关联的边的数目，就是顶点的度</li>
+<li>有向图中，TD(v) &#x3D; ID(v) + OD(v)<ul>
+<li><strong>入度</strong>：有向图中，以顶点为头的弧的数目，记为ID(v)</li>
+<li><strong>出度</strong>：有向图中，以顶点为尾的弧的数目，记为OD(v)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>路径</strong>：<ul>
+<li>无向图中，顶点到顶点的路径是一个顶点序列</li>
+<li>有向图中，路径也是有向的</li>
+<li><strong>路径的长度</strong>：是路径上的边或弧的数目。</li>
+</ul>
+</li>
+<li><strong>回路或环</strong>：第一个顶点到最后一个顶点相同的路径称为回路或环</li>
+<li><strong>简单路径</strong>：序列中顶点不重复出现的路径称为简单路径</li>
+<li><strong>简单回路</strong>：除了第一个顶点和最后一个顶点之外，其余顶点不重复出现的回路，称为简单回路或简单环。</li>
+</ul>
+<h3 id="3、连通图相关术语"><a href="#3、连通图相关术语" class="headerlink" title="3、连通图相关术语"></a>3、连通图相关术语</h3><ul>
+<li><strong>连通</strong>：无向图中，如果顶点间有路径，则称为连通的</li>
+<li><strong>连通图</strong>：无向图中，如果图中任意两个顶点都是连通的，则为连通图</li>
+<li><strong>强连通图</strong>：有向图中，每一对顶点之间都<em>相互</em>存在路径，则为强连通图</li>
+<li><strong>连通分量</strong>：无向图中的<em>极大</em>连通子图称为连通分量</li>
+<li><strong>强连通分量</strong>：有向图中的<em>极大</em>强连通子图称做有向图的强连通分量。</li>
+<li><strong>生成树</strong>：无向图中连通且有 n 个顶点 n-l 条边。</li>
+<li><strong>有向树</strong>：有向图恰有一个顶点的入度为 0 ，其余顶点的入度均为 1。</li>
+<li><strong>生成森林</strong>：一个有向图的生成森林由若干棵有向树组成 ， 含有图中全部顶点，但只有足以构成若干棵不相交的有向树的弧。</li>
+</ul>
+<h2 id="二、图的存储及基本操作"><a href="#二、图的存储及基本操作" class="headerlink" title="二、图的存储及基本操作"></a>二、图的存储及基本操作</h2><h3 id="1、邻接矩阵：适合稠密图"><a href="#1、邻接矩阵：适合稠密图" class="headerlink" title="1、邻接矩阵：适合稠密图"></a>1、邻接矩阵：适合稠密图</h3><p>邻接矩阵 (Adjacency Matrix)用两个数组来表示图：</p>
+<ul>
+<li><p>一维数组：存储图中顶点信息</p>
+</li>
+<li><p>二维数组：存储图中的边或弧的信息。</p>
+</li>
+</ul>
+<h4 id="1）无向图"><a href="#1）无向图" class="headerlink" title="1）无向图"></a>1）无向图</h4><p><img src="https://imine141.github.io/images/%E5%9B%BE1" alt="img"></p>
+<ul>
+<li>无向图的边数组是一个对称矩阵</li>
+<li>有无边：arc[i][j] 是否为 1</li>
+<li>顶点的度：顶点<code>v_i</code>在邻接矩阵中第 i 行(或第 i列)的元素之和</li>
+<li>邻接点：邻接矩阵中第 i 行元素值为 1 就是顶点<code>v_i</code>的邻接点。</li>
+</ul>
+<h4 id="2）有向图"><a href="#2）有向图" class="headerlink" title="2）有向图"></a>2）有向图</h4><p><img src="https://imine141.github.io/images/%E5%9B%BE2" alt="img"></p>
+<ul>
+<li>有向图的矩阵不对称。</li>
+<li>有无弧：arc[i][j] 是否为 1</li>
+<li>入度：第 i 行元素之和</li>
+<li>出度：第 i 列元素之和</li>
+<li>邻接点：第 i 行元素值为 1 的</li>
+</ul>
+<h4 id="3）网"><a href="#3）网" class="headerlink" title="3）网"></a>3）网</h4><p>网的对应边或弧存权值</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE3.jpg" alt="img"></p>
+<h3 id="2、邻接表：适合稀疏图"><a href="#2、邻接表：适合稀疏图" class="headerlink" title="2、邻接表：适合稀疏图"></a>2、邻接表：适合稀疏图</h3><p>邻接表(Adjacency List) 使用数组与链表相结合存储图</p>
+<ul>
+<li>一维数组：存顶点，和指向第一个邻接点的指针</li>
+<li>单链表：存每个顶点的所有邻接点。邻接点在顶点表中的下标，</li>
+</ul>
+<h4 id="1）无向图-1"><a href="#1）无向图-1" class="headerlink" title="1）无向图"></a>1）无向图</h4><p><img src="https://imine141.github.io/images/%E5%9B%BE4.jpg" alt="img"></p>
+<ul>
+<li>度：顶点的边表中结点的个数</li>
+<li>是否存在边：测试定点边表中是否存在结点下标</li>
+<li>邻接点：顶点的边表</li>
+</ul>
+<h4 id="2）有向图-1"><a href="#2）有向图-1" class="headerlink" title="2）有向图"></a>2）有向图</h4><p>以顶点为弧尾来存储边表</p>
+<p>有向图的逆邻接表：以顶点为弧头的边表</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE5.jpg" alt="img"></p>
+<h4 id="3）网-1"><a href="#3）网-1" class="headerlink" title="3）网"></a>3）网</h4><p>在边表结点定义中再增加一个 weight 的数据域，存储权值信息</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE6.jpg" alt="img"></p>
+<h3 id="3、十字链表：适合有向图"><a href="#3、十字链表：适合有向图" class="headerlink" title="3、十字链表：适合有向图"></a>3、十字链表：适合有向图</h3><p>对于有向图来说，邻接表是有缺陷的。出度入度只能关心一个。</p>
+<p>十字链表把邻接表与逆邻接表结合起来。</p>
+<ul>
+<li>一维数组：顶点表结点<ul>
+<li>data</li>
+<li>firstin：入边表头指针</li>
+<li>firstout：出边表头指针</li>
+</ul>
+</li>
+<li>边表结点：<ul>
+<li>tailvex：弧起点在顶点表的下标</li>
+<li>headvex：弧终点在顶点表中的下标</li>
+<li>headlink：入边表指针域</li>
+<li>taillink ：边表指针域</li>
+<li>weight：如果是网，存储权值</li>
+</ul>
+</li>
+</ul>
+<p>实线箭头指针的图示与邻接表相同。虚线箭头是逆邻接表的表示。</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE7.jpg" alt="img"></p>
+<h3 id="4、邻接多重表：适合处理无向图的边"><a href="#4、邻接多重表：适合处理无向图的边" class="headerlink" title="4、邻接多重表：适合处理无向图的边"></a>4、邻接多重表：适合处理无向图的边</h3><p>ivex 和 jvex 是与某条边依附的两个顶点在顶点表中下标。ilink 指向依附顶点 ivex 的下一条边， jlink 指向依附顶点 jvex 的下一条边。这就是邻接多重表结构。</p>
+<p>邻接多重表与邻接表的差别，仅仅是在于同一条边在邻接表中用两个结点表示，而在邻接多重表中只有一个结点。</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE8.jpg" alt="img"></p>
+<h3 id="5、边集数组：适合对边依次处理"><a href="#5、边集数组：适合对边依次处理" class="headerlink" title="5、边集数组：适合对边依次处理"></a>5、边集数组：适合对边依次处理</h3><p>边集数组是由两个一维数组构成。一个是存储顶点的信息;另一个是存储边的信息，这个边数组每个数据元素由一条边的起点下标 (begin) 、终点下标 (end) 和权(weigbt) 组成</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE9" alt="img"></p>
+<h2 id="三、图的遍历"><a href="#三、图的遍历" class="headerlink" title="三、图的遍历"></a>三、图的遍历</h2><p>图的遍历(Traversing Grapb)：从图中某一顶点出发访遍图中其余顶点，且使每一个顶点仅被访问一次</p>
+<h3 id="1、深度优先搜索"><a href="#1、深度优先搜索" class="headerlink" title="1、深度优先搜索"></a>1、深度优先搜索</h3><p>深度优先遍历(Depth_First_Search)，也有称为深度优先搜索，简称为 DFS。</p>
+<p>类似于树的前序遍历，用数组记录访问：</p>
+<ol>
+<li>访问初始结点v，并标记结点v为已访问。</li>
+<li>查找结点v的第一个邻接结点w。</li>
+<li>若w存在，则继续执行4，否则算法结束。</li>
+<li>若w未被访问，对w进行深度优先遍历递归（即把w当做另一个v，然后进行步骤123）。</li>
+<li>查找结点v的w邻接结点的下一个邻接结点，转到步骤3。</li>
+</ol>
+<h3 id="2、广度优先搜索"><a href="#2、广度优先搜索" class="headerlink" title="2、广度优先搜索"></a>2、广度优先搜索</h3><p>广度优先遍历 (Breadth.First.Search) ，又称为广度优先搜索，简称 BFS。</p>
+<p>类似于树的分层遍历，用队列保持访问过的结点的顺序：</p>
+<ol>
+<li>访问初始结点v并标记结点v为已访问。</li>
+<li>结点v入队列</li>
+<li>当队列非空时，继续执行，否则算法结束。</li>
+<li>出队列，取得队头结点u。</li>
+<li>查找结点u的第一个邻接结点w。</li>
+<li>若结点u的邻接结点w不存在，则转到步骤3；否则循环执行以下三个步骤：<ol>
+<li>若结点w尚未被访问，则访问结点w并标记为已访问。</li>
+<li>结点w入队列</li>
+<li>查找结点u的继w邻接结点后的下一个邻接结点w，转到步骤6。</li>
+</ol>
+</li>
+</ol>
+<h2 id="四、图的基本应用"><a href="#四、图的基本应用" class="headerlink" title="四、图的基本应用"></a>四、图的基本应用</h2><h3 id="1、最小（代价）生成树"><a href="#1、最小（代价）生成树" class="headerlink" title="1、最小（代价）生成树"></a>1、最小（代价）生成树</h3><p>最小生成树： 一个具有n个顶点的加权的无向连通图，用n-1条边连接这n个顶点，并且使得连接之后的所有边的权值之和最小的树。</p>
+<h4 id="1）普里姆-Prim-算法"><a href="#1）普里姆-Prim-算法" class="headerlink" title="1）普里姆 ( Prim )算法"></a>1）普里姆 ( Prim )算法</h4><ol>
+<li>将点分为两拨，已经加入最小生成树的，未加入的</li>
+<li>找到未加入中距离集合最近的点，添加该点，修改其它点到集合的距离</li>
+<li>直到所有结点都加入到最小生成树</li>
+</ol>
+<h4 id="2）克鲁斯卡尔-Kruskal-算法"><a href="#2）克鲁斯卡尔-Kruskal-算法" class="headerlink" title="2）克鲁斯卡尔( Kruskal )算法"></a>2）克鲁斯卡尔( Kruskal )算法</h4><ol>
+<li>现将所有边进行权值的从小到大排序</li>
+<li>定义一个一维数组代表连接过的边，数组的下标为边的起点，值为边的终点</li>
+<li>按照排好序的集合用边对顶点进行依次连接，连接的边则存放到一维数组中</li>
+<li>用一维数组判断是否对已经连接的边能构成回路，有回路则无效，没回路则是一条有效边</li>
+<li>重复3，4直至遍历完所有的边为止，即找到最小生成树</li>
+</ol>
+<h3 id="2、最短路径"><a href="#2、最短路径" class="headerlink" title="2、最短路径"></a>2、最短路径</h3><p>对于网图来说，最短路径，是指两顶点之间经过的边上权值之和最少的路径，并且我们称路径上的第一个顶点是源点，最后一个顶点是终点。</p>
+<h4 id="1）迪杰斯特拉-Dijkstra-算法"><a href="#1）迪杰斯特拉-Dijkstra-算法" class="headerlink" title="1）迪杰斯特拉( Dijkstra ) 算法"></a>1）迪杰斯特拉( Dijkstra ) 算法</h4><p>适用于求一个节点到其他节点的最短路径，通过广度搜索来遍历其他所有需要求距离的点。</p>
+<ol>
+<li>选取初始节点作为一个集合，D(v)表示初始节点到V节点的最短路径</li>
+<li>所有能直接到达V的节点路径记为 D(v)&#x3D;距离，不能直接到达的节点路径记为 D(v)&#x3D;无穷</li>
+<li>选取 D(v) 最小的节点加入初始节点集合，最短路径记为<code>D(w)=min(D(w),D(v)+j(v,w))</code>（j(v,w)为节点V到W的距离）</li>
+<li>重复步骤3，直到所有节点都加入初始节点集合</li>
+</ol>
+<h4 id="2）弗洛伊德-Floyd-算法"><a href="#2）弗洛伊德-Floyd-算法" class="headerlink" title="2）弗洛伊德( Floyd )算法"></a>2）弗洛伊德( Floyd )算法</h4><p>适用于求所有顶点至所有顶点的最短路径问题。</p>
+<p><img src="https://imine141.github.io/images/%E5%9B%BE10.jpg" alt="img"></p>
+<ol>
+<li>确定一个中间点</li>
+<li>定义两个二维数组 D[][] 和 P[][]<ul>
+<li>D 代表顶点到顶点的最短路径权值和的矩阵，即点的邻接矩阵</li>
+<li>P 代表对应顶点的最小路径的前驱矩阵</li>
+</ul>
+</li>
+<li>对于每一对顶点 v 和 w，看看是否存在一个顶点 u 使得从 v 到 u 再到 w 比己知的路径更短。</li>
+</ol>
+<h3 id="3、拓扑排序"><a href="#3、拓扑排序" class="headerlink" title="3、拓扑排序"></a>3、拓扑排序</h3><ul>
+<li>AOV：有向无环图</li>
+<li>拓扑序列：是一个有向无环图的所有顶点的线性序列。<ul>
+<li>每个顶点出现且只出现一次。</li>
+<li>若存在一条从顶点 A 到顶点 B 的路径，那么在序列中顶点 A 出现在顶点 B 的前面。</li>
+</ul>
+</li>
+<li>拓扑排序：对一个有向图构造拓扑序列的过程<ul>
+<li>从 AOV 中选择一个入度为0的顶点并输出。</li>
+<li>从图中删除该顶点，井删除以此顶点为尾的弧</li>
+<li>重复此步骤，直到输出全部顶点，或不存在入度为0的顶点为止。</li>
+</ul>
+</li>
+</ul>
+<p>建立一个邻接表，在顶点表结点结构中，增加一个人度域 in</p>
+<h3 id="4、关键路径"><a href="#4、关键路径" class="headerlink" title="4、关键路径"></a>4、关键路径</h3><ul>
+<li>AOE：有向无环网</li>
+<li>路径长度：路径上各个活动所持续的时间之和</li>
+<li>关键路径：从源点到汇点具有最大长度的路径</li>
+<li>关键活动：在关键路径上的活动</li>
+</ul>
+<h5 id="关键路径算法"><a href="#关键路径算法" class="headerlink" title="关键路径算法"></a>关键路径算法</h5><ol>
+<li>事件最早开始时间（etv）：顶点<code>v_k</code>最早发生的时间。</li>
+<li>事件最晚开始时间（ltv）：顶点<code>v_k</code>最晚发生的时间，超出则会延误整个工期。</li>
+<li>活动的最早开始时间（ete）：弧<code>a_k</code>最早发生时间。</li>
+<li>活动的最晚开始时间（lte）：弧<code>a_k</code>最晚发生时间。不推迟工期的最晚开工时间。</li>
+</ol>
+<p>由 1 和 2 可以求得 3 和 4 ，然后再根据 ete[k] 是否与 lte[k] 相等来判断<code>a_k</code>是 否是关键活动。</p>
+<p>建立一个邻接表，弧链表增加了 weight 域，用来存储弧的权值。</p>
+<ul>
+<li>先要调用一次拓扑序列算法的代码来计算etv和拓扑序列表。</li>
+<li>数组etv存储事件最早发生时间</li>
+<li>数组ltv存储事件最迟发生时间</li>
+<li>全局栈用来保存拓扑序列</li>
+</ul>
+<p>如果是多条关键路径，则单是提高一条关键路径上的关键活动速度并不是能导致整个工程缩短工期、而必须提高同时在几条关键路径上的活动的速度。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/29/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91/">树</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><div class="content"><h2 id="一、树的基本概念"><a href="#一、树的基本概念" class="headerlink" title="一、树的基本概念"></a>一、树的基本概念</h2><p>树：是 n ( n&gt;&#x3D;0 ) 个结点的有限集。</p>
+<ul>
+<li>n &#x3D; 0 时称为空树。</li>
+<li>在任意一棵非空树中:<ul>
+<li>有且仅有一个根结点</li>
+<li>当 n &gt; 1 时，其余结点可分为一个或多个互不相交的有限集。 其中每一个集合本身又是一棵树，并且称为根的子树。</li>
+</ul>
+</li>
+</ul>
+<h3 id="1、结点分类"><a href="#1、结点分类" class="headerlink" title="1、结点分类"></a>1、结点分类</h3><ul>
+<li>结点的度：结点拥有的子树数</li>
+<li>叶结点：度为 0 的结点</li>
+<li>分支结点：度不为 0 的结点</li>
+<li>树的度：树内各结点的度的最大值</li>
+</ul>
+<h3 id="2、结点间关系"><a href="#2、结点间关系" class="headerlink" title="2、结点间关系"></a>2、结点间关系</h3><ul>
+<li>孩子：结点的子树的根称</li>
+<li>双亲：上一结点</li>
+<li>兄弟：同一个双亲的孩子</li>
+<li>祖先：从根到该结点所经分支上的所有结点</li>
+</ul>
+<h3 id="3、树的其他相关概念"><a href="#3、树的其他相关概念" class="headerlink" title="3、树的其他相关概念"></a>3、树的其他相关概念</h3><ul>
+<li>层次：根开始定义起，根为第一层 ，根的孩子为第二层</li>
+<li>堂兄弟：双亲在同一层的结点</li>
+<li>树的深度：树中结点的最大层次</li>
+<li>有序树：树中结点的各子树从左至右有次序，不能互换</li>
+<li>无序树：非有序树</li>
+<li>森林：m (m&gt;&#x3D;0) 互不相交的树的集合</li>
+</ul>
+<h2 id="二、二叉树"><a href="#二、二叉树" class="headerlink" title="二、二叉树"></a>二、二叉树</h2><h3 id="1、二叉树的定义"><a href="#1、二叉树的定义" class="headerlink" title="1、二叉树的定义"></a>1、二叉树的定义</h3><p>二叉树：是 n(n &gt;&#x3D; 0) 个结点的有限集合，该集合或者为空集(称为空二叉树)，或者由一个根结点和两棵互不相交的、分别称为根结点的左子树和右子树的二叉树组成。</p>
+<h4 id="1）主要特征"><a href="#1）主要特征" class="headerlink" title="1）主要特征"></a>1）主要特征</h4><ul>
+<li>每个结点最多有两棵子树，所以二叉树中不存在度大于 2 的结点。</li>
+<li>左子树和右子树是有顺序的，次序不能任意颠倒。</li>
+<li>即使树中某结点只有一棵子树，也要区分它是左子树还是右子树.</li>
+</ul>
+<h4 id="2）特殊二叉树"><a href="#2）特殊二叉树" class="headerlink" title="2）特殊二叉树"></a>2）特殊二叉树</h4><ul>
+<li>斜树：都只有一边子结点<ul>
+<li>左斜树：所有的结点都只有左子树的二叉树</li>
+<li>右斜树：所有结点都是只有右子树的二叉树</li>
+<li>线性表结构可以理解为是树的一种极其特殊的表现形式</li>
+</ul>
+</li>
+<li>满二叉树：每层结点都排满了</li>
+<li>完全二叉树：按层排序，到结尾中间没有漏掉的结点</li>
+</ul>
+<h4 id="3）二叉树性质"><a href="#3）二叉树性质" class="headerlink" title="3）二叉树性质"></a>3）二叉树性质</h4><ul>
+<li><p>在二叉树的第 i 层上至多有 <code>2^&#123;i-1&#125;</code> 个结点 (i &gt;&#x3D; 1 ) 。</p>
+</li>
+<li><p>深度为 k 的二叉树至多有<code>2^k-1</code>个结点 (k &gt;&#x3D; l) 。</p>
+</li>
+<li><p>对任何一棵二叉树 T，如果其终端结点数为 <code>n_0</code>，度为 2 的结点数为 <code>n_2</code>，则 <code>n_0 = n_2 +1</code>。</p>
+</li>
+<li><p>具有 n 个结点的完全二叉树的深度为 <code>[log_2n]+1</code> ([x] 表示不大于 x 的最大整数)。</p>
+</li>
+<li><p>如果对一棵有 n 个结点的完全二叉树(其深度为 <code> [log_2n]+1</code> ) 的结点按层序编号(从第 1 层到第<code> [log_2n]+1</code>层，每层从左到右) ，对任一结点 i (1&lt;&#x3D; i&lt;&#x3D; n)有:</p>
+<ul>
+<li>如果 i &#x3D; 1 ，则结点 i 是二叉树的根，无双亲；如果 i &gt; 1 ，则其双亲是结点 [i&#x2F;2]。</li>
+</ul>
+</li>
+<li><p>如果 2i &gt; n ，则结点 i 无左孩子(结点 i 为叶子结点)；否则其左孩子是结点 2i。</p>
+<ul>
+<li>如果 2i+1 &gt; n ，则结点 i 无右孩子；否则其右孩子是结点 2i+1 。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、二叉树的存储结构"><a href="#2、二叉树的存储结构" class="headerlink" title="2、二叉树的存储结构"></a>2、二叉树的存储结构</h3><h4 id="1）顺序存储结构"><a href="#1）顺序存储结构" class="headerlink" title="1）顺序存储结构"></a>1）顺序存储结构</h4><p>顺序存储结构一般只用于完全二叉树。</p>
+<p>用一维数组存储二叉树中的结点，数组的下标和结点序号一致。没有结点的存空。</p>
+<h4 id="2）链式存储结构"><a href="#2）链式存储结构" class="headerlink" title="2）链式存储结构"></a>2）链式存储结构</h4><p>二叉链表：一个数据域和两个指针域的链表。</p>
+<p>指针域分别存左孩子和右孩子的指针。</p>
+<h3 id="3、二叉树的遍历"><a href="#3、二叉树的遍历" class="headerlink" title="3、二叉树的遍历"></a>3、二叉树的遍历</h3><h4 id="1）遍历方法"><a href="#1）遍历方法" class="headerlink" title="1）遍历方法"></a>1）遍历方法</h4><ul>
+<li>前序遍历：根节点-&gt;左子树-&gt;右子树</li>
+<li>中序遍历：左子树-&gt;根节点-&gt;右子树</li>
+<li>后序遍历：左子树-&gt;右子树-&gt;根节点</li>
+<li>层序（宽度优先、广度优先）遍历：每一层从左向右输出</li>
+</ul>
+<p>前序、中序、后序遍历用迭代很简单。</p>
+<p>层序遍历，元素储存有先进先出的特性，选用队列。</p>
+<h4 id="2）遍历推导"><a href="#2）遍历推导" class="headerlink" title="2）遍历推导"></a>2）遍历推导</h4><ul>
+<li>己知前序遍历序列和中序遍历序列，可以唯一确定一棵二叉树。</li>
+<li>已知后序遍历序列和中序遍历序列，可以唯一确定一棵二叉树 。</li>
+<li>已知前序和后序遍历，是不能确定一棵二叉树的</li>
+</ul>
+<h4 id="3）二叉树的建立"><a href="#3）二叉树的建立" class="headerlink" title="3）二叉树的建立"></a>3）二叉树的建立</h4><p>扩展二叉树：将每个结点的空指针引出一个虚结点，值为特定值（如“#”）</p>
+<p>扩展二叉树可以用递归采用前序、中序、后序遍历的一个遍历序列就确定一颗二叉树。</p>
+<h3 id="4、线索二叉树"><a href="#4、线索二叉树" class="headerlink" title="4、线索二叉树"></a>4、线索二叉树</h3><h4 id="1）基本概念"><a href="#1）基本概念" class="headerlink" title="1）基本概念"></a>1）基本概念</h4><ul>
+<li>线索：指向前驱和后继的指针称为线索</li>
+<li>线索链表：加上线索的二叉链表称为线索链表</li>
+<li>线索化：将二叉链表中的空指针改为指向前驱或后继的线索</li>
+</ul>
+<p>线索二叉树，等于是把一棵二叉树转属变成了一个双向链表，对插入删除结点、查找某个结点都带来了方便</p>
+<h4 id="2）构造"><a href="#2）构造" class="headerlink" title="2）构造"></a>2）构造</h4><p>每个结点增设两个标志域 ltag 和 rtag，区分指针是指向孩子还是指向前驱、后继。</p>
+<p>在遍历的过程中修改空指针。</p>
+<p>如果所用的二叉树需经常遍历或查找结点时需要某种遍历序列中的前驱和后继，那么采用线索二叉链表的存储结构就是非常不错的选择。</p>
+<h2 id="三、树、森林"><a href="#三、树、森林" class="headerlink" title="三、树、森林"></a>三、树、森林</h2><h3 id="1、树的存储结构"><a href="#1、树的存储结构" class="headerlink" title="1、树的存储结构"></a>1、树的存储结构</h3><h4 id="1-）双亲表示法"><a href="#1-）双亲表示法" class="headerlink" title="1 ）双亲表示法"></a>1 ）双亲表示法</h4><p>除了根结点外，其余每个结点，它不一定有孩子，但是一定有且仅有一个双亲。以一组连续空间存储树的结点，同时在每个结点中，附设一个指示器指示其双亲结点到链表中的位置。</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%911"></p>
+<p>存储结构的设计是一个非常灵活的过程。</p>
+<ul>
+<li>双亲域：增加一个结点指示其双亲结点的域</li>
+<li>长子域：增加一个结点最左边孩子的域</li>
+<li>右兄弟域：增加一个右兄弟域体现兄弟关系</li>
+</ul>
+<p>当算法中需要在树结构中频繁地查找某结点的父结点时，使用双亲表示法最合适。当频繁地访问结点的孩子结点时，双亲表示法就很麻烦，采用孩子表示法就很简单。</p>
+<h4 id="2）孩子表示法"><a href="#2）孩子表示法" class="headerlink" title="2）孩子表示法"></a>2）孩子表示法</h4><p>由于树中每个结点可能有多棵子树，可以考虑用多重链表，即每个结点有多个指针域，其中每个指针指向一棵子树的根结点，我们把这种方法叫做多重链表表示法。</p>
+<ul>
+<li>方案一：指针域的个数就等于树的度<ul>
+<li>树中各结点的度相差很大时，浪费空间</li>
+</ul>
+</li>
+<li>方案二：每个结点指针域的个数等于该结点的度<ul>
+<li>各个结点的链表是不相同的结构，还要维护结点的度的数值，浪费运算时间</li>
+</ul>
+</li>
+</ul>
+<h5 id="孩子表示法"><a href="#孩子表示法" class="headerlink" title="孩子表示法"></a>孩子表示法</h5><p>把每个结点的孩子结点排列起来，以单链表作存储结构，则 n 个结点有 n 个孩子链表，如果是叶子结点则此单链表为空。然后 n 个头指针又组成一个线性表，采用顺序存储结构，存放进一个一维数组中</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%912"></p>
+<h5 id="双亲孩子表示法"><a href="#双亲孩子表示法" class="headerlink" title="双亲孩子表示法"></a>双亲孩子表示法</h5><p>使用孩子表示法存储的树结构，正好和双亲表示法相反，适用于查找某结点的孩子结点，不适用于查找其父结点。可以将两种表示方法合二为一</p>
+<p><img src="https://imine141.github.io/images/%E6%A0%913"></p>
+<h5 id="孩子兄弟表示法"><a href="#孩子兄弟表示法" class="headerlink" title="孩子兄弟表示法"></a>孩子兄弟表示法</h5><p>把一棵复杂的树变成一棵二叉树</p>
+<p>链表中每个结点由 3 部分组成：</p>
+<ul>
+<li>孩子指针域：表示指向当前结点的第一个孩子结点</li>
+<li>数据域</li>
+<li>兄弟指针域：表示指向当前结点的下一个兄弟结点</li>
+</ul>
+<p><img src="https://imine141.github.io/images/%E6%A0%914"></p>
+<h3 id="2、树、森林与二叉树的转换"><a href="#2、树、森林与二叉树的转换" class="headerlink" title="2、树、森林与二叉树的转换"></a>2、树、森林与二叉树的转换</h3><h4 id="1）树转换为二叉树"><a href="#1）树转换为二叉树" class="headerlink" title="1）树转换为二叉树"></a>1）树转换为二叉树</h4><ol>
+<li>加线。在所有兄弟结点之间加一条连线。</li>
+<li>去钱。对树中每个结点，只保留它与第一个孩子结点的连线，删除色与其他孩子结点之间的连线。</li>
+<li>层次调整。以树的根结点为轴心，将整棵树顺时针旋转一定的角度，使之结构层次分明。（注意第一个孩子是结点的左孩子，兄弟转换过来的孩子是结点的右孩子）</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%915"></p>
+<h4 id="2）森林转换为二叉树"><a href="#2）森林转换为二叉树" class="headerlink" title="2）森林转换为二叉树"></a>2）森林转换为二叉树</h4><ol>
+<li>把每棵树转换为二叉树。</li>
+<li>第一棵二叉树不动，从第二棵二叉树开始，依次把后一棵二叉树的根结点作为前一棵二叉树的根结点的右孩子，用线连接起来。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%916"></p>
+<h4 id="3）二叉树转换为树"><a href="#3）二叉树转换为树" class="headerlink" title="3）二叉树转换为树"></a>3）二叉树转换为树</h4><ol>
+<li>加线。若某结点X的左孩子结点存在，则将这个左孩子的右孩子结点、右孩子的右孩子结点、右孩子的右孩子的右孩子结点…，都作为结点X的孩子。将结点X与这些右孩子结点用线连接起来。</li>
+<li>去线。删除原二叉树中所有结点与其右孩子结点的连线。</li>
+<li>层次调整。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%917"></p>
+<h4 id="4）二叉树转换为森林"><a href="#4）二叉树转换为森林" class="headerlink" title="4）二叉树转换为森林"></a>4）二叉树转换为森林</h4><p>假如一棵二叉树的根节点有右孩子，则这棵二叉树能够转换为森林，否则将转换为一棵树。</p>
+<ol>
+<li>从根节点开始，若右孩子存在，则把与右孩子结点的连线删除。再查看分离后的二叉树，若其根节点的右孩子存在，则连线删除…。直到所有这些根节点与右孩子的连线都删除为止。</li>
+<li>将每棵分离后的二叉树转换为树。</li>
+</ol>
+<p><img src="https://imine141.github.io/images/%E6%A0%918"></p>
+<h3 id="3、树和森林的遍历"><a href="#3、树和森林的遍历" class="headerlink" title="3、树和森林的遍历"></a>3、树和森林的遍历</h3><h4 id="1）树的遍历"><a href="#1）树的遍历" class="headerlink" title="1）树的遍历"></a>1）树的遍历</h4><p>分为两种方式</p>
+<ul>
+<li>一种是先根遍历树，即先访问树的根结点，然后依次先根遍历棍的每棵子树。</li>
+<li>另一种是后根遍历，即先依次后根遍历每棵子树，然后再访问根结点</li>
+</ul>
+<h4 id="2）森林的遍历"><a href="#2）森林的遍历" class="headerlink" title="2）森林的遍历"></a>2）森林的遍历</h4><p>也分为两种方式:</p>
+<ul>
+<li>前序遍历: 先访问森林中第一棵树的根结点，然后再依次先根遍历根的每棵子树，再依放用同样方式遍历除去第一棵树的剩余树构成的森林。</li>
+<li>后序遍历: 是先访问森林中第一棵树，后根遍历的方式遍历每棵子树，然后再访问根结点，再依次同样方式遍历除去第一棵树的剩余树构成的森林。</li>
+</ul>
+<p>森林的前序遍历和二叉树的前序遍历结果相同，森林的后序遍历和二叉树的中序遍历结果相同。</p>
+<p>当以二叉链表作树的存储结构时，树的先根遍历和后根遍历完全可以借用二叉树的前序遍历和中序遍历的算法来实现。</p>
+<h2 id="四、二叉树的应用"><a href="#四、二叉树的应用" class="headerlink" title="四、二叉树的应用"></a>四、二叉树的应用</h2><h3 id="1、BST（二叉排序树-二叉查找树-二叉搜索树）"><a href="#1、BST（二叉排序树-二叉查找树-二叉搜索树）" class="headerlink" title="1、BST（二叉排序树&#x2F;二叉查找树&#x2F;二叉搜索树）"></a>1、BST（二叉排序树&#x2F;二叉查找树&#x2F;二叉搜索树）</h3><h4 id="1）定义"><a href="#1）定义" class="headerlink" title="1）定义"></a>1）定义</h4><p>二叉排序树：又称为二叉查找树、二叉搜索树。它或者是一棵空树，或者是具有下列性质的二叉树。</p>
+<ul>
+<li>若它的左子树不空，则左子树上所有结点的值均小于它的根结点的值;</li>
+<li>若它的右子树不空，则右子树上所有结点的值均大于它的根结点的值;</li>
+<li>它的左、右子树也分别为二叉排序树。</li>
+</ul>
+<p>二叉排序树利于插入和删除的实现。</p>
+<h4 id="2-操作"><a href="#2-操作" class="headerlink" title="2)操作"></a>2)操作</h4><ul>
+<li>查找：查找成功返回ture，指向成功结点；查找失败返回false，指向上一结点。</li>
+<li>插入：查找不成功，则插入到上一节点的子节点</li>
+<li>构建：反复插入</li>
+<li>删除：<ul>
+<li>叶子节点直接删；</li>
+<li>只有左或右子树的，“子继父业”；</li>
+<li>左右子树都有的，找到需要删除的结点 p 的直接前驱(或直接后继) s，用 s 来替换结点 p，然后再删除此结点 s，s 的子结点移到 s 原来的位置</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、平衡二叉树"><a href="#2、平衡二叉树" class="headerlink" title="2、平衡二叉树"></a>2、平衡二叉树</h3><h4 id="1）定义-1"><a href="#1）定义-1" class="headerlink" title="1）定义"></a>1）定义</h4><ul>
+<li>平衡二叉树：是一种二叉排序树，其中每一个节点的左子树和右子树的高度之差的绝对值不超过 1。</li>
+<li>平衡因子：二叉树上结点的左子树深度减去右子树深度的值（只可能是-1 、0 和 1）</li>
+<li>最小失衡子树：在新插入的结点向上查找，以第一个平衡因子的绝对值超过1的结点为根的子树称为最小不平衡子树。</li>
+</ul>
+<h4 id="2）失衡调整"><a href="#2）失衡调整" class="headerlink" title="2）失衡调整"></a>2）失衡调整</h4><p><img src="https://imine141.github.io/images/%E6%A0%919"></p>
+<ul>
+<li>LL失衡：右旋（Zig）。当传入一个二叉排序树 P，将它的左孩子结点定义为 L ，将 L 的右子树变成 P 的左子树，再将 P 改成 L 的右子树，最后将 L 替换 P 成为根结点。</li>
+<li>RR失衡：左旋（Zag）。与右旋对称。</li>
+<li>LR失衡：先左旋后右旋（Zig-zag）</li>
+<li>RL失衡：先右旋后左旋（Zag-zig）</li>
+</ul>
+<h3 id="3、堆"><a href="#3、堆" class="headerlink" title="3、堆"></a>3、堆</h3><p>最大堆、最小堆</p>
+<h3 id="4、红黑树"><a href="#4、红黑树" class="headerlink" title="4、红黑树"></a>4、红黑树</h3><p>把树中的节点定义为红、黑两种颜色，并通过规则确保从根节点到叶节点的最长路径的长度不超过最短路径的两倍。</p>
+<h3 id="5、哈夫曼-Huffman-树和哈夫曼编码"><a href="#5、哈夫曼-Huffman-树和哈夫曼编码" class="headerlink" title="5、哈夫曼(Huffman)树和哈夫曼编码"></a>5、哈夫曼(Huffman)树和哈夫曼编码</h3><h4 id="1）赫夫曼树定义"><a href="#1）赫夫曼树定义" class="headerlink" title="1）赫夫曼树定义"></a>1）赫夫曼树定义</h4><ul>
+<li>路径长度：从树中一个结点到另一个结点之间的分支构成两个结点之间的路径，路径上的分支数目称做路径长度。</li>
+<li>树的路径长度：就是从树根到每一结点的路径长度之和。</li>
+<li>带权路径长度：结点的带权的路径长度为从该结点到树根之间的路径长度与结点上权的乘积。</li>
+<li>树的带权路径长度：为树中所有叶子结点的带权路径长度之和 。</li>
+</ul>
+<p>赫夫曼树：带权路径长度 WPL 最小的二叉树称做赫夫曼树。</p>
+<h4 id="2-赫夫曼树构造"><a href="#2-赫夫曼树构造" class="headerlink" title="2)赫夫曼树构造"></a>2)赫夫曼树构造</h4><ol>
+<li>根据给定的 n 个权值 {<code>w_1,w_2,...,w_n</code>} 构成 n 棵二叉树的集合 F&#x3D;{ <code>T_1,T_2,...,T_n</code>}，其中每棵二叉树 <code>T_i</code> 中只有一个带权为 <code>w_i</code> 根结点，其左右子树均为空。</li>
+<li>在 F 中选取两棵根结点的权值最小的树作为左右子树构造一棵新的二叉树，且置新的二叉树的根结点的权值为其左右子树上根结点的权值之和。</li>
+<li>在 F 中删除这两棵树，同时将新得到的二叉树加入 F 中 。</li>
+<li>重复 2 和 3 步骤，直到 F 只含一棵树为止。这棵树便是赫夫曼树。</li>
+</ol>
+<h4 id="3-赫夫曼编码"><a href="#3-赫夫曼编码" class="headerlink" title="3)赫夫曼编码"></a>3)赫夫曼编码</h4><p>赫夫曼编码：对需要编码的字符集，统计各个字符出现的次数或频率，作为权值，构造赫夫曼树。规定赫夫曼树的左分支代表0，右分支代表1，从根节点到叶子结点所经过的路径分支组成的 0 和 1 的序列便为该结点对应字符的编码。</p>
+<ul>
+<li>定长编码：像 ASCII 编码</li>
+<li>变长编码：单个编码的长度不一致，可以根据整体出现频率来调节</li>
+<li>前缀码：所谓的前缀码，就是没有任何码字是其他码字的前缀</li>
+</ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/28/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/">栈与队列</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><div class="content"><h2 id="一、栈"><a href="#一、栈" class="headerlink" title="一、栈"></a>一、栈</h2><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1 基本概念"></a>1 基本概念</h3><ul>
+<li>栈：是限定仅在表尾进行插入和删除操作的线性表。后进先出LIFO<ul>
+<li>栈顶(top)：允许插入和删除的一端</li>
+<li>核底(bottom)：另一端</li>
+</ul>
+</li>
+<li>栈的引入简化了程序设计，使关注范围缩小，聚焦于要解决的问题核心。</li>
+</ul>
+<h3 id="2-栈的顺序存储结构-顺序栈"><a href="#2-栈的顺序存储结构-顺序栈" class="headerlink" title="2 栈的顺序存储结构 - 顺序栈"></a>2 栈的顺序存储结构 - 顺序栈</h3><h5 id="1）存储结构"><a href="#1）存储结构" class="headerlink" title="1）存储结构"></a>1）存储结构</h5><p>栈是线性表的特例，栈的顺序存储是线性表顺序存储的简化。</p>
+<ul>
+<li>栈底：数组0端</li>
+<li>top 变量：指示栈顶元素在数组中的位置，空栈-1</li>
+</ul>
+<h5 id="2）基本操作"><a href="#2）基本操作" class="headerlink" title="2）基本操作"></a>2）基本操作</h5><ul>
+<li>进栈push：栈顶指针加一，新插元素赋值栈顶空间</li>
+<li>出栈pop：栈顶指针减一，返回原栈顶</li>
+</ul>
+<h5 id="3）两栈共享空间"><a href="#3）两栈共享空间" class="headerlink" title="3）两栈共享空间"></a>3）两栈共享空间</h5><p>一个数组来存储两个具有相同数据类型的栈，数组两端为栈底，向中间靠拢。</p>
+<p>通常都是当两个栈的空间需求有相反关系时，才使用这样的数据结构。</p>
+<h3 id="3-栈的链式存储结构-链栈"><a href="#3-栈的链式存储结构-链栈" class="headerlink" title="3 栈的链式存储结构 - 链栈"></a>3 栈的链式存储结构 - 链栈</h3><h5 id="1）存储结构-1"><a href="#1）存储结构-1" class="headerlink" title="1）存储结构"></a>1）存储结构</h5><ul>
+<li>栈顶：单链表的头部，替代头结点</li>
+</ul>
+<h5 id="2）基本操作-1"><a href="#2）基本操作-1" class="headerlink" title="2）基本操作"></a>2）基本操作</h5><ul>
+<li>进栈push：当前栈顶元素赋值给新结点后继，新结点赋值给栈顶指针</li>
+<li>出栈pop：栈顶指针下移，释放原栈顶结点</li>
+</ul>
+<h5 id="3）顺序栈与链栈对比"><a href="#3）顺序栈与链栈对比" class="headerlink" title="3）顺序栈与链栈对比"></a>3）顺序栈与链栈对比</h5><ul>
+<li>如元素变化不可预料，最好是用链栈；</li>
+<li>如元素变化在可控范围内，使用顺序栈。</li>
+</ul>
+<h3 id="4-栈的应用"><a href="#4-栈的应用" class="headerlink" title="4 栈的应用"></a>4 栈的应用</h3><h5 id="1）递归"><a href="#1）递归" class="headerlink" title="1）递归"></a>1）递归</h5><p>编译器使用栈实现递归</p>
+<h5 id="2）四则运算表达式求值"><a href="#2）四则运算表达式求值" class="headerlink" title="2）四则运算表达式求值"></a>2）四则运算表达式求值</h5><ul>
+<li>中缀表达式：标准四则运算表达式，所有的运算符号都在两数字的中间<ul>
+<li><code>9 + (3 - 1) * 3 + 10/2</code></li>
+</ul>
+</li>
+<li>逆波兰表示：一种不需要括号的后缀表达法，所有的符号都是在要运算数字的后面出现<ul>
+<li><code>9 3 1-3 * + 10 2 / +</code></li>
+</ul>
+</li>
+</ul>
+<h6 id="1-将中缀表达式转化为后缀表达式-栈用来进出运算的符号-。"><a href="#1-将中缀表达式转化为后缀表达式-栈用来进出运算的符号-。" class="headerlink" title="1. 将中缀表达式转化为后缀表达式(栈用来进出运算的符号)。"></a>1. 将中缀表达式转化为后缀表达式(栈用来进出运算的符号)。</h6><ul>
+<li>从左到右遍历中缀表达式的每一数字和符号，若是数字就输出，即成为后缀表达式的一部分</li>
+<li>若是符号，则判断其与栈顶符号的优先级，是右括号或优先级低于栈顶符号（乘除优先加减）则栈顶元素依次出栈并输出，并将当前符号进栈</li>
+<li>一直到最终输出后缀表达式为止。</li>
+</ul>
+<h6 id="2-将后缀表达式进行运算得出结果-栈用来进出运算的数字-。"><a href="#2-将后缀表达式进行运算得出结果-栈用来进出运算的数字-。" class="headerlink" title="2. 将后缀表达式进行运算得出结果(栈用来进出运算的数字)。"></a>2. 将后缀表达式进行运算得出结果(栈用来进出运算的数字)。</h6><ul>
+<li>从左到右遍历表达式的每个数字和符号，遇到是数字就进栈；</li>
+<li>遇到是符号，就将处于栈顶两个数字出拢，进行运算，运算结果进栈</li>
+<li>一直到最终获得结果。</li>
+</ul>
+<h2 id="二、队列"><a href="#二、队列" class="headerlink" title="二、队列"></a>二、队列</h2><h3 id="1-基本概念-1"><a href="#1-基本概念-1" class="headerlink" title="1 基本概念"></a>1 基本概念</h3><ul>
+<li>队列：是只允许在一端进行插入操作、而在另一端进行删除操作的线性表。先进先出FIFO<ul>
+<li>队尾：允许插入的一端</li>
+<li>队头：允许删除的一端称</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-队列的顺序存储结构-循环队列"><a href="#2-队列的顺序存储结构-循环队列" class="headerlink" title="2 队列的顺序存储结构 - 循环队列"></a>2 队列的顺序存储结构 - 循环队列</h3><h5 id="1）存储结构-2"><a href="#1）存储结构-2" class="headerlink" title="1）存储结构"></a>1）存储结构</h5><ul>
+<li>循环队列：队列的头尾相接的顺序存储结构</li>
+<li>front 指针：头指针</li>
+<li>rear 指针：尾指针。若队列不空，指向队尾的下一个位置</li>
+<li>标志变量 flag：标记队列是否满了</li>
+</ul>
+<h5 id="2）基本操作-2"><a href="#2）基本操作-2" class="headerlink" title="2）基本操作"></a>2）基本操作</h5><ul>
+<li>入队EnQueue：判满，新元素给尾指针位置，尾指针后移</li>
+<li>出队DeQueue：判空，返回对头元素，头指针后移</li>
+</ul>
+<h3 id="3-队列的链式存储结构-链队列"><a href="#3-队列的链式存储结构-链队列" class="headerlink" title="3 队列的链式存储结构 - 链队列"></a>3 队列的链式存储结构 - 链队列</h3><p>队列的链式存储结构，其实就是线性表的单链表，只不过它只能尾进头出而已，我们把它简称为链队列。</p>
+<ul>
+<li>front 指针：头指针。指向头结点。</li>
+<li>rear 指针：尾指针。指向终端结点。</li>
+</ul>
+<h5 id="2）基本操作-3"><a href="#2）基本操作-3" class="headerlink" title="2）基本操作"></a>2）基本操作</h5><ul>
+<li>入队EnQueue：新结点赋值给原对尾结点后继，新结点设为队尾结点，尾指针指向新结点</li>
+<li>出队DeQueue：头结点的后继结点出队，头结点的后继改为其后面的结点。若链表除头结点外只剩一个元素时， 则需将尾指针指向头结点</li>
+</ul>
+<h5 id="3）循环队列与链队列对比"><a href="#3）循环队列与链队列对比" class="headerlink" title="3）循环队列与链队列对比"></a>3）循环队列与链队列对比</h5><ul>
+<li>在可以确定队列长度最大值的情况下，建议用循环队列</li>
+<li>如果无法预估队列的长度时，则用链队列</li>
+</ul>
+<h3 id="4-队列的应用"><a href="#4-队列的应用" class="headerlink" title="4 队列的应用"></a>4 队列的应用</h3><p>键盘输入显示器输出</p>
+<p>排队</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BA%BF%E6%80%A7%E8%A1%A8/">线性表List</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-26</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a></span><div class="content"><h2 id="一、线性表的定义和基本操作"><a href="#一、线性表的定义和基本操作" class="headerlink" title="一、线性表的定义和基本操作"></a>一、线性表的定义和基本操作</h2><h5 id="1）定义"><a href="#1）定义" class="headerlink" title="1）定义"></a>1）定义</h5><p>线性表：零个或多个数据元素的有序排列。</p>
+<blockquote>
+<p>除第一个元素外，每个元素有且只有一个直接前驱元素；除最后一个元素外，每个元素有且只有一个直接后继元素。</p>
+</blockquote>
+<h5 id="2）基本操作"><a href="#2）基本操作" class="headerlink" title="2）基本操作"></a>2）基本操作</h5><ul>
+<li>InitList：初始化</li>
+<li>ListEmpty：判空</li>
+<li>ClearList：清空</li>
+<li>GetElem：取值</li>
+<li>LocateElem：定位</li>
+<li>Listlnsert：插入</li>
+<li>ListDelete：删除</li>
+<li>ListLength：长度</li>
+</ul>
+<h2 id="二、线性表的实现"><a href="#二、线性表的实现" class="headerlink" title="二、线性表的实现"></a>二、线性表的实现</h2><h3 id="1-顺序存储"><a href="#1-顺序存储" class="headerlink" title="1 顺序存储"></a>1 顺序存储</h3><h5 id="1）定义-1"><a href="#1）定义-1" class="headerlink" title="1）定义"></a>1）定义</h5><p>线性表的顺序存储结构，指的是用一段地址连续的存储单元依次存储线性表的数据元素。</p>
+<h5 id="2）存储结构"><a href="#2）存储结构" class="headerlink" title="2）存储结构"></a>2）存储结构</h5><p>一维数组，存取时间性能为O(1)，随机存取结构</p>
+<ul>
+<li>存储空间的起始位置：数组 data 的存储位置</li>
+<li>线性表的最大容量：数组长度 MaxSize</li>
+<li>线性表的当前长度 : length</li>
+</ul>
+<h5 id="3）主要操作"><a href="#3）主要操作" class="headerlink" title="3）主要操作"></a>3）主要操作</h5><ul>
+<li>取值O(1)：返回数组中指定下标的值。下标超限抛异常</li>
+<li>插入O(n)：从最后一个元素到插入位置元素依次后移，插入，表长+1。位置或长度有问题抛异常或扩容。</li>
+<li>删除O(n)：从删除位置到最后元素依次前移，表长-1。删除位置不合理抛异常。</li>
+</ul>
+<h5 id="4）优缺点"><a href="#4）优缺点" class="headerlink" title="4）优缺点"></a>4）优缺点</h5><p>优点</p>
+<ul>
+<li>无须为表示表中元素之间的逻辑关系而增加额外的存储空间</li>
+<li>可以快速地存取表中任一位置的元素</li>
+</ul>
+<p>缺点</p>
+<ul>
+<li>插入和删除操作需要移动大量元素</li>
+<li>当线性表长度变化较大时，难以确定存储空间的容量</li>
+<li>造成存储空间的”碎片”</li>
+</ul>
+<h3 id="2-链式存储"><a href="#2-链式存储" class="headerlink" title="2 链式存储"></a>2 链式存储</h3><h4 id="2-1-单链表"><a href="#2-1-单链表" class="headerlink" title="2.1 单链表"></a>2.1 单链表</h4><h5 id="1）定义-2"><a href="#1）定义-2" class="headerlink" title="1）定义"></a>1）定义</h5><p>不考虑相邻，哪有空就存哪，让每个元素知道它下一个元素的位置</p>
+<h5 id="2）存储结构-1"><a href="#2）存储结构-1" class="headerlink" title="2）存储结构"></a>2）存储结构</h5><p>链式结构中，除了要存数据元素信息外，还要存储它的后继元素的存储地址。</p>
+<ul>
+<li>单链表：每个结点中只包含一个指针域，n 个结点链结成一个链表</li>
+<li>结点：数据元素的存储映像，由数据域和指针域组成<ul>
+<li>数据域：存储数据元素信息的域</li>
+<li>指针域：存储直接后继位置的域</li>
+</ul>
+</li>
+<li>头指针：（必要元素）指向链表中第一个结点的存储位置</li>
+<li>头结点：（可选元素）为方便操作，可在第一个结点前附设一个头结点。<ul>
+<li>头结点的数据域可以不存储任何信息，也可以存储如线性表的长度等附加信息。</li>
+<li>有了头节点，对第一结点前插入和删除第一结点，与其他结点的操作就统一了</li>
+</ul>
+</li>
+<li>线性链表的最后一个结点指针为“空”</li>
+</ul>
+<h5 id="3）主要操作-1"><a href="#3）主要操作-1" class="headerlink" title="3）主要操作"></a>3）主要操作</h5><ul>
+<li>读取O(n)：从第一个节点遍历</li>
+<li>插入、删除：遍历查找第i个元素O(n)，改变指针，插入和删除O(1)<ul>
+<li>若不知道位置，与顺序存储结构没有优势。知道位置后，优势很大</li>
+<li>对于插入或删除数据越频繁的操作，单链表的效率优势就越是明显</li>
+</ul>
+</li>
+<li>整表创建：动态生成链表。从空表起，依次建立元素结点，插入链表。<ul>
+<li>头插法：新结点插入到头结点与前一新元素之间。</li>
+<li>尾插法：记录尾结点，新结点插在终端结点后面</li>
+</ul>
+</li>
+<li>整表删除：便利每个节点，在内存中将它释放</li>
+</ul>
+<h5 id="4）单链表与顺序存储优缺点"><a href="#4）单链表与顺序存储优缺点" class="headerlink" title="4）单链表与顺序存储优缺点"></a>4）单链表与顺序存储优缺点</h5><ul>
+<li>时间性能<ul>
+<li>查找<ul>
+<li>顺序：o(1)</li>
+<li>单链表：O(n)</li>
+</ul>
+</li>
+<li>插入和删除<ul>
+<li>顺序：平均移动一半元素，O(n)</li>
+<li>单链表：找出位置后，O(1)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>空间性能<ul>
+<li>顺序：需预分配，大了浪费，小了溢出</li>
+<li>单链表：无需分配不受限</li>
+</ul>
+</li>
+<li>若线性表需要频繁查找，很少进行插入和删除操作时，宜采用顺序存储结构。</li>
+<li>若需要频繁插入和删除时，宜采用单链表结构。</li>
+<li>元素个数变化较大或未知时，最好用单链表。</li>
+<li>如长度确定，顺序存储结构效率会高很多。</li>
+</ul>
+<h4 id="2-2-静态链表"><a href="#2-2-静态链表" class="headerlink" title="2.2 静态链表"></a>2.2 静态链表</h4><h5 id="1）定义-3"><a href="#1）定义-3" class="headerlink" title="1）定义"></a>1）定义</h5><p>针对没有指针的语言，用数组来代替指针描述链表，被称为静态链表。</p>
+<h5 id="2）存储结构-2"><a href="#2）存储结构-2" class="headerlink" title="2）存储结构"></a>2）存储结构</h5><p>游标实现法：数组的元素都是由两个数据域组成， data 和 cur</p>
+<ul>
+<li>数据域data ：用来存放数据元素</li>
+<li>游标 cur ：相当于单链表中的 next 指针，存放该元素的后继在数组中的下标</li>
+<li>第一个元素：存放备用链表的第一个结点的下标</li>
+<li>最后一个元素：存放第一个有数值的元素的下标</li>
+</ul>
+<h5 id="3）主要操作-2"><a href="#3）主要操作-2" class="headerlink" title="3）主要操作"></a>3）主要操作</h5><p>将可用空间链成备用链表</p>
+<ul>
+<li>插入<ul>
+<li>模拟空间分配：从备用链表上取第一个结点作为待插入的新结点</li>
+</ul>
+</li>
+<li>删除<ul>
+<li>模拟空间释放：将删除位置加入备用链表第一位</li>
+</ul>
+</li>
+</ul>
+<h5 id="4）静态链表优缺点"><a href="#4）静态链表优缺点" class="headerlink" title="4）静态链表优缺点"></a>4）静态链表优缺点</h5><ul>
+<li>插入和删除操作时 ，只需要修改游标。</li>
+<li>没有解决连镇存储分配带来的表长难以确定的问题</li>
+<li>失去了顺序存储结构随机存取的特性</li>
+</ul>
+<h4 id="2-3-循环链表"><a href="#2-3-循环链表" class="headerlink" title="2.3 循环链表"></a>2.3 循环链表</h4><h5 id="1）定义-4"><a href="#1）定义-4" class="headerlink" title="1）定义"></a>1）定义</h5><p>循环链表：将单链表中终端结点的指针端由空指针改为指向头结点，这种头尾相接的单链表称为单循环链表，简称循环链表。</p>
+<h5 id="2）差异"><a href="#2）差异" class="headerlink" title="2）差异"></a>2）差异</h5><p>循环链表和单链表的主要差异就在于循环的判断条件上，原来是判断 p-&gt;next 是否为空，现在则是 p -&gt; next 不等于头结点，则循环未结束。</p>
+<h5 id="3）尾指针"><a href="#3）尾指针" class="headerlink" title="3）尾指针"></a>3）尾指针</h5><p>如用尾指针替代头指针，则查找开始结点和终端结点都很方便。</p>
+<h4 id="2-4-双向链表"><a href="#2-4-双向链表" class="headerlink" title="2.4 双向链表"></a>2.4 双向链表</h4><h5 id="1）定义-5"><a href="#1）定义-5" class="headerlink" title="1）定义"></a>1）定义</h5><p>双向链表是在单链表的每个结点中，再设置一个指向其前驱结点的指针域。</p>
+<h5 id="2）主要操作"><a href="#2）主要操作" class="headerlink" title="2）主要操作"></a>2）主要操作</h5><p>在插入和删除时，需要更改两个指针变量。顺序很重要，千万不能写反了。</p>
+<ul>
+<li>插入<ul>
+<li>先搞定插入结点的前驱和后继，再搞定后结点的前驱，最后解决前结点的后继。</li>
+</ul>
+</li>
+<li>删除<ul>
+<li>将前结点的后继指向后结点，将后结点的前驱指向前结点</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-线性表的应用"><a href="#3-线性表的应用" class="headerlink" title="3 线性表的应用"></a>3 线性表的应用</h3><p>队列和堆栈</p>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2024 By iMine</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

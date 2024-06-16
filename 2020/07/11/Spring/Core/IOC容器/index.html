@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="IOC容器和Bean"><meta name="keywords" content="spring,java"><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>IOC容器和Bean | iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 7.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-IOC-%E5%AE%B9%E5%99%A8"><span class="toc-text">1 IOC 容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-%E5%AE%B9%E5%99%A8%E5%AE%9E%E7%8E%B0"><span class="toc-text">1.1 容器实现</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%EF%BC%89BeanFactory"><span class="toc-text">1）BeanFactory</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%EF%BC%89ApplicationContext"><span class="toc-text">2）ApplicationContext</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%EF%BC%89Bean-Factory-%E5%92%8C-ApplicationContext-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">3）Bean Factory 和 ApplicationContext 的区别</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-getBean"><span class="toc-text">1.2 getBean()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Spring-Bean"><span class="toc-text">2 Spring Bean</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-Spring-Bean-%E5%AE%9A%E4%B9%89"><span class="toc-text">2.1 Spring Bean 定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-%E5%AE%9A%E4%B9%89-bean-%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-text">2.2 定义 bean 的作用域</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Bean-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">3 Bean 的生命周期</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="toc-text">3.1 实例化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E5%B1%9E%E6%80%A7%E5%A1%AB%E5%85%85%EF%BC%88%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%EF%BC%89"><span class="toc-text">3.2 属性填充（依赖注入）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E6%B3%A8%E5%85%A5-Aware-%E6%8E%A5%E5%8F%A3"><span class="toc-text">3.3 注入 Aware 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-BeanPostProcessor"><span class="toc-text">3.4 BeanPostProcessor</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">3.5 自定义初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%EF%BC%89InitializingBean-%E6%8E%A5%E5%8F%A3"><span class="toc-text">1）InitializingBean 接口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%EF%BC%89init-method-%E5%B1%9E%E6%80%A7"><span class="toc-text">2）init-method 属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%EF%BC%89-PostConstruct-%E6%B3%A8%E8%A7%A3"><span class="toc-text">3）@PostConstruct 注解</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-6-%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%80%E6%AF%81"><span class="toc-text">3.6 自定义销毁</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1%EF%BC%89DisposableBean-%E6%8E%A5%E5%8F%A3"><span class="toc-text">1）DisposableBean 接口</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2%EF%BC%89destroy-method-%E5%B1%9E%E6%80%A7"><span class="toc-text">2）destroy-method 属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3%EF%BC%89-PreDestroy-%E6%B3%A8%E8%A7%A3"><span class="toc-text">3）@PreDestroy 注解</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">74</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">IOC容器和Bean</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-11</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/spring/">spring</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/spring/Core/">Core</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="1-IOC-容器"><a href="#1-IOC-容器" class="headerlink" title="1 IOC 容器"></a>1 IOC 容器</h3><p>概念 ： IOC 容器（container）是 Spring 框架的核心，它管理着 Spring 应用中 bean 的创建、 配置和管理，负责对象的整个生命周期。</p>
+<h4 id="1-1-容器实现"><a href="#1-1-容器实现" class="headerlink" title="1.1 容器实现"></a>1.1 容器实现</h4><h5 id="1）BeanFactory"><a href="#1）BeanFactory" class="headerlink" title="1）BeanFactory"></a>1）BeanFactory</h5><p>最简单的容器，提供基本的 DI 支持。使用控制反转将应用的配置和依赖与实际的应用代码分离开来。</p>
+<p>第一次访问某一 Bean 时才实例化它。</p>
+<h5 id="2）ApplicationContext"><a href="#2）ApplicationContext" class="headerlink" title="2）ApplicationContext"></a>2）ApplicationContext</h5><p>基于 BeanFactory 构建， 并提供应用框架级别的服务。</p>
+<p>初始化容器时就实例化所有单例的 Bean。</p>
+<p>有多种 ApplicationContext 的实现， 每一种都提供了配置 Spring 的不同方式。</p>
+<h5 id="3）Bean-Factory-和-ApplicationContext-的区别"><a href="#3）Bean-Factory-和-ApplicationContext-的区别" class="headerlink" title="3）Bean Factory 和 ApplicationContext 的区别"></a>3）Bean Factory 和 ApplicationContext 的区别</h5><p>ApplicationContext 提供了一种解决文档信息的方法，一种加载文件资源的方式(如图片)，他们可以向监听他们的beans发送消息。</p>
+<p>另外，容器或者容器中 beans 的操作，这些必须以 Bean Factory 的编程方式处理的操作可以在 ApplicationContext 中以声明的方式处理。</p>
+<p><strong>这两者的继承关系如下：</strong></p>
+<p><img src="https://imine141.github.io/images/ioc%E7%BB%A7%E6%89%BF%E5%9B%BE2.png"></p>
+<h4 id="1-2-getBean"><a href="#1-2-getBean" class="headerlink" title="1.2 getBean()"></a>1.2 getBean()</h4><p>通过容器 getBean() 方法从容器获取指定 bean。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line"><span class="type">xxx</span> <span class="variable">xxxobj</span> <span class="operator">=</span> applicationContext.getBean(xxx.class);</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-Spring-Bean"><a href="#2-Spring-Bean" class="headerlink" title="2 Spring Bean"></a>2 Spring Bean</h3><h3 id="2-1-Spring-Bean-定义"><a href="#2-1-Spring-Bean-定义" class="headerlink" title="2.1 Spring Bean 定义"></a>2.1 Spring Bean 定义</h3><p><strong>什么是Bean？</strong></p>
+<p>由于Java语言欠缺属性、事件、多重继承功能，如果在Java程序中实现一些面向对象编程的常见需求，只能手写大量胶水代码。Bean正是编写这套胶水代码的惯用模式或约定。这些约定包括getXxx、setXxx、isXxx、addXxxListener、XxxEvent等。简而言之，Bean就是一个具有规范的Java类</p>
+<p>在spring中。这些bean对象由 Spring IOC 容器实例化、组装、管理。</p>
+<p>Spring Bean 中定义了所有的配置元数据，这些配置信息告知容器如何创建它，它的生命周期是什么以及它的依赖关系。</p>
+<h4 id="2-2-定义-bean-的作用域"><a href="#2-2-定义-bean-的作用域" class="headerlink" title="2.2 定义 bean 的作用域"></a>2.2 定义 bean 的作用域</h4><p>在 Spring 中创建一个 bean 的时候，我们可以通过“scope”属性声明它的作用域。</p>
+<p>Spring 中的 bean 默认都是单例（singleton）的，这对可变类型是非线程安全的。</p>
+<p>Spring 定义了几种 bean 的作用域：</p>
+<ul>
+<li>Singleton：单例。在 Spring IOC 容器中仅存在一个 Bean 实例，Bean 以单实例的方式存在。</li>
+<li>Prototype：原型。每次被装配时，都会创建一个新的实例。</li>
+<li>Request：在 WebApplicationContext 中，在每次 http 请求中创建一个 bean 的实例。</li>
+<li>Session：在 WebApplicationContext 中，在每次 HTTP Session 过程中只创建一个 bean 的实例；</li>
+<li>GlobalSession：在 WebApplicationContext 中，在同一个全局 HTTP Session 只创建一个 Bean 的实例</li>
+</ul>
+<h3 id="3-Bean-的生命周期"><a href="#3-Bean-的生命周期" class="headerlink" title="3 Bean 的生命周期"></a>3 Bean 的生命周期</h3><p>对于普通的 Java 对象，当 new 的时候创建对象，当它没有任何引用的时候被垃圾回收机制回收。而由 Spring IoC 容器托管的对象，它们的生命周期完全由容器控制。</p>
+<p>Spring 只管理单例模式 Bean 的完整生命周期，对于 prototype 的 bean ，Spring 在创建好交给使用者之后则不会再管理后续的生命周期。</p>
+<p><img src="https://imine141.github.io/images/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F" alt="bean的生命周期"></p>
+<p>BeanFactory 负责 bean 创建的最初四步，然后移交给 ApplicationContext 做后续创建过程</p>
+<h4 id="3-1-实例化"><a href="#3-1-实例化" class="headerlink" title="3.1 实例化"></a>3.1 实例化</h4><p>Spring 容器（从 XML 文件、注解、Java 配置文件）读取 bean 的定义并实例化 bean。</p>
+<ul>
+<li>对于 BeanFactory 容器：当客户向容器请求一个尚未初始化的 bean 时，或初始化 bean 的时候需要注入另一个尚未初始化的依赖时，容器就会调用 createBean 进行实例化。</li>
+<li>对于 ApplicationContext 容器：当容器启动结束后，便实例化所有的 bean。</li>
+</ul>
+<p>容器通过获取 BeanDefinition 对象中的信息进行实例化。并且这一步仅仅是简单的实例化，并未进行依赖注入。</p>
+<p>实例化对象被包装在 BeanWrapper 对象中，BeanWrapper 提供了设置对象属性的接口，从而避免了使用反射机制设置属性。</p>
+<h4 id="3-2-属性填充（依赖注入）"><a href="#3-2-属性填充（依赖注入）" class="headerlink" title="3.2 属性填充（依赖注入）"></a>3.2 属性填充（依赖注入）</h4><p>实例化后的对象被封装在 BeanWrapper 对象中，并且此时对象仍然是一个原生的状态，并没有进行依赖注入。</p>
+<p>紧接着，Spring 根据 BeanDefinition 中的信息进行依赖注入。</p>
+<p>并且通过 BeanWrapper 提供的设置属性的接口完成依赖注入。</p>
+<h4 id="3-3-注入-Aware-接口"><a href="#3-3-注入-Aware-接口" class="headerlink" title="3.3 注入 Aware 接口"></a>3.3 注入 Aware 接口</h4><p>紧接着，Spring 会检测该对象是否实现了 xxxAware 接口，并将相关的 xxxAware 实例注入给 bean。</p>
+<ul>
+<li>如果该 Bean 实现了 BeanNameAware 接口，Spring 将 bean 的 id 传递给 setBeanName() 方法。</li>
+<li>如果该 Bean 实现了 BeanFactoryAware 接口，Spring 将 BeanFactory 传递给 setBeanFactory() 方法。</li>
+<li>如果该 Bean 实现了 ApplicationContextAware 接口，Spring 将 ApplicationContext 传递给 setApplicationContext() 方法。</li>
+</ul>
+<p>xxxAware 接口可以用于在初始化 bean 时获得 Spring 中的一些对象，如获取 Spring 上下文等。</p>
+<h4 id="3-4-BeanPostProcessor"><a href="#3-4-BeanPostProcessor" class="headerlink" title="3.4 BeanPostProcessor"></a>3.4 BeanPostProcessor</h4><p>当经过上述几个步骤后，bean 对象已经被正确构造，但如果你想要对象被使用前再进行一些自定义的处理，就可以通过 BeanPostProcessor 接口实现。</p>
+<p>该接口提供了两个函数：</p>
+<ul>
+<li>postProcessBeforeInitialzation( Object bean, String beanName )<ul>
+<li>当前正在初始化的 bean 对象会被传递进来，我们就可以对这个 bean 作任何处理。</li>
+<li>这个函数会先于 InitialzationBean 执行，因此称为“前置处理”。</li>
+<li>所有 Aware 接口的注入就是在这一步完成的。</li>
+</ul>
+</li>
+<li>postProcessAfterInitialzation( Object bean, String beanName )<ul>
+<li>当前正在初始化的 bean 对象会被传递进来，我们就可以对这个 bean 作任何处理。</li>
+<li>这个函数会在 InitialzationBean 完成后执行，因此称为“后置处理”。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-5-自定义初始化"><a href="#3-5-自定义初始化" class="headerlink" title="3.5 自定义初始化"></a>3.5 自定义初始化</h4><p>当 BeanPostProcessor 的“前置处理”完成后就会进入本阶段。</p>
+<h5 id="1）InitializingBean-接口"><a href="#1）InitializingBean-接口" class="headerlink" title="1）InitializingBean 接口"></a>1）InitializingBean 接口</h5><p>InitializingBean 接口只有一个函数：afterPropertiesSet()</p>
+<p>这一阶段也可以在 bean 正式构造完成前增加我们自定义的逻辑，但它与前置处理不同，由于该函数并不会把当前 bean 对象传进来，因此在这一步没办法处理对象本身，只能增加一些额外的逻辑。</p>
+<p>若要使用它，我们需要让 bean 实现该接口，并把要增加的逻辑写在该函数中。</p>
+<p>Spring 会在前置处理完成后检测当前 bean 是否实现了 InitializingBean 接口，并执行 afterPropertiesSet 函数。</p>
+<h5 id="2）init-method-属性"><a href="#2）init-method-属性" class="headerlink" title="2）init-method 属性"></a>2）init-method 属性</h5><p>Spring 为了降低对客户代码的侵入性，给 bean 的配置提供了 init-method 属性，该属性指定了在这一阶段需要执行的函数名。</p>
+<p>Spring 便会在初始化阶段执行我们设置的函数。init-method 本质上仍然使用了 InitializingBean 接口。</p>
+<h5 id="3）-PostConstruct-注解"><a href="#3）-PostConstruct-注解" class="headerlink" title="3）@PostConstruct 注解"></a>3）@PostConstruct 注解</h5><p>对象构建之后调用</p>
+<h4 id="3-6-自定义销毁"><a href="#3-6-自定义销毁" class="headerlink" title="3.6 自定义销毁"></a>3.6 自定义销毁</h4><p>当 BeanPostProcessor 的“后置处理”完成后就会进入本阶段。</p>
+<h5 id="1）DisposableBean-接口"><a href="#1）DisposableBean-接口" class="headerlink" title="1）DisposableBean 接口"></a>1）DisposableBean 接口</h5><p>如果该 bean 实现了 DisposableBean，调用 destroy() 方法。</p>
+<h5 id="2）destroy-method-属性"><a href="#2）destroy-method-属性" class="headerlink" title="2）destroy-method 属性"></a>2）destroy-method 属性</h5><p>和 init-method 一样，通过给 destroy-method 指定函数，就可以在 bean 销毁前执行指定的逻辑。</p>
+<h5 id="3）-PreDestroy-注解"><a href="#3）-PreDestroy-注解" class="headerlink" title="3）@PreDestroy 注解"></a>3）@PreDestroy 注解</h5><p>对象移除之前调用</p>
+<p><strong>如果想从源码的角度再深入了解IOC这块，推荐看这篇文章</strong></p>
+<p> <a target="_blank" rel="noopener" href="https://javadoop.com/post/spring-ioc">https://javadoop.com/post/spring-ioc</a> </p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">iMine</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://imine141.github.io/2020/07/11/Spring/Core/IOC%E5%AE%B9%E5%99%A8/">https://imine141.github.io/2020/07/11/Spring/Core/IOC%E5%AE%B9%E5%99%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/spring/">spring</a><a class="post-meta__tags" href="/tags/java/">java</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/07/13/Spring/IoC/%E9%AB%98%E7%BA%A7%E8%A3%85%E9%85%8D/"><i class="fa fa-chevron-left">  </i><span>高级装配</span></a></div><div class="next-post pull-right"><a href="/2020/07/10/Spring/Core/spring%E5%9F%BA%E7%A1%80/"><span>spring基础</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2024 By iMine</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>

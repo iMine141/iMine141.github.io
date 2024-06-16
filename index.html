@@ -1,0 +1,1016 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="iMine"><meta name="copyright" content="iMine"><title>iMineのBlog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 7.2.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="false"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">iMine</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">74</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">9</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">24</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">iMineのBlog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span><span class="pull-right"></span></div><div id="site-info"><div id="site-title">iMineのBlog</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2023/03/06/pulsar/pulsar%E4%B8%8E%E5%85%B6%E4%BB%96%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/">pulsar 与其他中间件的对比</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-03-06</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h3 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h3><p>随着业务的快速变化，应用程序通信和集成变得更加重要。一个坚固的、成熟的、紧密耦合的通信基础设施成为了数字企业真正的基础，它让企业可以快速地应对变化。近年来，最有前景的数字通信方法来自开源社区，开发人员在这里合作，为构建数字世界的共同挑战提供解决方案。这些解决方案有 Kafka，RabbitMQ等。因为满足不断变化的业务需求需要仔细考虑，所以在本白皮书中，我们定义了几个开源或商业选项，并列出了它们的优点、缺点以及相关复杂性和成本信息。</p>
+<h3 id="二、messaging-简介"><a href="#二、messaging-简介" class="headerlink" title="二、messaging 简介"></a>二、messaging 简介</h3><p>当计算机开始通讯时，messaging 就成为了系统之间通讯的基础。最开始的消息传递是在阿帕网，它是第一个广域分组交换网络，使用以太网、TCP&#x2F;IP等网络层协议，来进行系统间的通讯。随着阿帕网的发展，更多的系统相互连接，成为今天的互联网，通信原则开始从网络层进入到应用层。随着这些进步，抽象层出现了，简化了系统连接和通信的方式，这也成为消息传递技术的目标。</p>
+<p>多年来，为不同类型的通信发明了新的通信协议。Java消息服务（JMS）和数据分发服务（DDS）规范协议在90年代末和21世纪初出现。许多应用程序开始使用像HTML和HTTP这样的协议，而不是最初设计的协议。每个人都在寻找一个协议，它可以适用于任何东西，但现实是，永远不会有一个单一的通信方法。数字通信将始终是多种方法和模式的混合体。</p>
+<h3 id="三、各个MQ简介"><a href="#三、各个MQ简介" class="headerlink" title="三、各个MQ简介"></a>三、各个MQ简介</h3><h4 id="1-RabbitMQ"><a href="#1-RabbitMQ" class="headerlink" title="1. RabbitMQ"></a>1. RabbitMQ</h4><p>RabbitMQ是使用Erlang语言开发的开源消息队列系统，基于AMQP协议来实现。AMQP的主要特征是面向消息、队列、路由（包括点对点和发布&#x2F;订阅）、可靠性、安全。AMQP协议更多用在企业系统内，对数据一致性、稳定性和可靠性要求很高的场景，对性能和吞吐量的要求在其次。RabbitMQ的可靠性是非常好的，数据能够保证百分之百的不丢失。可以使用镜像队列，它的稳定性非常好。在性能不如 Kafka，但也可以做一些性能上的优化。</p>
+<h5 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h5><h6 id="1-所需的技能"><a href="#1-所需的技能" class="headerlink" title="1. 所需的技能"></a>1. 所需的技能</h6><p>了解AMQP协议和规范。</p>
+<h6 id="2-复杂性"><a href="#2-复杂性" class="headerlink" title="2. 复杂性"></a>2. 复杂性</h6><p>API 和协议级别的通用数据交换方法意味着数据分发的选项呈指数级增长。</p>
+<h6 id="3-优点"><a href="#3-优点" class="headerlink" title="3. 优点"></a>3. 优点</h6><ul>
+<li>基于AMQP协议，操作行为的定义非常明确</li>
+<li>简易灵活的部署方式</li>
+<li>在低吞吐量的情况下，有着非常低延迟</li>
+<li>文档丰富和社区活跃</li>
+</ul>
+<h6 id="4-缺点"><a href="#4-缺点" class="headerlink" title="4. 缺点"></a>4. 缺点</h6><ul>
+<li>吞吐量限制，单机峰值约万&#x2F;s</li>
+<li>维护复杂，在弹性伸缩、高可用性、数据复制等不如 pulsar、kafka</li>
+<li>缺乏本地流处理、消息回溯、消息压缩等</li>
+</ul>
+<h6 id="5-总成本"><a href="#5-总成本" class="headerlink" title="5.总成本"></a>5.总成本</h6><p>RabbitMQ 易于部署和维护。但是由于是Erlang开发的，功能扩展和二次开发代价高。</p>
+<h6 id="6-性能"><a href="#6-性能" class="headerlink" title="6.  性能"></a>6.  性能</h6><ul>
+<li>并发一般，万级别 TPS</li>
+<li>延迟低，微秒级别</li>
+<li>可扩展性一般</li>
+<li>支持分布式，RabbitMQ 是为大规模部署而设计的，但通常需要大规模的服务器基础架构来支持可扩展的环境，以及复杂的路由来支持全球分布式结构</li>
+</ul>
+<h4 id="2-RocketMQ"><a href="#2-RocketMQ" class="headerlink" title="2.RocketMQ"></a>2.RocketMQ</h4><p>RocketMQ 是由阿里巴巴消息中间件团队研发的一款高性能、高吞吐量、低延迟、高可用、高可靠的分布式消息中间件，参考了优秀的开源消息中间件Kafka，天生为金融互联网领域而生，对于可靠性要求很高的场景，尤其是电商领域中，以及业务削峰。开源后并于2016年捐赠给Apache社区孵化，目前已经成为了Apache顶级项目。</p>
+<h5 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h5><h6 id="1-所需的技能-1"><a href="#1-所需的技能-1" class="headerlink" title="1. 所需的技能"></a>1. 所需的技能</h6><p>需要对消息传递，消息事物，消息重试机制等原理有基本理解。</p>
+<h6 id="2-复杂性-1"><a href="#2-复杂性-1" class="headerlink" title="2. 复杂性"></a>2. 复杂性</h6><p>相对于 kafka，不需要部署额外的 Zookeeper，内置了 nameserver ，部署简单。</p>
+<h6 id="3-优点-1"><a href="#3-优点-1" class="headerlink" title="3. 优点"></a>3. 优点</h6><ul>
+<li>满足多种需求，支持有序消息、延迟消息、消息回溯、消息积压等等</li>
+<li>保证高可用，能够大规模集群化部署</li>
+<li>java 开发，阅读源代码、扩展、二次开发方便</li>
+</ul>
+<h6 id="4-缺点-1"><a href="#4-缺点-1" class="headerlink" title="4. 缺点"></a>4. 缺点</h6><ul>
+<li>消息重复问题，它不能保证不重复</li>
+<li>延迟消息，只支持固定 level</li>
+<li>社区活跃度和文档都相较一般</li>
+</ul>
+<h6 id="5-总成本-1"><a href="#5-总成本-1" class="headerlink" title="5. 总成本"></a>5. 总成本</h6><p>RocketMQ 易于部署和维护，但与任何开源解决方案一样，随着基础设施的扩展，支持和维护它的成本也会增加。</p>
+<h6 id="6-性能-1"><a href="#6-性能-1" class="headerlink" title="6.  性能"></a>6.  性能</h6><ul>
+<li>并发高，十万级别 TPS</li>
+<li>延迟低，毫秒级别</li>
+<li>可扩展性强，集群可以同时进行水平方向和垂直方向的缩放</li>
+<li>支持分布式，原生支持高可用集群，分布式扩展设计</li>
+</ul>
+<h4 id="3-Kafka"><a href="#3-Kafka" class="headerlink" title="3.Kafka"></a>3.Kafka</h4><p>Kafka 是一个分布式、分区的、多副本的，基于 zookeeper 协调的分布式日志系统（也可以当做 MQ 系统），常见可以用于 web&#x2F;nginx 日志、访问日志，消息服务等。由 Linkedin 公司开发，于2010年贡献给了 Apache 基金会并成为顶级开源项目。</p>
+<h5 id="特性-2"><a href="#特性-2" class="headerlink" title="特性"></a>特性</h5><h6 id="1-所需的技能-2"><a href="#1-所需的技能-2" class="headerlink" title="1. 所需的技能"></a>1. 所需的技能</h6><p>了解消息传递和底层操作系统功能，如存储和网络通信。需要学习其他组件，如Zookeeper等。</p>
+<h6 id="2-复杂性-2"><a href="#2-复杂性-2" class="headerlink" title="2. 复杂性"></a>2. 复杂性</h6><p>相对容易开箱即用。当需要诸如安全性、复制和全局分发等功能时，复杂性就会增加。</p>
+<h6 id="3-优点-2"><a href="#3-优点-2" class="headerlink" title="3. 优点"></a>3. 优点</h6><ul>
+<li>性能强大，拥有百万级的吞吐量</li>
+<li>支持数据持久、分布式流处理、跨域复制等功能</li>
+<li>与周边系统的兼容性好，尤其是大数据和流计算领域，几乎所有相关的开源软件都支持Kafka</li>
+<li>文档丰富和社区活跃</li>
+</ul>
+<h6 id="4-缺点-2"><a href="#4-缺点-2" class="headerlink" title="4. 缺点"></a>4. 缺点</h6><ul>
+<li>没有与租户完全隔离的本地多租户</li>
+<li>长期存储数据昂贵，尽管可以长时间存储，但是由于成本问题却很少用到它</li>
+<li>运维困难，必须提前计划和计算 broker、topic、分区和副本的数量（确保计划的未来使用量增长），以避免扩展问题</li>
+<li>在大量 topic 下，吞吐量会大幅下降</li>
+</ul>
+<h6 id="5-总成本-2"><a href="#5-总成本-2" class="headerlink" title="5. 总成本"></a>5. 总成本</h6><p>Kafka 很简单，相对容易启动和运行，特别是对于中小型项目。开源并不意味着免费，Kafka 不断达到企业规模需要专门的支持人员来维护基础设施。</p>
+<h6 id="6-性能-2"><a href="#6-性能-2" class="headerlink" title="6.  性能"></a>6.  性能</h6><ul>
+<li>并发高，百万级别 TPS</li>
+<li>延迟低，毫秒级别</li>
+<li>可扩展性好，集群可以同时进行水平方向和垂直方向的缩放</li>
+<li>支持分布式</li>
+</ul>
+<h4 id="4-ADMQ"><a href="#4-ADMQ" class="headerlink" title="4.ADMQ"></a>4.ADMQ</h4><p>ADMQ 是基于Apache Pulsar 的二次开发消息中间件，是下一代云原生分布式消息流平台。在许多方面，Pulsar 与 Kafka 相似，但在规划部署方面差别很大。Pulsar 最初只是传统的消息传递系统，后面加入了流处理的功能。这对于那些希望部署大规模系统同时要求更少的复杂性的用户来说是非常有吸引力的。Pulsar 企业级的分布式对于多租户和数据复制的功能提供了一个开箱即用的支持，从而简化了随着时间的推移不断增长的资源使用和采用。</p>
+<h5 id="特性-3"><a href="#特性-3" class="headerlink" title="特性"></a>特性</h5><h6 id="1-所需的技能-3"><a href="#1-所需的技能-3" class="headerlink" title="1. 所需的技能"></a>1. 所需的技能</h6><p>对消息传递和底层操作系统功能的基本理解，如存储和网络通信。需要学习其他组件，如Zookeeper，Bookkeeper等。</p>
+<h6 id="2-复杂性-3"><a href="#2-复杂性-3" class="headerlink" title="2. 复杂性"></a>2. 复杂性</h6><p>一种简化的封装方法，其中所有功能都可以集中访问，从而降低了扩展到企业级别时的复杂性。</p>
+<h6 id="3-优点-3"><a href="#3-优点-3" class="headerlink" title="3. 优点"></a>3. 优点</h6><ul>
+<li>性能强大，比 kafka 更稳定的低延迟、高吞吐量</li>
+<li>存储与计算分离，无需移动数据即可添加或使用 broker，运维方便</li>
+<li>分层存储，历史数据可以使用其他廉价的存储</li>
+<li>地理复制和内置 Discovery，易于将集群复制到多个区域</li>
+<li>多租户，不同的团队可以使用相同的集群并将其隔离，解决了许多管理难题</li>
+<li>Function，易于部署、轻量级计算过程、对开发人员友好的 API，无需运行自己的流处理引擎</li>
+<li>多协议支持，支持 RocketMQ、AMQP、Kafka 协议等，容易与实现这些协议的中间件进行集成</li>
+<li>社区相对活跃，能够及时反馈。</li>
+</ul>
+<h6 id="4-缺点-3"><a href="#4-缺点-3" class="headerlink" title="4. 缺点"></a>4. 缺点</h6><ul>
+<li>部署比较复杂，除了 Pulsar 还有另外有Zookeeper、Bookkeeper两个组件</li>
+<li>相对缺乏支持、文档和案例</li>
+<li>插件和客户端相对 Kafka 较少</li>
+</ul>
+<h6 id="5-总成本-3"><a href="#5-总成本-3" class="headerlink" title="5. 总成本"></a>5. 总成本</h6><p>Pulsar 需要花费更多的精力来启动和运行，但一旦部署，它就可以很好地扩展到企业级别。开源并不意味着免费的，企业运行 Pulsar 通常需要专门的支持人员来维护基础设施。使用ADMQ商业版，金蝶天燕可以提供完美支持和维护。</p>
+<h6 id="6-性能-3"><a href="#6-性能-3" class="headerlink" title="6.  性能"></a>6.  性能</h6><p>并发高，百万级别 TPS</p>
+<p>延迟低，毫秒级别</p>
+<p>可扩展性强，集群可以同时进行水平方向和垂直方向的缩放</p>
+<p>支持分布式，内置了分布式和数据复制的本地支持</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>如今，在选择消息传递通信产品时，企业比其他任何时候都面临着困难的挑战。虽然单个解决方案的总体拥有成本较低，但没有一个解决方案能够满足所有应用程序的所有需求。消息传递必须更加全面，以满足特定和不同的应用程序需求—包括高性能&#x2F;低延迟事件处理、流分析的流数据、不同应用程序之间本地集成的微服务等等。</p>
+<p>如今 ADMQ 将流处理和传统消息队列统一，加上跨地域复制、无状态broker、分层存储、多协议支持，让 ADMQ 成为一个全新的消息中间件。提供给不同企业不同需求的对应解决方案。</p>
+<h4 id="对比概览"><a href="#对比概览" class="headerlink" title="对比概览"></a>对比概览</h4><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>RabbitMQ（AMQP）</th>
+<th>RocketMQ</th>
+<th>Kafka</th>
+<th>ADMQ</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>成熟度</td>
+<td>成熟</td>
+<td>成熟</td>
+<td>成熟</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>时效性</td>
+<td>微秒级别</td>
+<td>毫秒级别</td>
+<td>毫秒级别</td>
+<td>毫秒级别</td>
+</tr>
+<tr>
+<td>请求TPS</td>
+<td>万级别</td>
+<td>十万级别</td>
+<td>百万级别</td>
+<td>百万级别</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>一般</td>
+<td>高</td>
+<td>一般</td>
+<td>高</td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>高（主从构架）</td>
+<td>高（主从构架）</td>
+<td>非常高（分布式）</td>
+<td>非常高（分布式）</td>
+</tr>
+<tr>
+<td>定时消息</td>
+<td>支持</td>
+<td>支持（固定level）</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>事物</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>副本同步策略</td>
+<td>Master-Slave同步</td>
+<td>Master-Slave同步</td>
+<td>多机异步</td>
+<td>多机异步</td>
+</tr>
+<tr>
+<td>多租户</td>
+<td>支持部分</td>
+<td>支持部分</td>
+<td>支持部分</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>动态扩容</td>
+<td>集群扩容依赖前端</td>
+<td>需同步配置</td>
+<td>需手动执行rebalance</td>
+<td>友好，及时扩容</td>
+</tr>
+<tr>
+<td>故障恢复</td>
+<td>不友好</td>
+<td>不友好</td>
+<td>较友好</td>
+<td>友好</td>
+</tr>
+<tr>
+<td>消息堆积能力</td>
+<td>影响性能</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>消息回溯</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>顺序消息</td>
+<td>不支持</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>安全防护</td>
+<td>一般</td>
+<td>一般</td>
+<td>一般</td>
+<td>高</td>
+</tr>
+<tr>
+<td>社区活跃度</td>
+<td>高</td>
+<td>中</td>
+<td>高</td>
+<td>高</td>
+</tr>
+<tr>
+<td>文档</td>
+<td>多</td>
+<td>中</td>
+<td>多</td>
+<td>一般</td>
+</tr>
+<tr>
+<td>特点</td>
+<td>erlang语言发开，性能一般，出现比较早，有一定的用户基数</td>
+<td>各个环节分布式扩展设计，主从HA,多种消费模式，性能好</td>
+<td>高吞吐量、持久化数据存储、分布式系统易于扩展，性能极好</td>
+<td>灵活、多租户、云原生架构、跨地域复制，性能极好</td>
+</tr>
+</tbody></table>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/10/29/Java%E5%9F%BA%E7%A1%80/java%E6%BA%90%E7%A0%81/LongAdder/">LongAdder</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-10-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/java/">java</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/java/java%E6%BA%90%E7%A0%81/">java源码</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/java/">java</a></span><div class="content"><h3 id="为什么要使用Longadder"><a href="#为什么要使用Longadder" class="headerlink" title="为什么要使用Longadder?"></a>为什么要使用Longadder?</h3><p>传统的原子操作类 <strong>AtomicLong</strong> 。他的原子性是通过 CAS 原理来实现的，但是有一个问题，如果并发大了，所有请求线程只有一个线程会成功，其他的线程都需要自旋等待。而自旋等待的cpu消耗是很大的。所以在并发量大的情况下，Atomiclong的性能是比较低的</p>
+<p><strong>LongAdder</strong> 的原理就是，加入了分段的概念，每个线程都有属于自己的桶位，线程针对自己桶位的值 做cas计算。</p>
+<h5 id="LongAdder流程"><a href="#LongAdder流程" class="headerlink" title="LongAdder流程"></a>LongAdder流程</h5><p>base变量：非竞争条件下，直接累加到该值上</p>
+<p>cell[]数组：竞争条件下，累加到各自线程的槽中cell[i]</p>
+<p>竞争条件下调用get方法获取LongAdder的值，才会去统计所有cell数组中的值</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/08/07/pulsar/%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/jstack%E5%88%86%E6%9E%90%E7%BA%BF%E7%A8%8B%E8%BF%90%E8%A1%8C%E7%8A%B6%E6%80%81/">jstack分析线程运行状态</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-08-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/code/">code</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/code-method/">code_method</a></span><div class="content"><h5 id="1-通过ps-ef-grep-program-Name-找到程序进程ID"><a href="#1-通过ps-ef-grep-program-Name-找到程序进程ID" class="headerlink" title="**1.通过ps -ef|grep {*program*Name} 找到程序进程ID"></a>**1.通过ps -ef|grep {*<em>program*<em>Name} 找到程序进程ID</em></em></h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@10 keep_rule_sender]# ps -ef|grep java</span><br><span class="line">root      4896 18614  0 15:52 pts/0    00:00:00 grep --color=auto java</span><br><span class="line">root     15550 15547  0 5月25 ?       00:24:08 ./jre/bin/java -jar -Dfile.encoding=UTF-8 -XX:+UseG1GC -Xms16384M -Xmx16384M -Xmn8192M -Xss2M AuthCenter.jar</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>2.top -Hp pid 查看该进程对应的各个线程的运行状态</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[root@10 keep_rule_sender]# top Hp 15550</span><br><span class="line">top - 15:55:19 up 115 days, 54 min,  1 user,  load average: 0.31, 0.36, 0.40</span><br><span class="line">Threads: 146 total,   0 running, 146 sleeping,   0 stopped,   0 zombie</span><br><span class="line">%Cpu(s):  3.2 us,  0.7 sy,  0.0 ni, 96.1 id,  0.0 wa,  0.0 hi,  0.1 si,  0.0 st</span><br><span class="line">KiB Mem : 13157919+total, 62099732 free, 26188756 used, 43290704 buff/cache</span><br><span class="line">KiB Swap:  4194300 total,  4194300 free,        0 used. 10426378+avail Mem</span><br><span class="line">  PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND                                                                                                                                      </span><br><span class="line">15937 root      20   0 27.453g 9.252g  13756 S  0.3  7.4   0:16.47 java                                                                                                                                         </span><br><span class="line">15947 root      20   0 27.453g 9.252g  13756 S  0.3  7.4   0:16.73 java</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>3.jstack pid &gt; stack.txt 保存该程序各个线程当前的执行状态到本地文件stack.txt中</strong></p>
+<p><strong>4.查看对应线程的状态</strong></p>
+<p>把top看到的线程号（pid）转换成16进制</p>
+<p>在stack.txt文件中查看对应线程的执行状态</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;nioEventLoopGroup-3-52&quot; #78 prio=10 os_prio=0 tid=0x00007fe8b012c000 nid=0x3e41 runnable [0x00007fe7eb7fa000]</span><br><span class="line">java.lang.Thread.State: RUNNABLE</span><br><span class="line">  at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)</span><br><span class="line">  at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)</span><br><span class="line">  at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:79)</span><br><span class="line">  at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)</span><br><span class="line">  - locked &lt;0x00000003c0056660&gt; (a io.netty.channel.nio.SelectedSelectionKeySet)</span><br><span class="line">  - locked &lt;0x00000003c0056608&gt; (a java.util.Collections$UnmodifiableSet)</span><br><span class="line">  - locked &lt;0x00000003c0056618&gt; (a sun.nio.ch.EPollSelectorImpl)</span><br><span class="line">  at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)</span><br><span class="line">  at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:639)</span><br><span class="line">  at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:325)</span><br><span class="line">  at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:112)</span><br><span class="line">  at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:137)</span><br><span class="line">  at java.lang.Thread.run(Thread.java:745)</span><br><span class="line"></span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/10/15/pulsar/Pulsar%E8%AE%A2%E9%98%85%E8%BF%9B%E5%BA%A6%E5%90%8C%E6%AD%A5%E5%8E%9F%E7%90%86/">Pulsar订阅进度同步原理</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-10-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h1 id="描述"><a href="#描述" class="headerlink" title="描述"></a>描述</h1><p>Pulsar自带的跨集群数据复制，可以把一个集群收到的消息复制到其他集群上，这样消费者正在连接的集群挂掉后，可以从其他集群消费消息。</p>
+<p>除了消息的复制，pulsar还支持订阅进度的同步，具体场景如下：</p>
+<p>部署了三个集群A、B、C，并设置集群之间的消息两两复制。消费者A刚开始从集群A消费消息，当集群A挂掉后，消费者A切换到集群B消费消息，这时候消费者A不需要从头开始读取集群B上的消息，而是可以从上一次在集群A上消费失败的位置继续从集群B上消费消息。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><p>集群间的消息复制是通过内置生产者和消费者实现的，接收消息的集群上会启动一个消息读取进程，读取发送到该集群的消息，然后通过客户端接口发送到其他集群上。</p>
+<p>也就是说消息的复制并不是直接把bookie中的存储文件复制到其他集群上，而是使用内置的订阅名称读取本地消息，然后发送到其他集群。这样的话，两个集群的消息元数据就不是一样的，同一条消息在多个集群的消息ID是不一样的。</p>
+<p>所以如果想实现订阅进度的同步，需要把同一条消息在多个集群的消息ID关联上，然后在各个集群间同步上次消费完毕的消息ID，这样不同集群之间就都知道消费者上次消费确认的位置并能够移动本集群的消费位点了。</p>
+<p>所以实现订阅进度同步的关键点在于</p>
+<ul>
+<li><p>集群间能相互通信</p>
+</li>
+<li><p>同一条消息在多集群间的关联关系</p>
+</li>
+<li><p>消费进度更新时能及时通知到其他集群</p>
+</li>
+</ul>
+<h1 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h1><p>Pulsar本身的消息同步并不是实时的、严格的同步，只是避免大范围的重复消费，还是会有一小段消息的重复。</p>
+<p>Pulsar订阅进度同步的流程</p>
+<ul>
+<li><p>发布快照通知给其他集群。</p>
+</li>
+<li><p>其他集群收到通知后，记录本集群的LAC指针并发送给开启同步流程的集群。</p>
+</li>
+<li><p>开启流程的集群收到其他所有集群的返回消息后，分别建立其他集群LAC和本集群上一次消息ID的关联关系。</p>
+</li>
+<li><p>开启流程的集群建立好消息的ID的关联关系后，生成一个快照消息，并插入到消息队列中。</p>
+</li>
+<li><p>消费者返回确认后，会根据消息ID检测上一个快照，找到后就说明消费位置已经超过快照了，需要通知其他消费者更新消费位置了。</p>
+</li>
+<li><p>其他集群收到位置更新通知后更新本集群的消费位置。</p>
+</li>
+</ul>
+<p>下面以某个场景详细说明下。</p>
+<p>场景描述：</p>
+<p>集群A、B、C三个集群互相同步消息，生产者都发送消息到集群A上。</p>
+<h2 id="集群A发布一个快照通知"><a href="#集群A发布一个快照通知" class="headerlink" title="集群A发布一个快照通知"></a>集群A发布一个快照通知</h2><p>创建Topic时会检测是否需要同步订阅进度，如果需要则通过ReplicatedSubscriptionsController启动一个定时任务，任务的功能就是发送一个通知，代码如下：</p>
+<p><strong>ReplicatedSubscriptionsController</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void startNewSnapshot() &#123;</span><br><span class="line">  cleanupTimedOutSnapshots();</span><br><span class="line">  // 判断是否有新消息写入了</span><br><span class="line">  if (topic.getLastDataMessagePublishedTimestamp() &lt; lastCompletedSnapshotStartTime) &#123;</span><br><span class="line">    // There was no message written since the last snapshot, we can skip creating a new snapshot</span><br><span class="line">    if (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(&quot;[&#123;&#125;] There is no new data in topic. Skipping snapshot creation.&quot;, topic.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  MutableBoolean anyReplicatorDisconnected = new MutableBoolean();</span><br><span class="line">  topic.getReplicators().forEach((cluster, replicator) -&gt; &#123;</span><br><span class="line">    if (!replicator.isConnected()) &#123;</span><br><span class="line">      anyReplicatorDisconnected.setTrue();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">    // 当所有集群都正常时才会发送通知。</span><br><span class="line">  if (anyReplicatorDisconnected.isTrue()) &#123;</span><br><span class="line">    // Do not attempt to create snapshot when some of the clusters are not reachable</span><br><span class="line">    if (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(&quot;[&#123;&#125;] Do not attempt to create snapshot when some of the clusters are not reachable.&quot;,</span><br><span class="line">          topic.getName());</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Starting snapshot creation.&quot;, topic.getName());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pendingSnapshotsMetric.inc();</span><br><span class="line">  ReplicatedSubscriptionsSnapshotBuilder builder = new ReplicatedSubscriptionsSnapshotBuilder(this,</span><br><span class="line">      topic.getReplicators().keys(), topic.getBrokerService().pulsar().getConfiguration(), Clock.systemUTC());</span><br><span class="line">  pendingSnapshots.put(builder.getSnapshotId(), builder);</span><br><span class="line">    // 这里只是通过往该Topic写入一条消息，消息中包含通知ID。</span><br><span class="line">  builder.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>ReplicatedSubscriptionsSnapshotBuilder</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void start() &#123;</span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Starting new snapshot &#123;&#125; - Clusters: &#123;&#125;&quot;, controller.topic().getName(), snapshotId,</span><br><span class="line">        missingClusters);</span><br><span class="line">  &#125;</span><br><span class="line">  startTimeMillis = clock.millis();</span><br><span class="line">    // 设置通知ID（快照ID）和本集群名称。</span><br><span class="line">  controller.writeMarker(</span><br><span class="line">      Markers.newReplicatedSubscriptionsSnapshotRequest(snapshotId, controller.localCluster()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="集群B和C收到通知"><a href="#集群B和C收到通知" class="headerlink" title="集群B和C收到通知"></a>集群B和C收到通知</h2><p>集群A写入消息到该Topic后，该条消息会和其他消息一样发送到集群B和集群C上。</p>
+<p>由于集群间是相互复制消息，所以集群B和C的复制模块能够读取到该消息，并作相应的处理。</p>
+<p><strong>PersistentReplicator</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void checkReplicatedSubscriptionMarker(Position position, MessageImpl&lt;?&gt; msg, ByteBuf payload) &#123;</span><br><span class="line">  if (!msg.getMessageBuilder().hasMarkerType()) &#123;</span><br><span class="line">    // No marker is defined</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  int markerType = msg.getMessageBuilder().getMarkerType();</span><br><span class="line"></span><br><span class="line">    // 这里确保只处理消息发送方集群发送的消息，即只处理集群A发送的消息。</span><br><span class="line">  if (!(msg.getMessageBuilder().hasReplicatedFrom()</span><br><span class="line">      &amp;&amp; remoteCluster.equals(msg.getMessageBuilder().getReplicatedFrom()))) &#123;</span><br><span class="line">    // Only consider markers that are coming from the same cluster that this</span><br><span class="line">    // replicator instance is assigned to.</span><br><span class="line">    // All the replicators will see all the markers, but we need to only process</span><br><span class="line">    // it once.</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">    // 需要处理的消息包含三类：通知、通知应答、消费位置更新。</span><br><span class="line">  switch (markerType) &#123;</span><br><span class="line">  case MarkerType.REPLICATED_SUBSCRIPTION_SNAPSHOT_REQUEST_VALUE:</span><br><span class="line">  case MarkerType.REPLICATED_SUBSCRIPTION_SNAPSHOT_RESPONSE_VALUE:</span><br><span class="line">  case MarkerType.REPLICATED_SUBSCRIPTION_UPDATE_VALUE:</span><br><span class="line">    topic.receivedReplicatedSubscriptionMarker(position, markerType, payload);</span><br><span class="line">    break;</span><br><span class="line"></span><br><span class="line">  default:</span><br><span class="line">    // Do nothing</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>收到通知后，会获取LAC，然后封装LAC，写入到该Topic中。</p>
+<p><strong>ReplicatedSubscriptionsController</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void receivedSnapshotRequest(ReplicatedSubscriptionsSnapshotRequest request) &#123;</span><br><span class="line">  // if replicator producer is already closed, restart it to send snapshot response</span><br><span class="line">  Replicator replicator = topic.getReplicators().get(request.getSourceCluster());</span><br><span class="line">  if (!replicator.isConnected()) &#123;</span><br><span class="line">    topic.startReplProducers();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // Send response containing the current last written message id. The response</span><br><span class="line">  // marker we&#x27;re publishing locally and then replicating will have a higher</span><br><span class="line">  // message id.</span><br><span class="line">    // 得到集群上次写入的消息</span><br><span class="line">  PositionImpl lastMsgId = (PositionImpl) topic.getLastPosition();</span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Received snapshot request. Last msg id: &#123;&#125;&quot;, topic.getName(), lastMsgId);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">    // 把消息ID连同通知ID一起写入到Topic中。</span><br><span class="line">  ByteBuf marker = Markers.newReplicatedSubscriptionsSnapshotResponse(</span><br><span class="line">      request.getSnapshotId(),</span><br><span class="line">      request.getSourceCluster(),</span><br><span class="line">      localCluster,</span><br><span class="line">      lastMsgId.getLedgerId(), lastMsgId.getEntryId());</span><br><span class="line">  writeMarker(marker);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="集群A建立本集群和集群B、C间消费ID的关联关系"><a href="#集群A建立本集群和集群B、C间消费ID的关联关系" class="headerlink" title="集群A建立本集群和集群B、C间消费ID的关联关系"></a>集群A建立本集群和集群B、C间消费ID的关联关系</h2><p>集群B和C写入的消息会被集群B和C的复制模块发送到集群A，集群A的复制模块会读到该消息并做相应的处理。</p>
+<p><strong>ReplicatedSubscriptionsController</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void receivedSnapshotResponse(Position position, ReplicatedSubscriptionsSnapshotResponse response) &#123;</span><br><span class="line">  String snapshotId = response.getSnapshotId();</span><br><span class="line">  ReplicatedSubscriptionsSnapshotBuilder builder = pendingSnapshots.get(snapshotId);</span><br><span class="line">  if (builder == null) &#123;</span><br><span class="line">    if (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(&quot;[&#123;&#125;] Received late reply for timed-out snapshot &#123;&#125; from &#123;&#125;&quot;, topic.getName(), snapshotId,</span><br><span class="line">          response.getCluster().getCluster());</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  builder.receivedSnapshotResponse(position, response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>ReplicatedSubscriptionsSnapshotBuilder</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// 该Position是集群A和B返回的消息在集群A上的Position。</span><br><span class="line">synchronized void receivedSnapshotResponse(Position position, ReplicatedSubscriptionsSnapshotResponse response) &#123;</span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Received response from &#123;&#125;&quot;, controller.topic().getName(),</span><br><span class="line">        response.getCluster().getCluster());</span><br><span class="line">  &#125;</span><br><span class="line">  String cluster = response.getCluster().getCluster();</span><br><span class="line">    // Response中包含集群A/集群B中的LAC消息。</span><br><span class="line">  responses.putIfAbsent(cluster, new MarkersMessageIdData().copyFrom(response.getCluster().getMessageId()));</span><br><span class="line">  missingClusters.remove(cluster);</span><br><span class="line"></span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Missing clusters &#123;&#125;&quot;, controller.topic().getName(), missingClusters);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (!missingClusters.isEmpty()) &#123;</span><br><span class="line">    // We&#x27;re still waiting for more responses to come back</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  // We have now received all responses</span><br><span class="line">  // 如果超过两个集群需要两次通知，这里没看懂为啥...</span><br><span class="line">  if (needTwoRounds &amp;&amp; !firstRoundComplete) &#123;</span><br><span class="line">    // Mark that 1st round is done and start a 2nd round</span><br><span class="line">    firstRoundComplete = true;</span><br><span class="line">    missingClusters.addAll(remoteClusters);</span><br><span class="line"></span><br><span class="line">    controller.writeMarker(</span><br><span class="line">        Markers.newReplicatedSubscriptionsSnapshotRequest(snapshotId, controller.localCluster()));</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;] Snapshot is complete &#123;&#125;&quot;, controller.topic().getName(), snapshotId);</span><br><span class="line">  &#125;</span><br><span class="line">  // Snapshot is now complete, store it in the local topic</span><br><span class="line">    // 这里是建立记录集群B/集群C的LAC消息和集群A收到集群B/集群C是保存LAC的消息的消息ID间的关联关系，而且是最后边一个消息。</span><br><span class="line">    // 所以这里不能实现同一条消息在三个集群间的关联。</span><br><span class="line">  PositionImpl p = (PositionImpl) position;</span><br><span class="line">  controller.writeMarker(</span><br><span class="line">      Markers.newReplicatedSubscriptionsSnapshot(snapshotId, controller.localCluster(),</span><br><span class="line">          p.getLedgerId(), p.getEntryId(), responses));</span><br><span class="line">  controller.snapshotCompleted(snapshotId);</span><br><span class="line"></span><br><span class="line">  double latencyMillis = clock.millis() - startTimeMillis;</span><br><span class="line">  snapshotMetric.observe(latencyMillis);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>集群A建立好关联关系后，会生成一个快照，这个快照包含各集群消息ID的关联关系、</p>
+<p>然后写入到该Topic中，之后这条消息就会复制到集群B和集群C上。</p>
+<h2 id="创建快照缓存"><a href="#创建快照缓存" class="headerlink" title="创建快照缓存"></a>创建快照缓存</h2><p>虽然上边的步骤已经生成快照了，但是快照的缓存并不上在上边添加的。当快照被写到Topic中，那么当消费者读取消息时就肯定能读到该快照。</p>
+<p>当消息在Broker端被读到时，通过过滤器处理这些消息。</p>
+<p><strong>AbstractBaseDispatcher</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public int filterEntriesForConsumer(Optional&lt;EntryWrapper[]&gt; entryWrapper, int entryWrapperOffset,</span><br><span class="line">     List&lt;Entry&gt; entries, EntryBatchSizes batchSizes, SendMessageInfo sendMessageInfo,</span><br><span class="line">     EntryBatchIndexesAcks indexesAcks, ManagedCursor cursor, boolean isReplayRead) &#123;</span><br><span class="line">  int totalMessages = 0;</span><br><span class="line">  long totalBytes = 0;</span><br><span class="line">  int totalChunkedMessages = 0;</span><br><span class="line">  int totalEntries = 0;</span><br><span class="line">  for (int i = 0, entriesSize = entries.size(); i &lt; entriesSize; i++) &#123;</span><br><span class="line">    Entry entry = entries.get(i);</span><br><span class="line">    if (entry == null) &#123;</span><br><span class="line">      continue;</span><br><span class="line">    &#125;</span><br><span class="line">    totalEntries++;</span><br><span class="line">    ByteBuf metadataAndPayload = entry.getDataBuffer();</span><br><span class="line">    int entryWrapperIndex = i + entryWrapperOffset;</span><br><span class="line">    MessageMetadata msgMetadata = entryWrapper.isPresent() &amp;&amp; entryWrapper.get()[entryWrapperIndex] != null</span><br><span class="line">        ? entryWrapper.get()[entryWrapperIndex].getMetadata()</span><br><span class="line">        : null;</span><br><span class="line">    msgMetadata = msgMetadata == null</span><br><span class="line">        ? Commands.peekMessageMetadata(metadataAndPayload, subscription.toString(), -1)</span><br><span class="line">        : msgMetadata;</span><br><span class="line">    if (!isReplayRead &amp;&amp; msgMetadata != null &amp;&amp; msgMetadata.hasTxnidMostBits()</span><br><span class="line">        &amp;&amp; msgMetadata.hasTxnidLeastBits()) &#123;</span><br><span class="line">      // 省略代码 ...</span><br><span class="line">            </span><br><span class="line">    &#125; else if (msgMetadata == null || Markers.isServerOnlyMarker(msgMetadata)) &#123;</span><br><span class="line">            // 这里处理读到的快照消息。</span><br><span class="line">      PositionImpl pos = (PositionImpl) entry.getPosition();</span><br><span class="line">      // Message metadata was corrupted or the messages was a server-only marker</span><br><span class="line"></span><br><span class="line">      if (Markers.isReplicatedSubscriptionSnapshotMarker(msgMetadata)) &#123;</span><br><span class="line">        processReplicatedSubscriptionSnapshot(pos, metadataAndPayload);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      entries.set(i, null);</span><br><span class="line">      entry.release();</span><br><span class="line">      subscription.acknowledgeMessage(Collections.singletonList(pos), AckType.Individual,</span><br><span class="line">          Collections.emptyMap());</span><br><span class="line">      continue;</span><br><span class="line">    &#125; else if (msgMetadata.hasDeliverAtTime()</span><br><span class="line">        &amp;&amp; trackDelayedDelivery(entry.getLedgerId(), entry.getEntryId(), msgMetadata)) &#123;</span><br><span class="line">      // The message is marked for delayed delivery. Ignore for now.</span><br><span class="line">      entries.set(i, null);</span><br><span class="line">      entry.release();</span><br><span class="line">      continue;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 省略代码 ...</span><br><span class="line">  &#125;</span><br><span class="line">  sendMessageInfo.setTotalMessages(totalMessages);</span><br><span class="line">  sendMessageInfo.setTotalBytes(totalBytes);</span><br><span class="line">  sendMessageInfo.setTotalChunkedMessages(totalChunkedMessages);</span><br><span class="line">  return totalEntries;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void processReplicatedSubscriptionSnapshot(PositionImpl pos, ByteBuf headersAndPayload) &#123;</span><br><span class="line">  // Remove the protobuf headers</span><br><span class="line">  Commands.skipMessageMetadata(headersAndPayload);</span><br><span class="line"></span><br><span class="line">  try &#123;</span><br><span class="line">    ReplicatedSubscriptionsSnapshot snapshot = Markers.parseReplicatedSubscriptionsSnapshot(headersAndPayload);</span><br><span class="line">    subscription.processReplicatedSubscriptionSnapshot(snapshot);</span><br><span class="line">  &#125; catch (Throwable t) &#123;</span><br><span class="line">    log.warn(&quot;Failed to process replicated subscription snapshot at &#123;&#125; -- &#123;&#125;&quot;, pos, t.getMessage(), t);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>PersistentSubscription</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">@Override</span><br><span class="line">public void processReplicatedSubscriptionSnapshot(ReplicatedSubscriptionsSnapshot snapshot) &#123;</span><br><span class="line">    ReplicatedSubscriptionSnapshotCache snapshotCache = this.replicatedSubscriptionSnapshotCache;</span><br><span class="line">    if (snapshotCache != null) &#123;</span><br><span class="line">        snapshotCache.addNewSnapshot(new ReplicatedSubscriptionsSnapshot().copyFrom(snapshot));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>ReplicatedSubscriptionSnapshotCache</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public synchronized void addNewSnapshot(ReplicatedSubscriptionsSnapshot snapshot) &#123;</span><br><span class="line">    // 这里的本地消息ID，就是保存集群B/集群C LAC消息的消息ID，且是最新的一个。</span><br><span class="line">    MarkersMessageIdData msgId = snapshot.getLocalMessageId();</span><br><span class="line">    PositionImpl position = new PositionImpl(msgId.getLedgerId(), msgId.getEntryId());</span><br><span class="line"></span><br><span class="line">    if (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(&quot;[&#123;&#125;] Added new replicated-subscription snapshot at &#123;&#125; -- &#123;&#125;&quot;, subscription, position,</span><br><span class="line">                  snapshot.getSnapshotId());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    snapshots.put(position, snapshot);</span><br><span class="line"></span><br><span class="line">    // Prune the cache</span><br><span class="line">    while (snapshots.size() &gt; maxSnapshotToCache) &#123;</span><br><span class="line">        snapshots.pollFirstEntry();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>至此快照从存储中被加载到Broker内存中。</p>
+<h2 id="集群A更新进度"><a href="#集群A更新进度" class="headerlink" title="集群A更新进度"></a>集群A更新进度</h2><p>当消费者订阅消息时，快照才会被加载到Broker内存里，然后消费者返回确认消息时，会查找消息ID的上一个快照。</p>
+<p><strong>PersistentSubscription</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Override</span><br><span class="line">public void acknowledgeMessage(List&lt;Position&gt; positions, AckType ackType, Map&lt;String, Long&gt; properties) &#123;</span><br><span class="line">  Position previousMarkDeletePosition = cursor.getMarkDeletedPosition();</span><br><span class="line"></span><br><span class="line">  // 省略代码 ... </span><br><span class="line"></span><br><span class="line">    // 当可删除位置更新了（注意不能处理单独确认的消息）</span><br><span class="line">  if (!cursor.getMarkDeletedPosition().equals(previousMarkDeletePosition)) &#123;</span><br><span class="line">    this.updateLastMarkDeleteAdvancedTimestamp();</span><br><span class="line"></span><br><span class="line">    // Mark delete position advance</span><br><span class="line">    ReplicatedSubscriptionSnapshotCache snapshotCache  = this.replicatedSubscriptionSnapshotCache;</span><br><span class="line">    if (snapshotCache != null) &#123;</span><br><span class="line">      ReplicatedSubscriptionsSnapshot snapshot = snapshotCache</span><br><span class="line">          .advancedMarkDeletePosition((PositionImpl) cursor.getMarkDeletedPosition());</span><br><span class="line">      if (snapshot != null) &#123;</span><br><span class="line">        topic.getReplicatedSubscriptionController()</span><br><span class="line">            .ifPresent(c -&gt; c.localSubscriptionUpdated(subName, snapshot));</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  deleteTransactionMarker(properties);</span><br><span class="line"></span><br><span class="line">  if (topic.getManagedLedger().isTerminated() &amp;&amp; cursor.getNumberOfEntriesInBacklog(false) == 0) &#123;</span><br><span class="line">    // Notify all consumer that the end of topic was reached</span><br><span class="line">    if (dispatcher != null) &#123;</span><br><span class="line">      dispatcher.getConsumers().forEach(Consumer::reachedEndOfTopic);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果能找到快照，则说明需要更新进度了。</p>
+<p>这个进度是上一次的快照进度，不是最新消费的进度。</p>
+<p><strong>ReplicatedSubscriptionsController</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void localSubscriptionUpdated(String subscriptionName, ReplicatedSubscriptionsSnapshot snapshot) &#123;</span><br><span class="line">    if (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(&quot;[&#123;&#125;][&#123;&#125;] Updating subscription to snapshot &#123;&#125;&quot;, topic, subscriptionName,</span><br><span class="line">                  snapshot.getClustersList().stream()</span><br><span class="line">                  .map(cmid -&gt; String.format(&quot;%s -&gt; %d:%d&quot;, cmid.getCluster(),</span><br><span class="line">                                             cmid.getMessageId().getLedgerId(), cmid.getMessageId().getEntryId()))</span><br><span class="line">                  .collect(Collectors.toList()));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Map&lt;String, MarkersMessageIdData&gt; clusterIds = new TreeMap&lt;&gt;();</span><br><span class="line">    for (int i = 0, size = snapshot.getClustersCount(); i &lt; size; i++) &#123;</span><br><span class="line">        ClusterMessageId cmid = snapshot.getClusterAt(i);</span><br><span class="line">        clusterIds.put(cmid.getCluster(), cmid.getMessageId());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ByteBuf subscriptionUpdate = Markers.newReplicatedSubscriptionsUpdate(subscriptionName, clusterIds);</span><br><span class="line">    writeMarker(subscriptionUpdate);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="集群B和C更新进度"><a href="#集群B和C更新进度" class="headerlink" title="集群B和C更新进度"></a>集群B和C更新进度</h2><p>更新进度的消息会被写入到Topic中，这个消息也会被复制到集群B和C。</p>
+<p>集群B和C中的复制模块读到消息后会做如下处理：</p>
+<p><strong>ReplicatedSubscriptionsController</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void receiveSubscriptionUpdated(ReplicatedSubscriptionsUpdate update) &#123;</span><br><span class="line">  MarkersMessageIdData updatedMessageId = null;</span><br><span class="line">  for (int i = 0, size = update.getClustersCount(); i &lt; size; i++) &#123;</span><br><span class="line">    ClusterMessageId cmid = update.getClusterAt(i);</span><br><span class="line">    if (localCluster.equals(cmid.getCluster())) &#123;</span><br><span class="line">      updatedMessageId = cmid.getMessageId();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  if (updatedMessageId == null) &#123;</span><br><span class="line">    // No updates for this cluster, ignore</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">    // 这里的消息ID是上一次的LAC。</span><br><span class="line">  Position pos = new PositionImpl(updatedMessageId.getLedgerId(), updatedMessageId.getEntryId());</span><br><span class="line"></span><br><span class="line">  if (log.isDebugEnabled()) &#123;</span><br><span class="line">    log.debug(&quot;[&#123;&#125;][&#123;&#125;] Received update for subscription to &#123;&#125;&quot;, topic, update.getSubscriptionName(), pos);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">    // 更新消费者读取进度为上一次的LAC。</span><br><span class="line">  PersistentSubscription sub = topic.getSubscription(update.getSubscriptionName());</span><br><span class="line">  if (sub != null) &#123;</span><br><span class="line">    sub.acknowledgeMessage(Collections.singletonList(pos), AckType.Cumulative, Collections.emptyMap());</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    // Subscription doesn&#x27;t exist. We need to force the creation of the subscription in this cluster, because</span><br><span class="line">    log.info(&quot;[&#123;&#125;][&#123;&#125;] Creating subscription at &#123;&#125;:&#123;&#125; after receiving update from replicated subcription&quot;,</span><br><span class="line">        topic, update.getSubscriptionName(), updatedMessageId.getLedgerId(), pos);</span><br><span class="line">    topic.createSubscription(update.getSubscriptionName(),</span><br><span class="line">        InitialPosition.Latest, true /* replicateSubscriptionState */);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，消息进度的同步是由延迟的，而且是不是精确的。</p>
+<h1 id="其他说明"><a href="#其他说明" class="headerlink" title="其他说明"></a>其他说明</h1><p>建立不同集群间消息ID的关联关系过程，是一个不精确的过程。集群A只是发送了一个快照通知，集群B和集群C把当前LAC发送给集群A，集群A读到这个LAC时，已经有新的消息写入到集群A了。此时集群A把集群B和集群C上次的LAC和本地集群中相对靠前的消息ID建立了关联关系。</p>
+<p>比如：</p>
+<p>集群A收到1、2、3三条消息，发送通知给集群B和集群C。</p>
+<p>集群B读取到3后，可能有4、5、6又发送到集群B了，此时集群B发送的LAC是6。</p>
+<p>集群C读取到3后，可能有4、5、6、7又发送到集群C了，此时集群C发送的LAC是7。</p>
+<p>集群A读取到6后，记录下来，等待集群C的LAC。</p>
+<p>集群A读取到7后，可能有8、9发送到集群A了，此时存储7的消息ID变成了10。</p>
+<p>集群A建立的关联关系是10 - 6（集群B）- 7（集群C）。</p>
+<p>当集群A的消费者读取到10的时候，把快照缓存到Broker的内存里，读取到11的时候，发现前边有一个快照。然后记录更新通知，写到Topic里。</p>
+<p>集群B和集群C读取到快照时，会把进度分别更新到6和7，但此时消费者其实已经读取到11了。</p>
+<p>按照这种解释，订阅进度永远不可能完全一致，即使集群A长时间都没收到消息了，集群B和集群C的消费进度也不会和集群A一致。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/14/pulsar/%E3%80%90bug%E3%80%91fastjson%E5%92%8Cjackson%E5%86%B2%E7%AA%81%E9%80%A0%E6%88%90%E7%9A%84%E6%95%B0%E6%8D%AE%E8%A7%A3%E6%9E%90%E9%97%AE%E9%A2%98/">fastjson和jackson冲突造成的数据解析问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h1 id="1-版本"><a href="#1-版本" class="headerlink" title="1. 版本"></a>1. 版本</h1><p>pulsar：2.8.0</p>
+<p>fastjson：1.2.76</p>
+<h1 id="2-问题"><a href="#2-问题" class="headerlink" title="2. 问题"></a>2. 问题</h1><p>在pulsar项目中引入fastjson后，pulsar中某些admin api不能正常使用，会报NPE错误。</p>
+<p>执行命令会报错：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[mac bin]$ ./pulsar-admin namespaces set-backlog-quota --limit 100M --limitTime 1111 --policy producer_request_hold sample/ns118:38:54.968 [AsyncHttpClient-7-1] WARN  org.apache.pulsar.client.admin.internal.BaseResource - [http://x.x.x.x:8080/admin/v2/namespaces/sample/ns1/backlogQuota] Failed to perform http post request: javax.ws.rs.InternalServerErrorException: HTTP 500 Internal Server ErrorHTTP 500 Internal Server Error</span><br><span class="line">Reason: HTTP 500 Internal Server Error[mac bin]$</span><br></pre></td></tr></table></figure>
+
+<p>查看pulsar的日志：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">11:50:05.098 [pulsar-web-63-6] ERROR org.apache.pulsar.broker.admin.impl.NamespacesBase - [null] Failed to update backlog quota map for namespace sample/ns1org.apache.pulsar.metadata.api.MetadataStoreException: com.fasterxml.jackson.databind.JsonMappingException: (was java.lang.NullPointerException) (through reference chain: org.apache.pulsar.common.policies.data.Policies[&quot;backlog_quota_map&quot;]-&gt;java.util.LinkedHashMap[&quot;destination_storage&quot;]-&gt;com.sun.proxy.$Proxy117[&quot;limitSize&quot;])  at org.apache.pulsar.broker.resources.BaseResources.set(BaseResources.java:94) ~[org.apache.pulsar-pulsar-broker-common-2.8.0.jar:2.8.0]  at org.apache.pulsar.broker.admin.impl.NamespacesBase.internalSetBacklogQuota(NamespacesBase.java:1387) ~[pulsar-broker-2.8.0.jar:2.8.0]  at org.apache.pulsar.broker.admin.v2.Namespaces.setBacklogQuota(Namespaces.java:724) ~[pulsar-broker-2.8.0.jar:2.8.0]  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:1.8.0_231]  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:1.8.0_231]  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:1.8.0_231]  at java.lang.reflect.Method.invoke(Method.java:498) ~[?:1.8.0_231]  at org.glassfish.jersey.server.model.internal.ResourceMethodInvocationHandlerFactory.lambda$static$0(ResourceMethodInvocationHandlerFactory.java:52) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher$1.run(AbstractJavaResourceMethodDispatcher.java:124) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.invoke(AbstractJavaResourceMethodDispatcher.java:167) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.internal.JavaResourceMethodDispatcherProvider$VoidOutInvoker.doDispatch(JavaResourceMethodDispatcherProvider.java:159) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.internal.AbstractJavaResourceMethodDispatcher.dispatch(AbstractJavaResourceMethodDispatcher.java:79) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:475) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:397) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.model.ResourceMethodInvoker.apply(ResourceMethodInvoker.java:81) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.ServerRuntime$1.run(ServerRuntime.java:255) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.internal.Errors$1.call(Errors.java:248) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.internal.Errors$1.call(Errors.java:244) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.internal.Errors.process(Errors.java:292) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.internal.Errors.process(Errors.java:274) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.internal.Errors.process(Errors.java:244) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.process.internal.RequestScope.runInScope(RequestScope.java:265) ~[org.glassfish.jersey.core-jersey-common-2.34.jar:?]  at org.glassfish.jersey.server.ServerRuntime.process(ServerRuntime.java:234) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.server.ApplicationHandler.handle(ApplicationHandler.java:680) ~[org.glassfish.jersey.core-jersey-server-2.34.jar:?]  at org.glassfish.jersey.servlet.WebComponent.serviceImpl(WebComponent.java:394) ~[org.glassfish.jersey.containers-jersey-container-servlet-core-2.34.jar:?]  at org.glassfish.jersey.servlet.WebComponent.service(WebComponent.java:346) ~[org.glassfish.jersey.containers-jersey-container-servlet-core-2.34.jar:?]  at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:366) ~[org.glassfish.jersey.containers-jersey-container-servlet-core-2.34.jar:?]  at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:319) ~[org.glassfish.jersey.containers-jersey-container-servlet-core-2.34.jar:?]  at org.glassfish.jersey.servlet.ServletContainer.service(ServletContainer.java:205) ~[org.glassfish.jersey.containers-jersey-container-servlet-core-2.34.jar:?]  at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:799) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.servlet.ServletHandler$ChainEnd.doFilter(ServletHandler.java:1626) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.apache.pulsar.broker.web.ResponseHandlerFilter.doFilter(ResponseHandlerFilter.java:65) ~[pulsar-broker-2.8.0.jar:2.8.0]  at org.eclipse.jetty.servlet.FilterHolder.doFilter(FilterHolder.java:193) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.servlet.ServletHandler$Chain.doFilter(ServletHandler.java:1601) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:548) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:1624) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ScopedHandler.nextHandle(ScopedHandler.java:233) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:1435) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:188) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:501) ~[org.eclipse.jetty-jetty-servlet-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:1594) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ScopedHandler.nextScope(ScopedHandler.java:186) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:1350) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:141) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:234) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:146) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.StatisticsHandler.handle(StatisticsHandler.java:179) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:127) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.Server.handle(Server.java:516) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.HttpChannel.lambda$handle$1(HttpChannel.java:388) ~[org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.HttpChannel.dispatch(HttpChannel.java:633) [org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.HttpChannel.handle(HttpChannel.java:380) [org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.server.HttpConnection.onFillable(HttpConnection.java:277) [org.eclipse.jetty-jetty-server-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.io.AbstractConnection$ReadCallback.succeeded(AbstractConnection.java:311) [org.eclipse.jetty-jetty-io-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.io.FillInterest.fillable(FillInterest.java:105) [org.eclipse.jetty-jetty-io-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.io.ChannelEndPoint$1.run(ChannelEndPoint.java:104) [org.eclipse.jetty-jetty-io-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.runTask(EatWhatYouKill.java:338) [org.eclipse.jetty-jetty-util-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.doProduce(EatWhatYouKill.java:315) [org.eclipse.jetty-jetty-util-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.tryProduce(EatWhatYouKill.java:173) [org.eclipse.jetty-jetty-util-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.util.thread.strategy.EatWhatYouKill.run(EatWhatYouKill.java:131) [org.eclipse.jetty-jetty-util-9.4.42.v20210604.jar:9.4.42.v20210604]  at org.eclipse.jetty.util.thread.ReservedThreadExecutor$ReservedThread.run(ReservedThreadExecutor.java:383) [org.eclipse.jetty-jetty-util-9.4.42.v20210604.jar:9.4.42.v20210604]  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149) [?:1.8.0_231]  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [?:1.8.0_231]  at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30) [io.netty-netty-common-4.1.63.Final.jar:4.1.63.Final]  at java.lang.Thread.run(Thread.java:748) [?:1.8.0_231]</span><br></pre></td></tr></table></figure>
+
+<p>虽然能明显看出来是json解析报错引起的空指针问题，但是不知道是哪一个步骤造成解析失败。</p>
+<h1 id="3-问题解决"><a href="#3-问题解决" class="headerlink" title="3. 问题解决"></a>3. 问题解决</h1><p>经过一系列的排查后，发现是fastjson自动注册provider引起的。</p>
+<p>pulsar使用jersey框架作为restful接口的处理，同时使用jackson作为json解析框架，但是项目引入fastjson后，解析框架就会被替换成fast接送。</p>
+<p>所以解决方法就是找到注册相关的代码，设置不自动注册。</p>
+<p>查看fastjson中注册的代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 这里继承jersey的AutoDiscoverable接口，并设置注册优先权高于jersey的默认权限，是为了优先注册fastjson的解析框架。</span></span><br><span class="line"><span class="meta">@Priority(AutoDiscoverable.DEFAULT_PRIORITY - 1)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FastJsonAutoDiscoverable</span> <span class="keyword">implements</span> <span class="title class_">AutoDiscoverable</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">FASTJSON_AUTO_DISCOVERABLE</span> <span class="operator">=</span> <span class="string">&quot;fastjson.auto.discoverable&quot;</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">volatile</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="variable">autoDiscover</span> <span class="operator">=</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">static</span> &#123;        </span><br><span class="line">      <span class="comment">// 获取系统属性        </span></span><br><span class="line">      <span class="keyword">try</span> &#123;            </span><br><span class="line">        autoDiscover = Boolean.parseBoolean(System.getProperty(FASTJSON_AUTO_DISCOVERABLE, String.valueOf(autoDiscover)));        </span><br><span class="line">      &#125; <span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">        <span class="comment">//skip        </span></span><br><span class="line">      &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(<span class="keyword">final</span> FeatureContext context)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Configuration</span> <span class="variable">config</span> <span class="operator">=</span> context.getConfiguration();</span><br><span class="line">        <span class="comment">// Register FastJson. 如果设置了自动注册，且还没有注册过，则进行注册。        </span></span><br><span class="line">      <span class="keyword">if</span> (!config.isRegistered(FastJsonFeature.class) &amp;&amp; autoDiscover) &#123;</span><br><span class="line">            context.register(FastJsonFeature.class);        </span><br><span class="line">      &#125;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>所以如果不想用fastjson，则需要设置自动注册为false：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">System.setProperty(FastJsonAutoDiscoverable.FASTJSON_AUTO_DISCOVERABLE, &quot;false&quot;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>这个是全局变量，所以需要在程序启动的时候设置，如果在jersey加载完之后在设置就没有效果了。</strong></p>
+<h1 id="4-问题排查"><a href="#4-问题排查" class="headerlink" title="4. 问题排查"></a>4. 问题排查</h1><p>解决办法虽然很简单，一行代码就可以了，但是找问题却耗费了很长时间，下面记录下查找问题做的一些工作。</p>
+<h2 id="4-1-问题确认"><a href="#4-1-问题确认" class="headerlink" title="4.1 问题确认"></a>4.1 问题确认</h2><p>出现问题的原因是我们添加了自己的业务逻辑，那么就要确认这个问题是新增代码引起的还是以前就有的bug。</p>
+<p>所以首先需要把环境恢复成修改之前的环境，然后测试。</p>
+<p>结果发现之前的环境没问题，所以确认出现问题的原因就是最近新加的代码。</p>
+<h2 id="4-2-在问题出现的地方找原因"><a href="#4-2-在问题出现的地方找原因" class="headerlink" title="4.2 在问题出现的地方找原因"></a>4.2 在问题出现的地方找原因</h2><p>通常情况下，对于新出现的问题，我们不可能马上明白原因是啥，不知道是之前哪一块逻辑修改造成的，尤其是代码可能不是自己写的。</p>
+<p>所以，最简单的就是在问题出现地方的前后打日志，理清前后逻辑。</p>
+<p>该问题出现在</p>
+<p>org.apache.pulsar.metadata.cache.impl.MetadataCacheImpl：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title function_">readModifyUpdate</span><span class="params">(String path, Function&lt;T, T&gt; modifyFunction)</span> &#123;</span><br><span class="line">  log.info(<span class="string">&quot;vvv method &#123;&#125;, path &#123;&#125;&quot;</span>, <span class="string">&quot;readModifyUpdate0&quot;</span>, path);</span><br><span class="line">  <span class="keyword">return</span> executeWithRetry(() -&gt; objCache.get(path)</span><br><span class="line">      .thenCompose(optEntry -&gt; &#123;</span><br><span class="line">        <span class="keyword">if</span> (!optEntry.isPresent()) &#123;</span><br><span class="line">          <span class="keyword">return</span> FutureUtils.exception(<span class="keyword">new</span> <span class="title class_">NotFoundException</span>(<span class="string">&quot;&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        CacheGetResult&lt;T&gt; entry = optEntry.get();</span><br><span class="line">        <span class="type">T</span> <span class="variable">currentValue</span> <span class="operator">=</span> entry.getValue();</span><br><span class="line"></span><br><span class="line">        <span class="type">long</span> <span class="variable">expectedVersion</span> <span class="operator">=</span> optEntry.get().getStat().getVersion();</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;vvv method &#123;&#125;, path: &#123;&#125;, class: &#123;&#125;, value: &#123;&#125;, hash: &#123;&#125;, expectedVersion: &#123;&#125;, p: &#123;&#125;&quot;</span>,</span><br><span class="line">            <span class="string">&quot;readModifyUpdate&quot;</span>, path, currentValue.getClass(), currentValue, currentValue.hashCode(),</span><br><span class="line">            expectedVersion, <span class="built_in">this</span>.hashCode());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (currentValue <span class="keyword">instanceof</span> Policies) &#123;</span><br><span class="line">          <span class="type">Policies</span> <span class="variable">p</span> <span class="operator">=</span> (Policies) currentValue;</span><br><span class="line">          <span class="keyword">if</span> (p.backlog_quota_map.size() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            p.backlog_quota_map.forEach((key, value) -&gt; &#123;</span><br><span class="line">              log.info(<span class="string">&quot;vvv method &#123;&#125;, path &#123;&#125;, key &#123;&#125;, value &#123;&#125; &#123;&#125;&quot;</span>, <span class="string">&quot;readModifyUpdate&quot;</span>, path, key,</span><br><span class="line">                  value.getClass(), value);</span><br><span class="line">            &#125;);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        T newValueObj;</span><br><span class="line">        <span class="type">byte</span>[] newValue;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="comment">// Use clone and CAS zk to ensure thread safety</span></span><br><span class="line">                    <span class="comment">// 问题出现在这里</span></span><br><span class="line">          currentValue = serde.deserialize(serde.serialize(currentValue));</span><br><span class="line">                    <span class="comment">// apply方法可以拿到之前方法的值。</span></span><br><span class="line">          newValueObj = modifyFunction.apply(currentValue);</span><br><span class="line">          log.info(<span class="string">&quot;vvv method &#123;&#125;, path: &#123;&#125;, class: &#123;&#125;, newValue: &#123;&#125;&quot;</span>, <span class="string">&quot;readModifyUpdate&quot;</span>, path,</span><br><span class="line">              newValueObj.getClass(), newValueObj);</span><br><span class="line"></span><br><span class="line">          newValue = serde.serialize(newValueObj);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">          <span class="keyword">return</span> FutureUtils.exception(t);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> store.put(path, newValue, Optional.of(expectedVersion)).thenAccept(stat -&gt; &#123;</span><br><span class="line">          <span class="comment">// Make sure we have the value cached before the operation is completed</span></span><br><span class="line">          log.info(<span class="string">&quot;vvv method &#123;&#125;, path &#123;&#125;&quot;</span>, <span class="string">&quot;readModifyUpdate-put&quot;</span>, path);</span><br><span class="line">          objCache.put(path,</span><br><span class="line">              FutureUtils.value(Optional.of(<span class="keyword">new</span> <span class="title class_">CacheGetResult</span>&lt;&gt;(newValueObj, stat))));</span><br><span class="line">        &#125;).thenApply(__ -&gt; newValueObj);</span><br><span class="line">      &#125;), path);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过阅读该类的代码，可以发现：</p>
+<ul>
+<li><p>该类缓存了一些从zookeeper中查询的数据，缓存使用的框架是Caffeine。</p>
+</li>
+<li><p>缓存中的数据会定时老化。</p>
+</li>
+<li><p>该类提供了数据修改方法，接收到修改指令后会更新到zookeeper中，然后更新缓存数据。</p>
+</li>
+<li><p>在上述方法中，接收到更新指令后，首先根据path查找缓存中是否存在，如果不存在则直接返回；如果存在，则获取数据和数据版本（对应zookeeper中的版本），把旧数据序列化后再反序列化（不知道意义是啥），然后把新数据保存到zookeeper中，保存成功后更新缓存数据。</p>
+</li>
+<li><p>缓存初始化的方法是readValueFromStore用于从zookeeper中查询数据。</p>
+</li>
+</ul>
+<p><strong>打包后替换线上环境，并看下打印的日志：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">11:50:05.095 [pulsar-web-63-6] INFO  org.apache.pulsar.metadata.cache.impl.MetadataCacheImpl - vvv method readModifyUpdate, path: /admin/policies/sample/ns1, class: class org.apache.pulsar.common.policies.data.Policies, value: Policies(auth_policies=AuthPoliciesImpl(namespaceAuthentication=&#123;&#125;, topicAuthentication=&#123;&#125;, subscriptionAuthentication=&#123;&#125;), replication_clusters=[standalone], bundles=BundlesDataImpl(boundaries=[0x00000000, 0x40000000, 0x80000000, 0xc0000000, 0xffffffff], numBundles=4), backlog_quota_map=&#123;destination_storage=&#123;&#125;&#125;, clusterDispatchRate=&#123;&#125;, topicDispatchRate=&#123;&#125;, subscriptionDispatchRate=&#123;&#125;, replicatorDispatchRate=&#123;&#125;, clusterSubscribeRate=&#123;&#125;, persistence=null, deduplicationEnabled=null, autoTopicCreationOverride=null, autoSubscriptionCreationOverride=null, publishMaxMessageRate=&#123;&#125;, latency_stats_sample_rate=&#123;&#125;, message_ttl_in_seconds=null, subscription_expiration_time_minutes=0, retention_policies=null, deleted=false, encryption_required=false, delayed_delivery_policies=null, inactive_topic_policies=null, subscription_auth_mode=None, max_producers_per_topic=null, max_consumers_per_topic=null, max_consumers_per_subscription=null, max_unacked_messages_per_consumer=null, max_unacked_messages_per_subscription=null, max_subscriptions_per_topic=null, compaction_threshold=null, offload_threshold=-1, offload_deletion_lag_ms=null, max_topics_per_namespace=null, schema_auto_update_compatibility_strategy=Full, schema_compatibility_strategy=UNDEFINED, is_allow_auto_update_schema=true, schema_validation_enforced=false, offload_policies=null, deduplicationSnapshotIntervalSeconds=null, subscription_types_enabled=[], properties=&#123;&#125;, resource_group_name=null), hash: -2056889852, expectedVersion: 0, p: 1890262240</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>可以看到backlog_quota_map&#x3D;{destination_storage&#x3D;{}}中destination_storage是一个空值，所以当序列化的时候会抛出NPE异常。</p>
+<p>正常情况下的日志应该是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">10:49:44.719 [metadata-store-32-1] INFO  org.apache.pulsar.metadata.cache.impl.MetadataCacheImpl - vvv method readValueFromStore, path /admin/policies/sample/ns1, class class org.apache.pulsar.common.policies.data.Policies, value Policies(auth_policies=AuthPoliciesImpl(namespaceAuthentication=&#123;&#125;, topicAuthentication=&#123;&#125;, subscriptionAuthentication=&#123;&#125;), replication_clusters=[standalone], bundles=BundlesDataImpl(boundaries=[0x00000000, 0x40000000, 0x80000000, 0xc0000000, 0xffffffff], numBundles=4), backlog_quota_map=&#123;destination_storage=BacklogQuotaImpl(limitSize=104857600, limitTime=1111, policy=producer_request_hold)&#125;, clusterDispatchRate=&#123;&#125;, topicDispatchRate=&#123;&#125;, subscriptionDispatchRate=&#123;&#125;, replicatorDispatchRate=&#123;&#125;, clusterSubscribeRate=&#123;&#125;, persistence=null, deduplicationEnabled=null, autoTopicCreationOverride=null, autoSubscriptionCreationOverride=null, publishMaxMessageRate=&#123;&#125;, latency_stats_sample_rate=&#123;&#125;, message_ttl_in_seconds=null, subscription_expiration_time_minutes=0, retention_policies=null, deleted=false, encryption_required=false, delayed_delivery_policies=null, inactive_topic_policies=null, subscription_auth_mode=None, max_producers_per_topic=null, max_consumers_per_topic=null, max_consumers_per_subscription=null, max_unacked_messages_per_consumer=null, max_unacked_messages_per_subscription=null, max_subscriptions_per_topic=null, compaction_threshold=null, offload_threshold=-1, offload_deletion_lag_ms=null, max_topics_per_namespace=null, schema_auto_update_compatibility_strategy=Full, schema_compatibility_strategy=UNDEFINED, is_allow_auto_update_schema=true, schema_validation_enforced=false, offload_policies=null, deduplicationSnapshotIntervalSeconds=null, subscription_types_enabled=[], properties=&#123;&#125;, resource_group_name=null), hash 1614905576, version: 1, p: 1843660571</span><br></pre></td></tr></table></figure>
+
+<p>destination_storage是有内容的，内容是：</p>
+<p>BacklogQuotaImpl(limitSize&#x3D;104857600, limitTime&#x3D;1111, policy&#x3D;producer_request_hold)。</p>
+<p>由于这里的数据是从缓存中获取的，所以怀疑从缓存中拿到数据就是空，但是在readValueFromStore方法中打印日志后，发现这里的数据并不是空，而且内容和readModifyUpdate中不一样。<strong>所以就能确认在其他地方修改了缓存中的数据</strong>。</p>
+<h2 id="4-3-查看调用链"><a href="#4-3-查看调用链" class="headerlink" title="4.3 查看调用链"></a>4.3 查看调用链</h2><p>通过debug可以确认调用链是：</p>
+<ul>
+<li><p>org.apache.pursar.broker.admin.v2.Namespaces -&gt; setBacklogQuota</p>
+</li>
+<li><p>org.apache.pursar.broker.admin.impl.NamespaceBase -&gt; internalSetBacklogQuota</p>
+</li>
+<li><p>org.apache.pulsar.broker.resources -&gt; set</p>
+</li>
+<li><p>org.apache.pulsar.broker.resources -&gt; setAsync</p>
+</li>
+<li><p>org.apache.pulsar.metadata.cache.impl -&gt; readModifyUpdate</p>
+</li>
+</ul>
+<p>第一个方法就是提供了http接口，接收客户端传递的参数。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBacklogQuota</span><span class="params">(<span class="meta">@PathParam(&quot;tenant&quot;)</span> String tenant, <span class="meta">@PathParam(&quot;namespace&quot;)</span> String namespace,</span></span><br><span class="line"><span class="params">    <span class="meta">@QueryParam(&quot;backlogQuotaType&quot;)</span> BacklogQuotaType backlogQuotaType,</span></span><br><span class="line"><span class="params">    <span class="meta">@ApiParam(value = &quot;Backlog quota for all topics of the specified namespace&quot;)</span></span></span><br><span class="line"><span class="params">        BacklogQuota backlogQuota)</span> &#123;</span><br><span class="line">  validateNamespaceName(tenant, namespace);</span><br><span class="line">  log.info(<span class="string">&quot;vvv method &#123;&#125;, backlogQuota &#123;&#125;, class &#123;&#125;&quot;</span>, <span class="string">&quot;setBacklogQuota&quot;</span>, backlogQuota, backlogQuota.getClass());</span><br><span class="line">  internalSetBacklogQuota(backlogQuotaType, backlogQuota);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处打印的日志如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">11:50:05.094 [pulsar-web-63-6] INFO  org.apache.pulsar.broker.admin.v2.Namespaces - vvv method setBacklogQuota, backlogQuota &#123;&#125;, class com.sun.proxy.$Proxy117 &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>第二个方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">internalSetBacklogQuota</span><span class="params">(BacklogQuotaType backlogQuotaType, BacklogQuota backlogQuota)</span> &#123;</span><br><span class="line">  validateNamespacePolicyOperation(namespaceName, PolicyName.BACKLOG, PolicyOperation.WRITE);</span><br><span class="line">  validatePoliciesReadOnlyAccess();</span><br><span class="line">  <span class="keyword">final</span> <span class="type">BacklogQuotaType</span> <span class="variable">quotaType</span> <span class="operator">=</span> backlogQuotaType != <span class="literal">null</span> ? backlogQuotaType</span><br><span class="line">      : BacklogQuotaType.destination_storage;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="type">String</span> <span class="variable">path</span> <span class="operator">=</span> path(POLICIES, namespaceName.toString());</span><br><span class="line">        <span class="comment">// 从MetaCacheImpl中获取缓存中的数据。</span></span><br><span class="line">    <span class="type">Policies</span> <span class="variable">policies</span> <span class="operator">=</span> namespaceResources().get(path)</span><br><span class="line">        .orElseThrow(() -&gt; <span class="keyword">new</span> <span class="title class_">RestException</span>(Status.NOT_FOUND, <span class="string">&quot;Namespace policies does not exist&quot;</span>));</span><br><span class="line">    <span class="type">RetentionPolicies</span> <span class="variable">r</span> <span class="operator">=</span> policies.retention_policies;</span><br><span class="line">    <span class="keyword">if</span> (r != <span class="literal">null</span>) &#123;</span><br><span class="line">      <span class="type">Policies</span> <span class="variable">p</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Policies</span>();</span><br><span class="line">      p.backlog_quota_map.put(quotaType, backlogQuota);</span><br><span class="line">      <span class="keyword">if</span> (!checkQuotas(p, r)) &#123;</span><br><span class="line">        log.warn(</span><br><span class="line">            <span class="string">&quot;[&#123;&#125;] Failed to update backlog configuration&quot;</span></span><br><span class="line">                + <span class="string">&quot; for namespace &#123;&#125;: conflicts with retention quota&quot;</span>,</span><br><span class="line">            clientAppId(), namespaceName);</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">RestException</span>(Status.PRECONDITION_FAILED,</span><br><span class="line">            <span class="string">&quot;Backlog Quota exceeds configured retention quota for namespace.&quot;</span></span><br><span class="line">                + <span class="string">&quot; Please increase retention quota and retry&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">        <span class="comment">// 修改缓存中的数据（这里是直接修改缓存中的数据，所以在之前的日志中,</span></span><br><span class="line">        <span class="comment">// 我们发现readModifyUpdate方法中拿到的缓存对象的内容和缓存加载方法readValueFromStore中的不一致）。</span></span><br><span class="line">    policies.backlog_quota_map.put(quotaType, backlogQuota);</span><br><span class="line">    log.info(<span class="string">&quot;vvv method &#123;&#125;, path &#123;&#125;, policies &#123;&#125;&quot;</span>, <span class="string">&quot;internalSetBacklogQuota&quot;</span>, path, policies);</span><br><span class="line">    namespaceResources().set(path, p -&gt; policies);</span><br><span class="line">    log.info(<span class="string">&quot;[&#123;&#125;] Successfully updated backlog quota map: namespace=&#123;&#125;, map=&#123;&#125;&quot;</span>, clientAppId(), namespaceName,</span><br><span class="line">        jsonMapper().writeValueAsString(backlogQuota));</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">catch</span> (RestException pfe) &#123;</span><br><span class="line">    <span class="keyword">throw</span> pfe;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    log.error(<span class="string">&quot;[&#123;&#125;] Failed to update backlog quota map for namespace &#123;&#125;&quot;</span>, clientAppId(), namespaceName, e);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RestException</span>(e);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个方法中，先是从MetaCacheImple对象中根据path拿到缓存中的policies，然后更新该policies，然后再通过MetaCacheImpl的update方法更新zookeeper中的数据。</p>
+<p><strong>通过上述流程，我们可以确定的是，缓存从zookeeper中加载的数据是正确的，客户端调用命令后传递的数据是错误的，所以定位到问题出现在调用链的第一个方法中。</strong></p>
+<h2 id="4-4-问题分析"><a href="#4-4-问题分析" class="headerlink" title="4.4 问题分析"></a>4.4 问题分析</h2><p>从前面的过程中，我们就能大致确认问题是客户端传递的参数没有被正常解析或者客户端传递的参数为空，然后pulsar本身使用jersey作为restful框架，使用jackson解析请求中的json数据，并对请求参数进行赋值。</p>
+<p>首先通过tcpdump捕获交互过程中的数据包，确定客户端发送的数据中是有内容的：</p>
+<p><img src="/../../images/image-20231007103138364.png" alt="image-20231007103138364"></p>
+<p>可以看到传递的内容不为空，然后看不报错情况下的数据报文：</p>
+<p><img src="/../../images/image-20231007103221655.png" alt="image-20231007103221655"></p>
+<p>由此就可以确定不是客户端的问题，而是broker端接收到数据后的解析问题。</p>
+<p>结合以往经验，推测是不同的json处理框架有冲突，导致数据解析失败。把fastjson去掉后，果然问题不再出现！</p>
+<h2 id="4-5-问题解决"><a href="#4-5-问题解决" class="headerlink" title="4.5 问题解决"></a>4.5 问题解决</h2><p>既然是fastjson的问题，那么推测是加载fastjson包后，会在某些情况下替换jackson进行json数据的解析，导致解析出错。</p>
+<p>pulsar是基于jersey作为restful框架的，而jersey遵循了javax-ws规范，规范中定义了加载哪些数据解析类，即定义了加载哪一个json框架作为解析框架。</p>
+<p>搜索关键词：fastjson和jersey冲突，发现fastjson项目中的一个issue：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/fastjson/issues/1392">https://github.com/alibaba/fastjson/issues/1392</a></p>
+<p>有人遇到了相似的问题，fastjson进行了修复。</p>
+<p>我们的问题与上述问题还是有些不同的，但本质一样，都是由于fastjson默认加载了自己的作为java-ws的provider，导致jersey不能加载jackson。</p>
+<p>而fastjson又不够强大，如果参数中的变量类型是interface，fastjson不能找到该interface的实现类并赋值，所以我们看到setBacklogQuota方法中backlogQuota是空的，而且class是com.sun.proxy.$Proxy117。</p>
+<p><strong>如果我们把BacklogQuota换成backlogQuotaImpl或者我们自己写的一个包含三个参数的类，则能成功赋值，例如这样：</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VVData</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> limitSize;</span><br><span class="line">    <span class="comment">// backlog quota by time in second</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> limitTime;</span><br><span class="line">    <span class="keyword">private</span> BacklogQuota.RetentionPolicy policy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">12:14:01.371 [pulsar-web-63-12] INFO  org.apache.pulsar.broker.admin.v2.Namespaces - vvv method setBacklogQuota, backlogQuota VVData(limitSize=104857600, limitTime=1111, policy=producer_request_hold</span><br></pre></td></tr></table></figure>
+
+<h1 id="5-疑问"><a href="#5-疑问" class="headerlink" title="5. 疑问"></a>5. 疑问</h1><p>上边问题已经解决了，但是在找问题的过程中，发现可以通过其他地方修改Caffeine缓存中的数据。</p>
+<p><strong>这里在多线程同时操作情况下有出现数据不一致的问题吧</strong></p>
+<p>fastjson不会自动把自己设置为java-ws的provider，应该是jersey在启动的时候查找AutoDiscoverable接口的所有实现类，然后根据实现类里面设置的优先级加载优先级最高的provider，或者按照优先级顺序加载所有的provider。AutoDiscoverable的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">package org.glassfish.jersey.internal.spi;</span><br><span class="line">import javax.ws.rs.core.FeatureContext;</span><br><span class="line">/** * A service provider contract for JAX-RS and Jersey components that need to be automatically discovered and registered in * &#123;@link javax.ws.rs.core.Configuration runtime configurations&#125;. * &lt;p/&gt; * A component implementing this contract becomes auto-discoverable by adding a new entry with fully qualified name of its * implementation class name to a &#123;@code org.glassfish.jersey.internal.spi.AutoDiscoverable&#125; file in the &#123;@code * META-INF/services&#125; directory. * &lt;p/&gt; * Almost all Jersey &#123;@code AutoDiscoverable&#125; implementations have * &#123;@link #DEFAULT_PRIORITY&#125; &#123;@link javax.annotation.Priority priority&#125; set. * * @author Michal Gajdos */public interface AutoDiscoverable &#123;</span><br><span class="line">    /**     * Default common priority of Jersey build-in auto-discoverables.     * Use lower number on your &#123;@code AutoDiscoverable&#125; implementation to run it before Jersey auto-discoverables     * and vice versa.     * 优先级，在fastjson中设置的优先级是 (DEFAULT_PRIORITY - 1)，所以会优先加载。     */    public static final int DEFAULT_PRIORITY = 2000;</span><br><span class="line">    /**     * A call-back method called when an auto-discoverable component is to be configured in a given runtime configuration scope.     * &lt;p&gt;     * Note that as with &#123;@link javax.ws.rs.core.Feature JAX-RS features&#125;, before registering new JAX-RS components in a     * given configurable context, an auto-discoverable component should verify that newly registered components are not     * already registered in the configurable context.     * &lt;/p&gt;     *     * @param context configurable context in which the auto-discoverable should be configured.     */    public void configure(FeatureContext context);&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/02/pulsar/%E5%8F%AA%E8%AF%BBbroker%E8%AE%BE%E8%AE%A1%EF%BC%88%E4%B8%80%EF%BC%89/">只读broker设计（一）</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h1 id="1-初衷"><a href="#1-初衷" class="headerlink" title="1. 初衷"></a>1. 初衷</h1><p>pulsar中每一个topic必须由唯一的一个broker负责读和写，这样在保证消息的顺序和事务方面就很方便。但是如果出现如下场景：</p>
+<ul>
+<li>消费业务分布在多个地区</li>
+<li>某一个topic的消费业务特别多</li>
+</ul>
+<p>单个broker处理请求就显得不能满足需求了。</p>
+<p>因此，就可以设计一种只读broker，类似zookeeper中的observer，该种角色的broker只负责消息的读，不负责消息的写入。这样既能满足异地消费时从本地存储中拉取数据，又能横向扩展单topic多业务消费能力。</p>
+<h1 id="2-解析"><a href="#2-解析" class="headerlink" title="2. 解析"></a>2. 解析</h1><p>在pulsar的架构中，消息的处理和存储是分离的，producer和consumer和broker进行数据的交互，broker收到数据后选择对应的bookie节点进行读写。如下图：</p>
+<p><img src="/../../images/image-20231008234840919.png" alt="image-20231008234840919"></p>
+<p>这种计算和存储分离的结构，虽然一定程度上会增大消息延迟，但是对于系统的整体可用性以及资源的平均分配有很大好处。</p>
+<p>也因此在pulsar中，broker是无状态的，broker之间不需要进行信息的同步，不需要感知其他broker的状态。当一个consumer&#x2F;producer连接到broker后，broker只需要通过zk判断是否应该由自己负责topic消息的读写即可（pulsar正常工作的前提也是zk是正常的）。</p>
+<p>pulsar中每一个topic消息的读写都是由唯一的一个broker负责的（虽然有分区topic，但本质上还是拆分成独立的topic了），这样在保证消息顺序、事务、消息消费进度等方面都会变得很方便。但是就像开头说的那样，如果一个topic的消息成千上万的订阅者都需要，这样就会因broker单点造成性能的问题。</p>
+<p>在开始实现只读功能之前，根据以往的经验，可以想到有以下几个问题需要关注：</p>
+<ul>
+<li><p>只读broker怎么获取到某个topic写的进度，怎么能实时感知。</p>
+</li>
+<li><p>只读broker怎么保存某个subscription的消费进度。</p>
+</li>
+<li><p>只读broker之间是否需要同步消费进度，即是否支持一个subscription从多个broker订阅。</p>
+</li>
+<li><p>写broker是否需要消息消费进度。</p>
+</li>
+<li><p>怎么删除已消费完的消息（之前是有写broker判断如果所有的subscription都消费完成了，则删除消息，现在写broker不知道各个只读broker的消费进度）。</p>
+</li>
+<li><p>只读broker是单独部署还是说通过消费者发送的标识判断是否是以只读方式读取。</p>
+</li>
+<li><p>consumer连接到一个只读broker消费一定量消息后断开连接，连接到其他的只读broker，那么其他只读broker怎么获取到上次消费进度。</p>
+</li>
+</ul>
+<p>针对上述问题去pulsar源码中找答案，然后找一个折中的方案实现只读broker功能，首先我们先看消息订阅涉及到的几个阶段。</p>
+<h2 id="2-1-lookup"><a href="#2-1-lookup" class="headerlink" title="2.1 lookup"></a>2.1 lookup</h2><p>该阶段是为了查找topic属于哪一个broker负责，consumer传递的信息只有topic名称。</p>
+<p>broker收到请求后，会依次执行以下逻辑：</p>
+<ul>
+<li><p>校验topic是否合法</p>
+</li>
+<li><p>是否超过了设置的同时进行lookup的数量</p>
+</li>
+<li><p>是否通过代理方式连接（代理方式连接需要单独校验权限）</p>
+</li>
+<li><p>topic操作是否被授权</p>
+</li>
+<li><p>校验集群信息、权限信息</p>
+</li>
+<li><p>计算topic属于的bundle，然后根据bundle判断属于哪一个broker，并返回broker的地址</p>
+</li>
+</ul>
+<p><strong>如果实现只读broker，我们就需要在这里添加判断逻辑，返回我们给定的broker地址。</strong></p>
+<h2 id="2-2-subscribe"><a href="#2-2-subscribe" class="headerlink" title="2.2 subscribe"></a>2.2 subscribe</h2><p>该阶段是发送订阅请求，broker可以拿到subName。</p>
+<p>收到订阅请求后会执行以下逻辑：</p>
+<ul>
+<li><p>权限验证</p>
+</li>
+<li><p>客户端信息是否已被保存（broker是通过客户端生成的id来区分不同的consumer的），如果有则直接返回</p>
+</li>
+<li><p>到BrokerService中查找该subName的topic信息，如果有则复用（topic信息由单一实例存储，例如PersistentTopic）；如果没有则创建，然后会依次打开topic对应的ledger、ledger下的cursor。在这个过程中会进行topic归属broker的校验。</p>
+</li>
+<li><p>进行schema的处理</p>
+</li>
+<li><p>创建Subscription实例，保存订阅信息，并建立Consumer和Subscription之间的关系</p>
+</li>
+<li><p>返回订阅成功给consumer</p>
+</li>
+</ul>
+<p><strong>在此阶段中，由于在创建Topic实例的同时会打开ledger和cursor，而ledger是默认以写的方式打开新的ledger的，所以在只读broker中，需要在这个阶段添加判断逻辑，以只读的方式打卡ledger，并且不会创建新的写ledger。</strong></p>
+<h2 id="2-3-ledger和cursor恢复"><a href="#2-3-ledger和cursor恢复" class="headerlink" title="2.3 ledger和cursor恢复"></a>2.3 ledger和cursor恢复</h2><p>该阶段是通过zk中记录的数据进行topic以往ledger和cursor进度的恢复。分别对应zk中的path节点：</p>
+<p>&#x2F;managed-ledgers&#x2F;tenant_c&#x2F;ns1&#x2F;persistent&#x2F;topic01</p>
+<p>&#x2F;managed-ledgers&#x2F;tenant_c&#x2F;ns1&#x2F;persistent&#x2F;topic01&#x2F;consumer_00</p>
+<p><strong>这里需要注意的就是怎么同步ledger的LAC到cursor中，并实时感知topic下新的data ledger的创建以及获取最新的LAC信息并同步给cursor。</strong></p>
+<h2 id="2-4-客户端断开连接"><a href="#2-4-客户端断开连接" class="headerlink" title="2.4 客户端断开连接"></a>2.4 客户端断开连接</h2><p>该阶段会进行资源的清理，包括取消订阅信息、关闭consumer等。</p>
+<p><strong>这里需要关注的就是要把消费进度持久化到zk中（默认不是实时刷新到zk的，断开连接后也不会及时持久化，虽然会实时写入bk中）。然后就是需要等一个topic下所有的sub都断开连接了，才进行消费进度的保存。</strong></p>
+<h1 id="3-思路"><a href="#3-思路" class="headerlink" title="3. 思路"></a>3. 思路</h1><p>通过不断尝试，最终确定实现方式如下</p>
+<ul>
+<li><p>设置指定的broker为只读broker，只读broker不提供写功能，并且不会启动写的功能，比如创建topic。</p>
+</li>
+<li><p>一个subscription只能从唯一的一个broker读取消息，之间的关系会写到zk上，broker收到subscribe请求后会进行判断；连接断开后会删除zk中的关系。</p>
+</li>
+<li><p>broker在consumer发送subscribe后会从zk&#x2F;bk中拉取最新的消费进度，consumer断开连接后会把进度回写到zk中。这样就避免了只读broker之间同步进度。</p>
+</li>
+<li><p>只读broker在定时器中获取data ledger的LAC（对于closed状态的ledger，通过getLastAddConfirmed获取；对于open状态的ledger，通过readLastAddConfirmed）。当获取的LAC比记录的大时，会通过notifyCursors和notifyWaitingEntryCallBacks方法触发读操作。这种方式会造成一定的延迟，但也是可接受的。。。</p>
+</li>
+<li><p>当一个topic的所有subscription都断开时，会关闭cursor，触发进度的持久化。</p>
+</li>
+<li><p>当cursor恢复时，会查询zk中是否存在记录，如果存在则通过zk中的数据恢复进度（由于默认情况下cursor的进度都是在ManagedLedger实例第一次创建的时候恢复的，中间有新的cursor创建就不会有恢复流程了）。</p>
+</li>
+<li><p>只读broker和读写broker共用一套zk环境，但是只是往里面写入subscription的消费进度。</p>
+</li>
+</ul>
+<p>通过上述方式，可以实现一个简单的只读broker。</p>
+<p>后续需要改进的地方包括</p>
+<ul>
+<li><p>消费进度实时感知（当前情况下不能感知到最新一条消息，可能存在刷新延迟）。</p>
+</li>
+<li><p>支持多topic（目前没有测试这个，估计会有问题）。</p>
+</li>
+<li><p>支持分区topic（同上）。</p>
+</li>
+<li><p>延迟消息（目前测试有问题）。</p>
+</li>
+<li><p>只读broker模式下ManagedLedger的一些逻辑被注释掉了，没看懂具体功能，后续还需要继续研究。</p>
+</li>
+</ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/09/01/pulsar/%E3%80%90bug%E3%80%91%E8%AE%B0%E4%B8%80%E6%AC%A1CompletableFuture%E5%BC%95%E8%B5%B7%E7%9A%84%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/">记一次CompletableFuture引起的死锁问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-09-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h1><p>在pulsar中添加只读broker功能的支持，所以修改了pulsar-broker的代码，在创建cursor时添加了zk查询代码。</p>
+<p>然后测试的时候发现，每一次重新创建topic，consumer开始订阅消息后，broker就会出现阻塞，导致subscribe阶段一直不成功。</p>
+<h1 id="2-问题分析"><a href="#2-问题分析" class="headerlink" title="2. 问题分析"></a>2. 问题分析</h1><p>consumer和pulsar之间进行交互的阶段有：</p>
+<ul>
+<li><p>CONNECT</p>
+</li>
+<li><p>PARTITIONED_METADATA</p>
+</li>
+<li><p>LOOKUP</p>
+</li>
+<li><p>SUBSCRIBE</p>
+</li>
+</ul>
+<p>然后当consumer发送SUBSCRIBE后，一直收不到broker的应答，由此确认broker处理SUBSCRIBE出现问题。</p>
+<h2 id="2-1-定位代码"><a href="#2-1-定位代码" class="headerlink" title="2.1 定位代码"></a>2.1 定位代码</h2><p>通过查看pulsar的源码，可以看到对于zk数据的查询都是异步执行的，而且共用的一个线程，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// AbstractMetadataStore 构造方法</span><br><span class="line">protected AbstractMetadataStore() &#123;</span><br><span class="line">        this.executor = Executors</span><br><span class="line">                .newSingleThreadExecutor(new DefaultThreadFactory(&quot;metadata-store&quot;));</span><br><span class="line">        registerListener(this);</span><br><span class="line"> // other code   </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 执行查询或者回调函数</span><br><span class="line">/**</span><br><span class="line">  * Run the task in the executor thread and fail the future if the executor is shutting down</span><br><span class="line">  */</span><br><span class="line">protected void execute(Runnable task, CompletableFuture&lt;?&gt; future) &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        executor.execute(task);</span><br><span class="line">    &#125; catch (Throwable t) &#123;</span><br><span class="line">        future.completeExceptionally(t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以猜测是由于回调函数没有执行完毕导致的阻塞，因此在所有的回调函数出打印日志，定位到如下代码出现阻塞：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Override</span><br><span class="line">public CompletableFuture&lt;Stat&gt; storePut(String path, byte[] value, Optional&lt;Long&gt; optExpectedVersion,</span><br><span class="line">    EnumSet&lt;CreateOption&gt; options) &#123;</span><br><span class="line">  boolean hasVersion = optExpectedVersion.isPresent();</span><br><span class="line">  int expectedVersion = optExpectedVersion.orElse(-1L).intValue();</span><br><span class="line"></span><br><span class="line">  CompletableFuture&lt;Stat&gt; future = new CompletableFuture&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  try &#123;</span><br><span class="line">    if (hasVersion &amp;&amp; expectedVersion == -1) &#123;</span><br><span class="line">      CreateMode createMode = getCreateMode(options);</span><br><span class="line">      ZkUtils.asyncCreateFullPathOptimistic(zkc, path, value, ZooDefs.Ids.OPEN_ACL_UNSAFE,</span><br><span class="line">          createMode, (rc, path1, ctx, name) -&gt; &#123;</span><br><span class="line">            execute(() -&gt; &#123;</span><br><span class="line">              Code code = Code.get(rc);</span><br><span class="line">              if (code == Code.OK) &#123;</span><br><span class="line">                                // 运行到此处时出现阻塞。</span><br><span class="line">                future.complete(new Stat(name, 0, 0, 0, createMode.isEphemeral(), true));</span><br><span class="line">              &#125; else if (code == Code.NODEEXISTS) &#123;</span><br><span class="line">                // We&#x27;re emulating a request to create node, so the version is invalid</span><br><span class="line">                future.completeExceptionally(getException(Code.BADVERSION, path));</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                future.completeExceptionally(getException(code, path));</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;, future);</span><br><span class="line">          &#125;, null);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      // other code...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; catch (Throwable t) &#123;</span><br><span class="line">    future.completeExceptionally(new MetadataStoreException(t));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return future;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-查看进程和cpu使用情况"><a href="#2-2-查看进程和cpu使用情况" class="headerlink" title="2.2 查看进程和cpu使用情况"></a>2.2 查看进程和cpu使用情况</h2><p>然后查询进程和cpu使用情况：</p>
+<p># 找到进程ID</p>
+<p>ps -ef |grep broker</p>
+<p># 查询进程cpu</p>
+<p>top -Hp 16704</p>
+<p><img src="/%E3%80%90bug%E3%80%91%E8%AE%B0%E4%B8%80%E6%AC%A1CompletableFuture%E5%BC%95%E8%B5%B7%E7%9A%84%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98/image-20240519001339974.png" alt="image-20240519001339974"></p>
+<p>看到cpu使用的并不多，再10%以下，由此可推断不是gc或者其他死循环造成的阻塞。</p>
+<h2 id="2-3-查看堆栈信息"><a href="#2-3-查看堆栈信息" class="headerlink" title="2.3 查看堆栈信息"></a>2.3 查看堆栈信息</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;metadata-store-7-1&quot; #84 prio=5 os_prio=0 tid=0x00007f1560004800 nid=0x1ca1 waiting on condition [0x00007f1506a2c000]</span><br><span class="line">   java.lang.Thread.State: WAITING (parking)</span><br><span class="line">  at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">  - parking to wait for  &lt;0x00000000fd0c3d18&gt; (a java.util.concurrent.CompletableFuture$Signaller)</span><br><span class="line">  at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)</span><br><span class="line">  at java.util.concurrent.CompletableFuture$Signaller.block(CompletableFuture.java:1693)</span><br><span class="line">  at java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3323)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.waitingGet(CompletableFuture.java:1729)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:1895)</span><br><span class="line">  at org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl.recoverCursorFromZK(ManagedLedgerImpl.java:1072)</span><br><span class="line">  at org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl.asyncOpenCursor(ManagedLedgerImpl.java:1019)</span><br><span class="line">    // 阻塞原因</span><br><span class="line">  - locked &lt;0x00000000f5841ce8&gt; (a org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl)</span><br><span class="line">  at org.apache.pulsar.broker.service.persistent.PersistentTopic.getDurableSubscription(PersistentTopic.java:857)</span><br><span class="line">  at org.apache.pulsar.broker.service.persistent.PersistentTopic.subscribe(PersistentTopic.java:747)</span><br><span class="line">  at org.apache.pulsar.broker.service.ServerCnx.lambda$null$12(ServerCnx.java:1050)</span><br><span class="line">  at org.apache.pulsar.broker.service.ServerCnx$$Lambda$277/1382611823.apply(Unknown Source)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.uniCompose(CompletableFuture.java:952)</span><br><span class="line">  at java.util.concurrent.CompletableFuture$UniCompose.tryFire(CompletableFuture.java:926)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)</span><br><span class="line">  at org.apache.pulsar.broker.service.schema.BookkeeperSchemaStorage$$Lambda$295/640790180.accept(Unknown Source)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.uniAccept(CompletableFuture.java:656)</span><br><span class="line">  at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:632)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:474)</span><br><span class="line">  at java.util.concurrent.CompletableFuture.complete(CompletableFuture.java:1962)</span><br><span class="line">    // 阻塞代码</span><br><span class="line">  at org.apache.pulsar.metadata.impl.ZKMetadataStore.lambda$null$15(ZKMetadataStore.java:234)</span><br><span class="line">  at org.apache.pulsar.metadata.impl.ZKMetadataStore$$Lambda$127/153703270.run(Unknown Source)</span><br><span class="line">  at org.apache.pulsar.metadata.impl.AbstractMetadataStore.lambda$execute$8(AbstractMetadataStore.java:261)</span><br><span class="line">  at org.apache.pulsar.metadata.impl.AbstractMetadataStore$$Lambda$128/1782705605.run(Unknown Source)</span><br><span class="line">  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)</span><br><span class="line">  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)</span><br><span class="line">  at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)</span><br><span class="line">  at java.lang.Thread.run(Thread.java:748)</span><br><span class="line"></span><br><span class="line">&quot;main-EventThread&quot; #82 daemon prio=5 os_prio=0 tid=0x00007f15edd8e800 nid=0x1ca0 waiting on condition [0x00007f150692c000]</span><br><span class="line">   java.lang.Thread.State: WAITING (parking)</span><br><span class="line">  at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">  - parking to wait for  &lt;0x00000000f5840660&gt; (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)</span><br><span class="line">  at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)</span><br><span class="line">  at java.util.concurrent.locks.AbstractQue</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">uedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)</span><br><span class="line">	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)</span><br><span class="line">	at org.apache.zookeeper.ClientCnxn$EventThread.run(ClientCnxn.java:559)</span><br><span class="line"></span><br><span class="line">&quot;main-SendThread(172.20.140.23:2181)&quot; #81 daemon prio=5 os_prio=0 tid=0x00007f15edd8a800 nid=0x1c9f runnable [0x00007f150672a000]</span><br><span class="line">   java.lang.Thread.State: RUNNABLE</span><br><span class="line">	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)</span><br><span class="line">	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)</span><br><span class="line">	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)</span><br><span class="line">	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)</span><br><span class="line">	- locked &lt;0x00000000f571b3e8&gt; (a sun.nio.ch.Util$3)</span><br><span class="line">	- locked &lt;0x00000000f571b3f8&gt; (a java.util.Collections$UnmodifiableSet)</span><br><span class="line">	- locked &lt;0x00000000f571b3a0&gt; (a sun.nio.ch.EPollSelectorImpl)</span><br><span class="line">	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)</span><br><span class="line">	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:332)</span><br><span class="line">	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1290)</span><br></pre></td></tr></table></figure>
+
+<p>可以看到zk中代码出现阻塞的原因是和ManagedLedgerImpl中的代码出现了资源竞争，涉及到的代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private boolean recoverCursorFromZK(String cursorName, final OpenCursorCallback callback, final Object ctx) &#123;</span><br><span class="line">  CompletableFuture&lt;Boolean&gt; existsFuture = new CompletableFuture&lt;&gt;();</span><br><span class="line">  store.asyncGetCursorInfo(name, cursorName, new MetaStoreCallback&lt;MLDataFormats.ManagedCursorInfo&gt;() &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void operationComplete(MLDataFormats.ManagedCursorInfo info, Stat stat) &#123;</span><br><span class="line">      existsFuture.complete(true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void operationFailed(MetaStoreException e) &#123;</span><br><span class="line">      log.info(&quot;vvv method &#123;&#125; open failed&quot;, &quot;recoverCursorFromZK&quot;);</span><br><span class="line">      existsFuture.complete(false);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">    </span><br><span class="line">  try &#123;</span><br><span class="line">        // 阻塞的原因是因为这条语句</span><br><span class="line">    if (!existsFuture.get()) &#123;</span><br><span class="line">      return false;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; catch (Exception e) &#123;</span><br><span class="line">    log.error(&quot;vvv method recoverCursorFromZK error&quot;, e);</span><br><span class="line">    return false;</span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">    // other code</span><br><span class="line">  </span><br><span class="line">  return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-问题解决"><a href="#3-问题解决" class="headerlink" title="3. 问题解决"></a>3. 问题解决</h1><p>修改recoverCursorFromZK方法，把通过get进行任务执行完毕的判断改为confuture.thenAccept()。</p>
+<h1 id="4-问题总结"><a href="#4-问题总结" class="headerlink" title="4. 问题总结"></a>4. 问题总结</h1><p>其实最后也没发现为什么出现资源竞争，好像就是在一个线程中使用CompletableFuture就出现了问题。</p>
+<p>整个代码的逻辑是：</p>
+<ul>
+<li><p>通过zk查询数据，设置回调方法等待zk查询完成后执行。</p>
+</li>
+<li><p>zk查询完成后，通过唯一的线程执行回调方法，回调方法中就是future.complete()。</p>
+</li>
+<li><p>另外的线程开始执行同样的查询，回调方法同样是future.complete()，只不过还有其他线程调用了future.get()。</p>
+</li>
+</ul>
+<p>流程就像下面这种：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void testFuture() throws Exception &#123;</span><br><span class="line">  ExecutorService executor = Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">  CompletableFuture&lt;Boolean&gt; f1 = new CompletableFuture&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  new Thread(() -&gt; &#123;</span><br><span class="line">    CompletableFuture&lt;Boolean&gt; f2 = new CompletableFuture&lt;&gt;();</span><br><span class="line">    executor.execute(() -&gt; &#123;</span><br><span class="line">      sleep(1000);</span><br><span class="line"></span><br><span class="line">      System.out.println(&quot;f2 start&quot;);</span><br><span class="line">      f2.complete(true);</span><br><span class="line">      System.out.println(&quot;f2 done&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    executor.execute(() -&gt; &#123;</span><br><span class="line">      sleep(1000);</span><br><span class="line"></span><br><span class="line">      System.out.println(&quot;f1 start&quot;);</span><br><span class="line">      f1.complete(true);</span><br><span class="line">      System.out.println(&quot;f1 done&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;).start();</span><br><span class="line"></span><br><span class="line">  System.out.println(&quot;init done&quot;);</span><br><span class="line">  f1.get();</span><br><span class="line">  System.out.println(&quot;run done&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void sleep(int i) &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    Thread.sleep(1000);</span><br><span class="line">  &#125; catch (Exception e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/08/23/pulsar/pulsar%E6%B6%88%E8%B4%B9%E8%BF%9B%E5%BA%A6%E4%BF%9D%E5%AD%98%EF%BC%88%E4%BA%8C%EF%BC%89/">pulsar消费进度保存（二）</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-08-23</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><blockquote>
+<p>本文只针对persistent topic进行说明。</p>
+</blockquote>
+<h1 id="1-消息消费流程"><a href="#1-消息消费流程" class="headerlink" title="1. 消息消费流程"></a>1. 消息消费流程</h1><p>consumer和broker之间是通过TCP进行数据交互的，通信框架基于netty，数据格式是TLV结构，分为不包含负载的简单消息和包含负载的消息。</p>
+<p>具体参考：<a target="_blank" rel="noopener" href="https://pulsar.apache.org/docs/en/develop-binary-protocol/">https://pulsar.apache.org/docs/en/develop-binary-protocol/</a></p>
+<h2 id="1-1-简单消息（Simple-commands）"><a href="#1-1-简单消息（Simple-commands）" class="headerlink" title="1.1 简单消息（Simple commands）"></a>1.1 简单消息（Simple commands）</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>长度</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>totalSize</td>
+<td>4字节</td>
+<td>消息总长度，不包含该字段。（单个消息的长度最长为5M）</td>
+</tr>
+<tr>
+<td>commandSize</td>
+<td>4字节</td>
+<td>序列化消息的长度</td>
+</tr>
+<tr>
+<td>message</td>
+<td></td>
+<td>序列化消息</td>
+</tr>
+</tbody></table>
+<h2 id="1-2-内容消息（Payload-Message）"><a href="#1-2-内容消息（Payload-Message）" class="headerlink" title="1.2 内容消息（Payload Message）"></a>1.2 内容消息（Payload Message）</h2><p>这种类型的消息主要用于发布和传输消息。</p>
+<p>其中message字段并不是用户自定义的消息内容，而是pulsar进行通信时内定的各种消息，已有的消息类型参考：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/apache/pulsar/blob/master/pulsar-common/src/main/proto/PulsarApi.proto">https://github.com/apache/pulsar/blob/master/pulsar-common/src/main/proto/PulsarApi.proto</a></p>
+<p>pulsar中的消息以前是基于google protobuf进行序列化的，之后为了节约空间和减少代码量（protobuf会生成很多代码…）使用lightproto（<a target="_blank" rel="noopener" href="https://github.com/splunk/lightproto%EF%BC%89%E8%BF%9B%E8%A1%8C%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8C%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E3%80%82">https://github.com/splunk/lightproto）进行序列化和反序列化。</a></p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>长度</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>totalSize</td>
+<td>4字节</td>
+<td>消息总长度，不包含该字段。（单个消息的长度最长为5M）</td>
+</tr>
+<tr>
+<td>commandSize</td>
+<td>4字节</td>
+<td>序列化消息的长度</td>
+</tr>
+<tr>
+<td>message</td>
+<td></td>
+<td>序列化消息</td>
+</tr>
+<tr>
+<td>magicNumber</td>
+<td>2字节</td>
+<td>用于校验消息，固定为0x0e01。有此标识的话就会进行CRC校验。</td>
+</tr>
+<tr>
+<td>checksum</td>
+<td>4字节</td>
+<td>用于校验消息完整性。对该字段后边的消息进行CRC32-C计算。具体参考：1.2.1 CRC校验</td>
+</tr>
+<tr>
+<td>metadataSize</td>
+<td>4字节</td>
+<td>元数据大小</td>
+</tr>
+<tr>
+<td>metaData</td>
+<td></td>
+<td>元数据内容</td>
+</tr>
+<tr>
+<td>payload</td>
+<td></td>
+<td>其他内容（用户消息）</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-1-CRC校验"><a href="#1-2-1-CRC校验" class="headerlink" title="1.2.1 CRC校验"></a>1.2.1 CRC校验</h3><p>从netty接收到类型为Message的消息后，会调用handleMessage方法，然后调用consumer的messageReceived方法，在此处进行CRC校验。</p>
+<p>调用过程如下（只是列举了方法内的主要逻辑，代码并不完整）：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">// PulsarDecoder -&gt; channelRead</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelRead</span><span class="params">(ChannelHandlerContext ctx, Object msg)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span> (msg <span class="keyword">instanceof</span> HAProxyMessage) &#123;</span><br><span class="line">        <span class="type">HAProxyMessage</span> <span class="variable">proxyMessage</span> <span class="operator">=</span> (HAProxyMessage) msg;</span><br><span class="line">        <span class="built_in">this</span>.proxyMessage = proxyMessage;</span><br><span class="line">        proxyMessage.release();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Get a buffer that contains the full frame</span></span><br><span class="line">    <span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> (ByteBuf) msg;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// De-serialize the command</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">cmdSize</span> <span class="operator">=</span> (<span class="type">int</span>) buffer.readUnsignedInt();</span><br><span class="line">        cmd.parseFrom(buffer, cmdSize);</span><br><span class="line">        log.info(<span class="string">&quot;vvv_msg_type &quot;</span> + cmd.getType());</span><br><span class="line">        <span class="keyword">switch</span> (cmd.getType()) &#123;</span><br><span class="line">            <span class="keyword">case</span> MESSAGE: &#123;</span><br><span class="line">                checkArgument(cmd.hasMessage());</span><br><span class="line">                handleMessage(cmd.getMessage(), buffer);</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ClientCnx -&gt; handleMessage</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">handleMessage</span><span class="params">(CommandMessage cmdMessage, ByteBuf headersAndPayload)</span> &#123;</span><br><span class="line">    checkArgument(state == State.Ready);</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(<span class="string">&quot;&#123;&#125; Received a message from the server: &#123;&#125;&quot;</span>, ctx.channel(), cmdMessage);</span><br><span class="line">    &#125;</span><br><span class="line">    ConsumerImpl&lt;?&gt; consumer = consumers.get(cmdMessage.getConsumerId());</span><br><span class="line">    <span class="keyword">if</span> (consumer != <span class="literal">null</span>) &#123;</span><br><span class="line">        List&lt;Long&gt; ackSets = Collections.emptyList();</span><br><span class="line">        <span class="keyword">if</span> (cmdMessage.getAckSetsCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            ackSets = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(cmdMessage.getAckSetsCount());</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; cmdMessage.getAckSetsCount(); i++) &#123;</span><br><span class="line">                ackSets.add(cmdMessage.getAckSetAt(i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        consumer.messageReceived(cmdMessage.getMessageId(), cmdMessage.getRedeliveryCount(), ackSets, headersAndPayload, <span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ConsumerImpl -&gt; messageReceived</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">messageReceived</span><span class="params">(MessageIdData messageId, <span class="type">int</span> redeliveryCount, List&lt;Long&gt; ackSet, ByteBuf headersAndPayload, ClientCnx cnx)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">        log.debug(<span class="string">&quot;[&#123;&#125;][&#123;&#125;] Received message: &#123;&#125;/&#123;&#125;&quot;</span>, topic, subscription, messageId.getLedgerId(),</span><br><span class="line">                  messageId.getEntryId());</span><br><span class="line">    &#125;</span><br><span class="line">    log.info(<span class="string">&quot;headersAndPayload=&quot;</span> + headersAndPayload.readableBytes());</span><br><span class="line">    <span class="keyword">if</span> (!verifyChecksum(headersAndPayload, messageId)) &#123;</span><br><span class="line">        <span class="comment">// discard message with checksum error</span></span><br><span class="line">        discardCorruptedMessage(messageId, cnx, ValidationError.ChecksumMismatch);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    MessageMetadata msgMetadata;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        msgMetadata = Commands.parseMessageMetadata(headersAndPayload);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        discardCorruptedMessage(messageId, cnx, ValidationError.ChecksumMismatch);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ConsumerImpl -&gt; verifyChecksum</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">verifyChecksum</span><span class="params">(ByteBuf headersAndPayload, MessageIdData messageId)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (hasChecksum(headersAndPayload)) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">checksum</span> <span class="operator">=</span> Commands.readChecksum(headersAndPayload);</span><br><span class="line">        <span class="type">int</span> <span class="variable">computedChecksum</span> <span class="operator">=</span> Crc32cIntChecksum.computeChecksum(headersAndPayload);</span><br><span class="line">        <span class="keyword">if</span> (checksum != computedChecksum) &#123;</span><br><span class="line">            log.error(</span><br><span class="line">                <span class="string">&quot;[&#123;&#125;][&#123;&#125;] Checksum mismatch for message at &#123;&#125;:&#123;&#125;. Received checksum: 0x&#123;&#125;, Computed checksum: 0x&#123;&#125;&quot;</span>,</span><br><span class="line">                topic, subscription, messageId.getLedgerId(), messageId.getEntryId(),</span><br><span class="line">                Long.toHexString(checksum), Integer.toHexString(computedChecksum));</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Commands -&gt; hasChecksum</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">boolean</span> <span class="title function_">hasChecksum</span><span class="params">(ByteBuf buffer)</span> &#123;</span><br><span class="line">    <span class="comment">// magicCrc32c == 0x0e01</span></span><br><span class="line">    <span class="keyword">return</span> buffer.getShort(buffer.readerIndex()) == magicCrc32c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="1-3-消息订阅和确认过程"><a href="#1-3-消息订阅和确认过程" class="headerlink" title="1.3 消息订阅和确认过程"></a>1.3 消息订阅和确认过程</h2><p>consumer和broker的交互是基于netty进行的，业务处理handler分别是ClientCnx和ServerCnx。</p>
+<p>通过查看代码可以了解到consumer连接到broker，消费消息并返回确认的过程中会依次发送以下几种类型的消息：</p>
+<p><img src="/../../images/640-20231008232701854.png" alt="图片"></p>
+<p><strong>CONNECT</strong>：建立TCP连接，broker端确认client的权限，确认成功后返回CONNECTED。</p>
+<p><strong>PATITIONED_METADATA</strong>：获取分区数据。由于分区实际上是通过虚拟topic实现的，所有在此阶段可以获取分区topic信息。</p>
+<p><strong>LOOKUP</strong>：通过topic名称查找消息是哪一个broker处理的，返回broker的地址。</p>
+<p><strong>SUBSCRIBE</strong>：consumer向返回的broker地址建立连接，发送topic、subscriptionName等信息，开始订阅消息。</p>
+<p><strong>FLOW</strong>：consumer端发送消息获取请求，并告知broker自己可以接收的最大消息数量。</p>
+<p><strong>MESSAGE</strong>：broker收到flow请求后，会从缓存或者bk中拉取最新的消息，在消息完成封装后发送给consumer。</p>
+<p><strong>ACK</strong>：consumer接收并处理完消息后，发送消息消费确认通知（已消费消息的messageId）。</p>
+<p><strong>CLOSE_CONSUMER</strong>：发送连接断开请求。</p>
+<h1 id="2-订阅进度持久化"><a href="#2-订阅进度持久化" class="headerlink" title="2. 订阅进度持久化"></a>2. 订阅进度持久化</h1><ul>
+<li>每一个topic的消息都是由唯一的一个broker负责写入的，所以能比较容易保证每条消息的ID是唯一的，这个ID也是pulsar消息的消费和确认标识。</li>
+</ul>
+<p>一个ID包含如下内容：</p>
+<p>ledgerId：bk中每一个文件对应一个ledgerId，由bk维护。</p>
+<p>entryId：在每一个ledger中递增，由bk维护。</p>
+<p>partitionId：分区ID，由broker维护。</p>
+<ul>
+<li><p>在pulsar中，ManagedLedgerImpl用于用户消息的写入和读取，ManagedCursorImpl用于topic下每一个subscription的消费进度维护。</p>
+</li>
+<li><p>consumer收到broker发送的消息后，发送确认信息（messageId）给broker，broker收到后查找该subscription对应的ledger，如果存在则通过ledger写入到bk中；</p>
+<p>如果不存在，则创建一个ledger并把ledger信息写入到zk中，然后通过创建后的ledger写入bk中。</p>
+</li>
+<li><p>zk中写入的数据包含cursorLedgerId、deletedLedgerId、deletedEntryId等信息，如下：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">cursorsLedgerId=-1, markDeleteLedgerId=603, markDeleteEntryId=15, lastActive=1629692232349</span><br><span class="line">upper ledgerId=603, upper entryId=18, lower ledgerId=603, lower entryId=16</span><br><span class="line">upper ledgerId=37740, upper entryId=2, lower ledgerId=37740, lower entryId=1</span><br><span class="line">upper ledgerId=37740, upper entryId=4, lower ledgerId=37740, lower entryId=3</span><br></pre></td></tr></table></figure>
+
+<p>uppper和lower用于处理不连续确认的情况。</p>
+<p>而且，只有最新一个ledger的最新一个entry信息是有效的，broker初始化cursor信息时只会加载最新ledger的最近一条确认消息的entry中最新一条数据。</p>
+<ul>
+<li>bk中存储的数据内容：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">lowLedgerId=603, lowEntryId=16, upperLedgerId=603, upperEntryId=18</span><br><span class="line">lowLedgerId=37740, lowEntryId=1, upperLedgerId=37740, upperEntryId=2</span><br><span class="line">lowLedgerId=37740, lowEntryId=3, upperLedgerId=37740, upperEntryId=4</span><br><span class="line">lowLedgerId=37740, lowEntryId=5, upperLedgerId=37740, upperEntryId=6</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>可以看到bk中数据主要记录确认情况，zk中记录确认情况在哪一个ledger以及哪些数据被标记为可删除了（被成功消费了）。</strong></p>
+<ul>
+<li><p>对于不连续确认的消息，会记录消息确认范围信息。从low - upper之前的所有消息都被消费成功了（左开右闭）。</p>
+</li>
+<li><p>因broker停掉或者其他原因导致cursor被关闭后，会把进度持久化到zk或者bk中。满足以下条件会保存到bk中：</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">private boolean shouldPersistUnackRangesToLedger() &#123;</span><br><span class="line">    return cursorLedger != null</span><br><span class="line">        &amp;&amp; !isCursorLedgerReadOnly</span><br><span class="line">        &amp;&amp; config.getMaxUnackedRangesToPersist() &gt; 0</span><br><span class="line">        &amp;&amp; individualDeletedMessages.size() &gt; config.getMaxUnackedRangesToPersistInZk();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-1-zk中消费进度解析"><a href="#2-1-zk中消费进度解析" class="headerlink" title="2.1 zk中消费进度解析"></a>2.1 zk中消费进度解析</h2><p>当客户端连接后，要获取该subscription的cursor信息，先从zk中查询，path如下：</p>
+<p>&#x2F;managed-ledgers&#x2F;{tenant}&#x2F;{namespace}&#x2F;persistent&#x2F;{topic}&#x2F;{subscriptionName}</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testZKMetaDataCursorInfo</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">path</span> <span class="operator">=</span> <span class="string">&quot;/managed-ledgers/tenant_c/ns1/persistent/topic_cursor/consumer_002&quot;</span>;</span><br><span class="line">    <span class="type">byte</span>[] bytes = getValue(path);</span><br><span class="line">    <span class="keyword">if</span> (bytes == <span class="literal">null</span>) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;bytes is null&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    MLDataFormats.<span class="type">ManagedCursorInfo</span> <span class="variable">info</span> <span class="operator">=</span> MLDataFormats.ManagedCursorInfo.parseFrom(bytes);</span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">    sb.setLength(<span class="number">0</span>);</span><br><span class="line">    sb.append(<span class="string">&quot;cursorsLedgerId=&quot;</span>).append(info.getCursorsLedgerId());</span><br><span class="line">    sb.append(<span class="string">&quot;, markDeleteLedgerId=&quot;</span>).append(info.getMarkDeleteLedgerId());</span><br><span class="line">    sb.append(<span class="string">&quot;, markDeleteEntryId=&quot;</span>).append(info.getMarkDeleteEntryId());</span><br><span class="line">    sb.append(<span class="string">&quot;, lastActive=&quot;</span>).append(info.getLastActive());</span><br><span class="line">    <span class="keyword">if</span> (info.getIndividualDeletedMessagesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (MLDataFormats.MessageRange range : info.getIndividualDeletedMessagesList()) &#123;</span><br><span class="line">            sb.append(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">            sb.append(<span class="string">&quot; upper ledgerId=&quot;</span>).append(range.getUpperEndpoint().getLedgerId());</span><br><span class="line">            sb.append(<span class="string">&quot;, upper entryId=&quot;</span>).append(range.getUpperEndpoint().getEntryId());</span><br><span class="line">            sb.append(<span class="string">&quot;, lower ledgerId=&quot;</span>).append(range.getLowerEndpoint().getLedgerId());</span><br><span class="line">            sb.append(<span class="string">&quot;, lower entryId=&quot;</span>).append(range.getLowerEndpoint().getEntryId());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;debug vv &quot;</span> + sb);</span><br><span class="line">    System.out.println(<span class="string">&quot;done&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-bk中消费进度解析"><a href="#2-2-bk中消费进度解析" class="headerlink" title="2.2 bk中消费进度解析"></a>2.2 bk中消费进度解析</h2><p>如果从zk中查询的数据中，cursorLedger不等于-1，则会从bk中查询该ledger的数据，恢复进度。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parsePulsarCursor</span><span class="params">(StringBuilder sb, LedgerEntry entry)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    MLDataFormats.<span class="type">PositionInfo</span> <span class="variable">positionInfo</span> <span class="operator">=</span> MLDataFormats.PositionInfo.parseFrom(entry.getEntryBytes());</span><br><span class="line">    <span class="comment">//        sb.append(&quot;, ledgerId=&quot;).append(positionInfo.getLedgerId());</span></span><br><span class="line">    <span class="comment">//        sb.append(&quot;, entryId=&quot;).append(positionInfo.getEntryId());</span></span><br><span class="line">    <span class="type">PositionImpl</span> <span class="variable">position</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PositionImpl</span>(positionInfo);</span><br><span class="line">    <span class="keyword">if</span> (positionInfo.getIndividualDeletedMessagesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        positionInfo.getIndividualDeletedMessagesList().forEach(messageRange -&gt; &#123;</span><br><span class="line">            sb.setLength(<span class="number">0</span>);</span><br><span class="line">            MLDataFormats.<span class="type">NestedPositionInfo</span> <span class="variable">point</span> <span class="operator">=</span> messageRange.getLowerEndpoint();</span><br><span class="line">            sb.append(<span class="string">&quot;, lowLedgerId=&quot;</span>).append(point.getLedgerId());</span><br><span class="line">            sb.append(<span class="string">&quot;, lowEntryId=&quot;</span>).append(point.getEntryId());</span><br><span class="line">            point = messageRange.getUpperEndpoint();</span><br><span class="line">            sb.append(<span class="string">&quot;, upperLedgerId=&quot;</span>).append(point.getLedgerId());</span><br><span class="line">            sb.append(<span class="string">&quot;, upperEntryId=&quot;</span>).append(point.getEntryId());</span><br><span class="line">            log.info(sb.toString());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;-----------------&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (positionInfo.getBatchedEntryDeletionIndexInfoCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        positionInfo.getBatchedEntryDeletionIndexInfoList().forEach(batchDeletedIndexInfo -&gt; &#123;</span><br><span class="line">            sb.setLength(<span class="number">0</span>);</span><br><span class="line">            <span class="keyword">if</span> (batchDeletedIndexInfo.getDeleteSetCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; batchDeletedIndexInfo.getDeleteSetList().size(); i++) &#123;</span><br><span class="line">                    <span class="type">long</span> <span class="variable">indexId</span> <span class="operator">=</span> batchDeletedIndexInfo.getDeleteSetList().get(i);</span><br><span class="line">                    sb.append(<span class="string">&quot;, indexId=&quot;</span>).append(indexId);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            log.info(sb.toString());</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    log.info(<span class="string">&quot;=================&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="3-订阅进度恢复流程"><a href="#3-订阅进度恢复流程" class="headerlink" title="3. 订阅进度恢复流程"></a>3. 订阅进度恢复流程</h1><p>订阅进度保存在zk和bk中，这些信息会在broker加载topic信息的时候被恢复。</p>
+<p>当producer和consumer连接到broker时，都会调用BrokerService的getTopic方法（分别在ServerCnx的handleProducer和handleSubscribe方法）。</p>
+<p>由于brokerService是单例的，所以consumer和producer共用一组topic信息，然后通过topic实例关联ledger、cursor等信息。</p>
+<p>在BrokerService中，topic实例创建过程：</p>
+<ul>
+<li>是否已经创建，如果是则直接返回。</li>
+<li>该broker是否有topic的拥有权，如果没有则返回异常。</li>
+<li>对创建过程进行加锁，获取到锁后开始创建topic实例（同一时刻，一个topic仅有一个创建任务），由如下参数控制并发创建数量：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">return topics.computeIfAbsent(topic, (topicName) -&gt; &#123;</span><br><span class="line">        return this.loadOrCreatePersistentTopic(topicName, createIfMissing);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># Max number of concurrent topic loading request broker allows to control number of zk-operations</span><br><span class="line"># 限制获取topic信息时，zk并发操作数量</span><br><span class="line">maxConcurrentTopicLoadRequest=5000</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在后续每一个流程中都会校验该topic是否由该broker负责。</li>
+<li>判断ns中topic数量是否超过最大值，如果是则返回。</li>
+<li>打开ledger。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// BrokerService -&gt; createPersistentTopic</span><br><span class="line">// Once we have the configuration, we can proceed with the async open operation</span><br><span class="line">managedLedgerFactory.asyncOpen(topicName.getPersistenceNamingEncoding(), managedLedgerConfig, new OpenLedgerCallback())...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>初始化ledger、bookeeper、cursor。</li>
+<li>从zk中获取ledger信息。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// ManagedLedgerImpl -&gt; synchronized void initialize(final ManagedLedgerInitializeLedgerCallback callback, final Object ctx)</span><br><span class="line">store.getManagedLedgerInfo(name, config.isCreateIfMissing(), new MetaStoreCallback&lt;ManagedLedgerInfo&gt;() &#123;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>从zk中获取cursor信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">// ManagedLedgerImpl -&gt; private void initializeCursors(final ManagedLedgerInitializeLedgerCallback callback)store.getCursors(name, new MetaStoreCallback&lt;List&lt;String&gt;&gt;() &#123;...</span><br></pre></td></tr></table></figure>
+
+<p>恢复cursor内容。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">recover</span><span class="params">(<span class="keyword">final</span> VoidCallback callback)</span> &#123;</span><br><span class="line">    <span class="comment">// Read the meta-data ledgerId from the store</span></span><br><span class="line">    log.info(<span class="string">&quot;[&#123;&#125;] Recovering from bookkeeper ledger cursor: &#123;&#125;&quot;</span>, ledger.getName(), name);</span><br><span class="line">    ledger.getStore().asyncGetCursorInfo(ledger.getName(), name, <span class="keyword">new</span> <span class="title class_">MetaStoreCallback</span>&lt;ManagedCursorInfo&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">operationComplete</span><span class="params">(ManagedCursorInfo info, Stat stat)</span> &#123;</span><br><span class="line">            cursorLedgerStat = stat;</span><br><span class="line">            lastActive = info.getLastActive() != <span class="number">0</span> ? info.getLastActive() : lastActive;</span><br><span class="line">            <span class="comment">// 如果zk中的cursorLedger是-1，则说明不需要从ledger中查询订阅进度，直接从zk中加载进度信息即可。</span></span><br><span class="line">            <span class="keyword">if</span> (info.getCursorsLedgerId() == -<span class="number">1L</span>) &#123;</span><br><span class="line">                <span class="comment">// There is no cursor ledger to read the last position from. It means the cursor has been properly</span></span><br><span class="line">                <span class="comment">// closed and the last mark-delete position is stored in the ManagedCursorInfo itself.</span></span><br><span class="line">                <span class="type">PositionImpl</span> <span class="variable">recoveredPosition</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PositionImpl</span>(info.getMarkDeleteLedgerId(),</span><br><span class="line">                                                                  info.getMarkDeleteEntryId());</span><br><span class="line">                <span class="keyword">if</span> (info.getIndividualDeletedMessagesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    recoverIndividualDeletedMessages(info.getIndividualDeletedMessagesList());</span><br><span class="line">                &#125;</span><br><span class="line">                Map&lt;String, Long&gt; recoveredProperties = Collections.emptyMap();</span><br><span class="line">                <span class="keyword">if</span> (info.getPropertiesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="comment">// Recover properties map</span></span><br><span class="line">                    recoveredProperties = Maps.newHashMap();</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; info.getPropertiesCount(); i++) &#123;</span><br><span class="line">                        <span class="type">LongProperty</span> <span class="variable">property</span> <span class="operator">=</span> info.getProperties(i);</span><br><span class="line">                        recoveredProperties.put(property.getName(), property.getValue());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                recoveredCursor(recoveredPosition, recoveredProperties, <span class="literal">null</span>);</span><br><span class="line">                callback.operationComplete();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 需要从bk中加载消费进度信息。</span></span><br><span class="line">                <span class="comment">// Need to proceed and read the last entry in the specified ledger to find out the last position</span></span><br><span class="line">                log.info(<span class="string">&quot;[&#123;&#125;] Consumer &#123;&#125; meta-data recover from ledger &#123;&#125;&quot;</span>, ledger.getName(), name,</span><br><span class="line">                         info.getCursorsLedgerId());</span><br><span class="line">                recoverFromLedger(info, callback);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">operationFailed</span><span class="params">(MetaStoreException e)</span> &#123;</span><br><span class="line">            callback.operationFailed(e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从ledger中加载进度信息。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">recoverFromLedger</span><span class="params">(<span class="keyword">final</span> ManagedCursorInfo info, <span class="keyword">final</span> VoidCallback callback)</span> &#123;</span><br><span class="line">    <span class="comment">// Read the acknowledged position from the metadata ledger, then create</span></span><br><span class="line">    <span class="comment">// a new ledger and write the position into it</span></span><br><span class="line">    ledger.mbean.startCursorLedgerOpenOp();</span><br><span class="line">    <span class="type">long</span> <span class="variable">ledgerId</span> <span class="operator">=</span> info.getCursorsLedgerId();</span><br><span class="line">    <span class="type">OpenCallback</span> <span class="variable">openCallback</span> <span class="operator">=</span> (rc, lh, ctx) -&gt; &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// Read the last entry in the ledger</span></span><br><span class="line">        <span class="comment">// 读取最新一个位置</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">lastEntryInLedger</span> <span class="operator">=</span> lh.getLastAddConfirmed();</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">            </span><br><span class="line">        lh.asyncReadEntries(lastEntryInLedger, lastEntryInLedger, (rc1, lh1, seq, ctx1) -&gt; &#123;</span><br><span class="line">            ...</span><br><span class="line">                </span><br><span class="line">            <span class="comment">// 读取最后写入ledger的entry</span></span><br><span class="line">            <span class="type">LedgerEntry</span> <span class="variable">entry</span> <span class="operator">=</span> seq.nextElement();</span><br><span class="line">            PositionInfo positionInfo;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                positionInfo = PositionInfo.parseFrom(entry.getEntry());</span><br><span class="line">            &#125; <span class="keyword">catch</span> (InvalidProtocolBufferException e) &#123;</span><br><span class="line">                callback.operationFailed(<span class="keyword">new</span> <span class="title class_">ManagedLedgerException</span>(e));</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 加载属性信息</span></span><br><span class="line">            Map&lt;String, Long&gt; recoveredProperties = Collections.emptyMap();</span><br><span class="line">            <span class="keyword">if</span> (positionInfo.getPropertiesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// Recover properties map</span></span><br><span class="line">                recoveredProperties = Maps.newHashMap();</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; positionInfo.getPropertiesCount(); i++) &#123;</span><br><span class="line">                    <span class="type">LongProperty</span> <span class="variable">property</span> <span class="operator">=</span> positionInfo.getProperties(i);</span><br><span class="line">                    recoveredProperties.put(property.getName(), property.getValue());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="type">PositionImpl</span> <span class="variable">position</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PositionImpl</span>(positionInfo);</span><br><span class="line">            <span class="comment">// 如果有单独确认的消息（为了应对不是连续确认的情况）。</span></span><br><span class="line">            <span class="keyword">if</span> (positionInfo.getIndividualDeletedMessagesCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                recoverIndividualDeletedMessages(positionInfo.getIndividualDeletedMessagesList());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (config.isDeletionAtBatchIndexLevelEnabled() &amp;&amp; batchDeletedIndexes != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; positionInfo.getBatchedEntryDeletionIndexInfoCount() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                recoverBatchDeletedIndexes(positionInfo.getBatchedEntryDeletionIndexInfoList());</span><br><span class="line">            &#125;</span><br><span class="line">            recoveredCursor(position, recoveredProperties, lh);</span><br><span class="line">            callback.operationComplete();</span><br><span class="line">        &#125;, <span class="literal">null</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="comment">// 打开一个新的ledger，并把进度信息写入新ledger中。</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        bookkeeper.asyncOpenLedger(ledgerId, digestType, config.getPassword(), openCallback, <span class="literal">null</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">        log.error(<span class="string">&quot;[&#123;&#125;] Encountered error on opening cursor ledger &#123;&#125; for cursor &#123;&#125;&quot;</span>,</span><br><span class="line">                  ledger.getName(), ledgerId, name, t);</span><br><span class="line">        openCallback.openComplete(BKException.Code.UnexpectedConditionException, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从ledger中加载单独确认的消息。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">recoverIndividualDeletedMessages</span><span class="params">(List&lt;MLDataFormats.MessageRange&gt; individualDeletedMessagesList)</span> &#123;</span><br><span class="line">    lock.writeLock().lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        individualDeletedMessages.clear();</span><br><span class="line">        individualDeletedMessagesList.forEach(messageRange -&gt; &#123;</span><br><span class="line">            MLDataFormats.<span class="type">NestedPositionInfo</span> <span class="variable">lowerEndpoint</span> <span class="operator">=</span> messageRange.getLowerEndpoint();</span><br><span class="line">            MLDataFormats.<span class="type">NestedPositionInfo</span> <span class="variable">upperEndpoint</span> <span class="operator">=</span> messageRange.getUpperEndpoint();</span><br><span class="line">            <span class="comment">// 已确认的消息都在一个ledger内。</span></span><br><span class="line">            <span class="keyword">if</span> (lowerEndpoint.getLedgerId() == upperEndpoint.getLedgerId()) &#123;</span><br><span class="line">                individualDeletedMessages.addOpenClosed(lowerEndpoint.getLedgerId(), lowerEndpoint.getEntryId(),</span><br><span class="line">                                                        upperEndpoint.getLedgerId(), upperEndpoint.getEntryId());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 已确认的消息在不同的ledger内，这时候需要加载每个ledger中已确认的消息。</span></span><br><span class="line">                <span class="comment">// Store message ranges after splitting them by ledger ID</span></span><br><span class="line">                <span class="type">LedgerInfo</span> <span class="variable">lowerEndpointLedgerInfo</span> <span class="operator">=</span> ledger.getLedgersInfo().get(lowerEndpoint.getLedgerId());</span><br><span class="line">                <span class="keyword">if</span> (lowerEndpointLedgerInfo != <span class="literal">null</span>) &#123;</span><br><span class="line">                    individualDeletedMessages.addOpenClosed(lowerEndpoint.getLedgerId(), lowerEndpoint.getEntryId(),</span><br><span class="line">                                                            lowerEndpoint.getLedgerId(), lowerEndpointLedgerInfo.getEntries() - <span class="number">1</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    log.warn(<span class="string">&quot;[&#123;&#125;][&#123;&#125;] No ledger info of lower endpoint &#123;&#125;:&#123;&#125;&quot;</span>, ledger.getName(), name,</span><br><span class="line">                             lowerEndpoint.getLedgerId(), lowerEndpoint.getEntryId());</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 加载顺序是：</span></span><br><span class="line">                <span class="comment">// (lowerLedgerId, lowerEntryId) -&gt; (lowerLedgerId, -1)   第一条</span></span><br><span class="line">                <span class="comment">// (lowerLedgerId, -1) -&gt; (lowerLedgerId, -1)             中间部分</span></span><br><span class="line">                <span class="comment">// (upperLedgerId, -1) -&gt; (upperLedgerId, upperEntryId)   最后一条</span></span><br><span class="line">                <span class="keyword">for</span> (LedgerInfo li : ledger.getLedgersInfo()</span><br><span class="line">                     .subMap(lowerEndpoint.getLedgerId(), <span class="literal">false</span>, upperEndpoint.getLedgerId(), <span class="literal">false</span>).values()) &#123;</span><br><span class="line">                    individualDeletedMessages.addOpenClosed(li.getLedgerId(), -<span class="number">1</span>, li.getLedgerId(),</span><br><span class="line">                                                            li.getEntries() - <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                individualDeletedMessages.addOpenClosed(upperEndpoint.getLedgerId(), -<span class="number">1</span>,</span><br><span class="line">                                                        upperEndpoint.getLedgerId(), upperEndpoint.getEntryId());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.writeLock().unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>进度恢复完毕。</li>
+</ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/08/20/pulsar/pulsar%E6%B6%88%E8%B4%B9%E8%BF%9B%E5%BA%A6%E7%A0%94%E7%A9%B6%EF%BC%88%E4%B8%80%EF%BC%89/">pulsar消费进度研究（一）</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-08-20</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/pulsar/">pulsar</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/pulsar/">pulsar</a></span><div class="content"><p>在pulsar中，使用ManagedCursorImpl来记录每个订阅的消息消费进度信息，每个cursor对应一个subscription。cursor的信息会记录到zookeeper中，同时pulsar也会把ack信息持久化到bookkeeper中。</p>
+<p>通过阅读代码，了解到以下内容：</p>
+<blockquote>
+<p>1.从zk中&#x2F;managed-ledgers&#x2F;tenant_c&#x2F;ns1&#x2F;persistent&#x2F;storeV3&#x2F;consumer_002中查询cursor信息，保存在对象ManagedCursorInfo中，主要包含字段：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">message ManagedCursorInfo &#123;</span><br><span class="line">    // If the ledger id is -1, then the mark-delete position is</span><br><span class="line">    // the one from the (ledgerId, entryId) snapshot below</span><br><span class="line">    required int64 cursorsLedgerId = 1;</span><br><span class="line">    // Last snapshot of the mark-delete position</span><br><span class="line">    optional int64 markDeleteLedgerId = 2;</span><br><span class="line">    optional int64 markDeleteEntryId = 3;</span><br><span class="line">    repeated MessageRange individualDeletedMessages = 4;</span><br><span class="line">    // Additional custom properties associated with</span><br><span class="line">    // the current cursor position</span><br><span class="line">    repeated LongProperty properties = 5;</span><br><span class="line">    optional int64 lastActive = 6;</span><br><span class="line">    // Store which index in the batch message has been deleted</span><br><span class="line">    repeated BatchedEntryDeletionIndexInfo batchedEntryDeletionIndexInfo = 7;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>2.如果cursorsLedgerId字段为-1，表示记录确认信息的ledger已经被关闭，消费进度是markDeleteLedgerId和markDeleteEntryId字段。</p>
+<p>3.如果cursorsLedgerId存在，则从记录确认消息的ledger中读取内容。</p>
+</blockquote>
+<blockquote>
+<p>4.从ledger中获取最开始一次添加并确认的消息ID。bk中存储的内容格式如下：</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">message PositionInfo &#123;</span><br><span class="line">    required int64 ledgerId = 1;</span><br><span class="line">    required int64 entryId = 2;</span><br><span class="line">    repeated MessageRange individualDeletedMessages = 3;</span><br><span class="line">    // Additional custom properties associated with</span><br><span class="line">    // the current cursor position</span><br><span class="line">    repeated LongProperty properties = 4;</span><br><span class="line">    // Store which index in the batch message has been deleted</span><br><span class="line">    repeated BatchedEntryDeletionIndexInfo batchedEntryDeletionIndexInfo = 5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>5.如果有单独确认的消息，会读取内容并保存到individualDeletedMessages中。</p>
+</blockquote>
+<h3 id="broker重启后，消费者发送订阅请求，ledger和cursor恢复过程"><a href="#broker重启后，消费者发送订阅请求，ledger和cursor恢复过程" class="headerlink" title="broker重启后，消费者发送订阅请求，ledger和cursor恢复过程"></a>broker重启后，消费者发送订阅请求，ledger和cursor恢复过程</h3><p>ServerCnx：handleSubscribe</p>
+<p>校验topic、认证</p>
+<p>BrokerService：getTopic</p>
+<p>如果topic存在，则从缓存中返回topic对象</p>
+<p>如果topic不存在，且是持久化的topic，则调用loadOrCreatePersistentTopic加载或者创建一个topic对象</p>
+<p>BrokerService：createPersistentTopic</p>
+<p>获取该topic的ledger配置信息，并创建一个ledger</p>
+<p>ManagedLedgerFactoryImpl：asyncOpen</p>
+<p>如果ledger没有打开过，则创建一个新的ledger，并调用该ledger的initialize方法</p>
+<p>ManagedLedgerImpl：initialize</p>
+<p>从zk中获取ledger信息，初始化bk信息，初始化cursor信息。</p>
+<p>ManagedLedgerImpl：initializeCursors</p>
+<p>从zk中获取topic下有哪些订阅（&#x2F;managed-ledgers&#x2F;tenant_c&#x2F;ns1&#x2F;persistent&#x2F;topic_cursor的children），然后依次初始化每一个sub。</p>
+<p>针对每一个subscription创建一个cursor对象，同时对该cursor进行恢复。</p>
+<p>从zk中获取cursor的信息，如果cursor的ledgerId为-1，则记录MarkDeletedLedgerId和MarkDeletedEntryId为订阅进度；</p>
+<p>如果cursor的ledgerId不是-1，则开始读取bk中的进度数据，读取最新一条消息的entry，保存该entry的信息为订阅进度。</p>
+<h3 id="broker打印日志如下"><a href="#broker打印日志如下" class="headerlink" title="broker打印日志如下"></a>broker打印日志如下</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"># 权限验证</span><br><span class="line">14:47:56.559 [pulsar-io-4-1] INFO  auth.server.VVPulsarAuthorizationProvider - vv_auth_v2 allowTopicOperationAsync, topicName persistent://tenant_c/ns1/topic_cursor, role vv-role</span><br><span class="line"># 执行lookup阶段</span><br><span class="line">14:47:56.561 [pulsar-io-4-1] INFO  org.apache.pulsar.broker.service.ServerCnx - vvv_try_to_lookup,topicName: persistent://tenant_c/ns1/topic_cursor, requestId: 2</span><br><span class="line"># 权限验证</span><br><span class="line">14:47:56.563 [pulsar-io-4-1] INFO  auth.server.VVPulsarAuthorizationProvider - vv_auth_v2 allowTopicOperationAsync, topicName persistent://tenant_c/ns1/topic_cursor, role vv-role</span><br><span class="line"># 权限验证</span><br><span class="line">14:47:56.644 [pulsar-io-4-1] INFO  auth.server.VVPulsarAuthorizationProvider - vv_auth_v2 allowTopicOperationAsync, topicName persistent://tenant_c/ns1/topic_cursor, role vv-role</span><br><span class="line"># consumer发送subscribe消息（注意的是创建ledger在subscribe之后，）</span><br><span class="line">14:47:56.644 [pulsar-io-4-1] INFO  org.apache.pulsar.broker.service.ServerCnx - vvv_subscribe, consumer_002 Subscribing on topic persistent://tenant_c/ns1/topic_cursor</span><br><span class="line">14:47:56.646 [pulsar-io-4-1] INFO  org.apache.pulsar.broker.service.ServerCnx - [/172.21.32.64:59676] Subscribing on topic persistent://tenant_c/ns1/topic_cursor / consumer_002</span><br><span class="line"># 这里由于broker刚重启，没有加载ledger信息，所以在consumer连接后才创建ledger对象</span><br><span class="line">14:47:56.640 [pulsar-ordered-OrderedExecutor-7-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerFactoryImpl - vv_cc asyncOpen, name=tenant_c/ns1/persistent/topic_cursor</span><br><span class="line"># 创建ledger</span><br><span class="line">14:47:56.667 [pulsar-ordered-OrderedExecutor-7-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - Opening managed ledger tenant_c/ns1/persistent/topic_cursor</span><br><span class="line"># 从zk中获取ledger信息</span><br><span class="line">14:47:56.668 [pulsar-ordered-OrderedExecutor-7-0] INFO  org.apache.bookkeeper.mledger.impl.MetaStoreImpl - vvv_debug /managed-ledgers/tenant_c/ns1/persistent/topic_cursor</span><br><span class="line">14:47:56.722 [BookKeeperClientWorker-OrderedExecutor-0-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Creating ledger, metadata: &#123;component=[109, 97, 110, 97, 103, 101, 100, 45, 108, 101, 100, 103, 101, 114], pulsar/managed-ledger=[116, 101, 110, 97, 110, 116, 95, 99, 47, 110, 115, 49, 47, 112, 101, 114, 115, 105, 115, 116, 101, 110, 116, 47, 116, 111, 112, 105, 99, 95, 99, 117, 114, 115, 111, 114], application=[112, 117, 108, 115, 97, 114]&#125; - metadata ops timeout : 60 seconds</span><br><span class="line"># ledger创建成功</span><br><span class="line">14:47:56.761 [BookKeeperClientWorker-OrderedExecutor-0-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Created ledger 603</span><br><span class="line"># 开始加载cursor信息</span><br><span class="line">14:47:56.778 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Loading cursor consumer_002</span><br><span class="line">14:47:56.792 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedCursorImpl - [tenant_c/ns1/persistent/topic_cursor] Recovering from bookkeeper ledger cursor: consumer_002</span><br><span class="line"># 从zk中获取之前保存的cursor信息，主要包含cursorLedgerId、markDeletedLedgerId和markDeletedEntryId</span><br><span class="line">14:47:56.792 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.MetaStoreImpl - vv_cc asyncGetCursorInfo, ledgerName=tenant_c/ns1/persistent/topic_cursor, cursorName=consumer_002, path=/managed-ledgers/tenant_c/ns1/persistent/topic_cursor/consumer_002</span><br><span class="line"># 开始恢复cursor</span><br><span class="line">14:47:56.798 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedCursorImpl - [tenant_c/ns1/persistent/topic_cursor] Cursor consumer_002 recovered to position 56:9</span><br><span class="line">14:47:56.800 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Recovery for cursor consumer_002 completed. pos=56:9 -- todo=0</span><br><span class="line"># cursor的恢复是在创建ledger的过程中进行的，cursor恢复后则ledger创建过程结束。</span><br><span class="line">14:47:56.801 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerFactoryImpl - [tenant_c/ns1/persistent/topic_cursor] Successfully initialize managed ledger</span><br><span class="line">14:47:56.808 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.pulsar.broker.service.AbstractTopic - Disabling publish throttling for persistent://tenant_c/ns1/topic_cursor</span><br><span class="line">14:47:56.828 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.pulsar.broker.service.persistent.PersistentTopic - [persistent://tenant_c/ns1/topic_cursor] There are no replicated subscriptions on the topic</span><br><span class="line">14:47:56.837 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.pulsar.broker.service.BrokerService - Created topic persistent://tenant_c/ns1/topic_cursor - dedup is disabled</span><br><span class="line">14:47:56.843 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - Reset cursor:ManagedCursorImpl&#123;ledger=tenant_c/ns1/persistent/topic_cursor, name=consumer_002, ackPos=56:9, readPos=56:10&#125; to 603:-1 since ledger consumed completely</span><br><span class="line">14:47:56.847 [BookKeeperClientWorker-OrderedExecutor-0-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Ledger 56 contains the current last confirmed entry 56:9, and it is going to be deleted</span><br><span class="line">14:47:56.858 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] End TrimConsumedLedgers. ledgers=1 totalSize=0</span><br><span class="line">14:47:56.858 [bookkeeper-ml-scheduler-OrderedScheduler-2-0] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - [tenant_c/ns1/persistent/topic_cursor] Removing ledger 56 - size: 673</span><br><span class="line">14:47:57.251 [ForkJoinPool.commonPool-worker-5] INFO  org.apache.bookkeeper.mledger.impl.ManagedLedgerImpl - vv_cc asyncOpenCursor, cursorName=consumer_002</span><br><span class="line">14:47:57.262 [ForkJoinPool.commonPool-worker-5] INFO  org.apache.bookkeeper.mledger.impl.ManagedCursorImpl - [tenant_c/ns1/persistent/topic_cursor-consumer_002] Rewind from 56:10 to 56:10</span><br><span class="line">14:47:57.263 [ForkJoinPool.commonPool-worker-5] INFO  org.apache.pulsar.broker.service.persistent.PersistentTopic - [persistent://tenant_c/ns1/topic_cursor] There are no replicated subscriptions on the topic</span><br><span class="line">14:47:57.263 [ForkJoinPool.commonPool-worker-5] INFO  org.apache.pulsar.broker.service.persistent.PersistentTopic - [persistent://tenant_c/ns1/topic_cursor][consumer_002] Created new subscription for 0</span><br><span class="line">14:47:57.264 [ForkJoinPool.commonPool-worker-5] INFO  org.apache.pulsar.broker.service.ServerCnx - [/172.21.32.64:59676] Created subscription on topic persistent://tenant_c/ns1/topic_cursor / consumer_002</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/08/12/%E8%AE%A1%E7%AE%97%E6%9C%BA/Vim%E5%91%BD%E4%BB%A4/">vim命令</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-08-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/linux/">linux</a></span><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/vim/">vim</a></span><div class="content"><p><strong>文本信息配置</strong></p>
+<p>set nu（写入配置文件.vimrc中） 显示行号。</p>
+<p>ctrl-g（正常模式下使用命令） 显示文件信息和当前行。</p>
+<p>statusline.vim（插件） 增加底部状态栏。</p>
+<hr>
+<p><strong>代码缩进配置</strong></p>
+<p>filetype on（写入配置文件.vimrc中） 使vim对文件类型敏感。</p>
+<p>autocmd FileType c,cpp,h :setlocal cindent cinoptions&#x3D;:0,g0,t0（写入配置文件.vimrc中） 设置c缩进风格，具体详情参见:h cinoptions-values。</p>
+<p>autocmd FileType c,cpp,h :setlocal et sta sw&#x3D;4 sts&#x3D;4 tabstop&#x3D;4（写入配置文件.vimrc中） 设置一次缩进的距离是4个空格。</p>
+<p>&#x3D;（正常模式或者可视模式下使用命令） 按照缩进风格排版代码。</p>
+<p>&lt;（可视模式下使用命令） 向左缩进一级。</p>
+<p>&gt;（可视模式下使用命令） 向右缩进一级。</p>
+<hr>
+<p><strong>语法高亮</strong></p>
+<p>filetype plugin on（写入配置文件.vimrc中） 通常安装的vim中已经加入了各种语言的语法高亮插件，我们只需要打开文件类型相关的插件就可以了。</p>
+<hr>
+<p><strong>快速定位</strong></p>
+<p>gd（正常模式下使用命令） 跳转到局部变量定义处。</p>
+<p>gD（正常模式下使用命令） 跳转到全局标量定义处。</p>
+<p>*（正常模式下使用命令） 搜索并跳到下一个光标所在的单词。</p>
+<p>g<em>（正常模式下使用命令） 功能接近</em>，但是查找的目标不带&lt;和&gt;单词分界符号。</p>
+<p>#（正常模式下使用命令） 搜索并跳到上一个光标所在的单词。</p>
+<p>g#（正常模式下使用命令） 功能接近#，但是查找的目标不带&lt;和&gt;单词分界符号。</p>
+<hr>
+<p><strong>标记位置</strong></p>
+<p>m{a-zA-Z0-9} （正常模式下使用命令） 在当前位置制作一个标记，标记名字可以使用a-z或者A-Z之间的任意字符，例如输入ma，就是将当前位置标记为a标记。注意a-z为单文件标记，不可跨文件使用，而A-Z0-9为全局标记，可以跨文件使用。</p>
+<p>‘{a-zA-Z0-9} （正常模式下使用命令） 跳转到本文件的标记上。</p>
+<p>:marks [{a-zA-z0-9}] （正常模式下使用命令） 查看指定标记的内容，不写标记号则查看所有。</p>
+<p>:delm {a-zA-z0-9} （正常模式下使用命令） 删除一个标记。</p>
+<hr>
+<p><strong>全文搜索</strong></p>
+<p>:vimgrep（正常模式下使用命令） 全文搜索，功能同grep命令，但是支持在vim进行多文件跳转定位。</p>
+<p>使用方法:vimgrep 正则表达式 文件。文件支持通配符，例如*.c代表所有的.c文件。如果希望递归搜索，可以使用**&#x2F;*，表示搜索所有的文件。</p>
+<p>:cl 列举结果</p>
+<p>:cc（正常模式下使用命令） 当前结果</p>
+<p>:cn（正常模式下使用命令） 下一个结果</p>
+<p>:cp（正常模式下使用命令） 上一个结果</p>
+<p>:cw（正常模式下使用命令） 重新打开搜索结果窗口</p>
+<hr>
+<p><strong>多文件编辑</strong></p>
+<p>vim f1 f2 …… fn（在shell下使用命令） 打开多个文件。</p>
+<p>:e 文件名（正常模式下使用命令） 在vim中打开新文件。</p>
+<p>:ls（正常模式下使用命令） 所有打开文件列表。</p>
+<p>:bn（正常模式下使用命令） 到下一个文件。</p>
+<p>:bp（正常模式下使用命令） 到上一个文件。</p>
+<p>:b# 或 ctrl-6（正常模式下使用命令） 到最近的前一个文件。</p>
+<p>set  autowriteall（写入配置文件.vimrc中） 如果讨厌每次打开新文件，vim喋喋不休的要求你保存，那么可以设置自动保存。</p>
+<hr>
+<p><strong>多窗口编辑</strong></p>
+<p>:sp  文件名（正常模式下使用命令） 横向拆分窗口（多行窗口）。</p>
+<p>:vsp 文件名（正常模式下使用命令） 纵向拆分窗口（多列窗口）。</p>
+<p>ctrl-w h（正常模式下使用命令） 将光标移动到左一个窗口。</p>
+<p>ctrl-w j（正常模式下使用命令） 将光标移动到下一个窗口。</p>
+<p>ctrl-w k（正常模式下使用命令） 将光标移动到上一个窗口。</p>
+<p>ctrl-w l（正常模式下使用命令） 将光标移动到右一个窗口。</p>
+<p>ctrl-w +（正常模式下使用命令） 当前窗口尺寸变大。</p>
+<p>ctrl-w -（正常模式下使用命令） 当前窗口尺寸变小。</p>
+<p>ctrl-w o（正常模式下使用命令） 只显示当前窗口。</p>
+<hr>
+<p><strong>函数列表</strong></p>
+<p>taglist.vim（插件） 列表插件。</p>
+<p>let Tlist_Use_Right_Window &#x3D; 1（写入配置文件.vimrc中） 如果希望列表在右侧显示，则加入这个配置，默认是左侧。</p>
+<p>:Tlist（正常模式下使用命令） 显示函数列表。</p>
+<p>d（在taglist窗口下使用） 从列表中删除文件。</p>
+<p>+（在taglist窗口下使用） 展开文件。</p>
+<p>-（在taglist窗口下使用） 折叠文件。</p>
+<p>&#x3D;（在taglist窗口下使用） 折叠所有文件。</p>
+<p>x（在taglist窗口下使用） 显示或隐藏正常窗口。</p>
+<hr>
+<p><strong>文件列表</strong></p>
+<p>NERD_tree.vim（插件） 横向拆分窗口（多行窗口）。</p>
+<p>let NERDTreeWinPos &#x3D; ‘right’（写入配置文件.vimrc中） 如果希望文件树在右侧显示，则加入这个配置，默认是左侧。</p>
+<p>:NERDTree（正常模式下使用命令） 显示文件列表。</p>
+<hr>
+<p><strong>函数跳转</strong></p>
+<p>ctags（软件，需要另外安装） 生成多种语言tag文件的软件。</p>
+<p>Ctags –R *.c（在shell下使用命令） 生成当前路径所有.c文件的tag，-R代表递归。</p>
+<p>:ta 标记 或 [g] ctrl-] 列举标签（多个标签）或者跳转到标签（单个标签）。</p>
+<p>ctrl-t 返回上一级。</p>
+<p>:tags 列出标签栈。</p>
+<hr>
+<p><strong>语法错误</strong></p>
+<p>:make（正常模式下使用命令） 执行外部make命令，并且显示所有的编译警告和错误，并且可以在vim中定位。</p>
+<p>:cl 列举结果</p>
+<p>:cc（正常模式下使用命令） 当前结果</p>
+<p>:cn（正常模式下使用命令） 下一个结果</p>
+<p>:cp（正常模式下使用命令） 上一个结果</p>
+<p>:cw（正常模式下使用命令） 重新打开搜索结果窗口</p>
+<hr>
+<p><strong>二进制文件查看 （鉴于有同学理解出现分歧 将二进制查看更新为二进制文件查看）</strong></p>
+<p>:范围!xxd（正常模式下使用命令） 把指定范围的部分转化为二进制文件阅读方式。</p>
+<p>:范围!xxd -r（正常模式下使用命令） 把指定范围的部分转回字符阅读方式。</p>
+<hr>
+<p><strong>字符集的编码</strong></p>
+<p>let &amp;termencoding&#x3D;&amp;encoding</p>
+<p>set fileencodings&#x3D;utf-8,gbk,cp936（写入配置文件.vimrc中）</p>
+<p> 加入多种字符编码支持。</p>
+<p>:set fileencoding（正常模式下使用命令） 设定文件字符编码。</p>
+<hr>
+<p><strong>补充</strong></p>
+<p>ctrl-p（插入模式下使用命令） 跳出补全菜单。</p>
+<p>ctrl-n（在跳出补全菜单后） 下一个结果。</p>
+<p>ctrl-p（在跳出补全菜单后） 上一个结果。</p>
+<p>ctrl-y（在跳出补全菜单后） 选择当前结果。</p>
+<p>ctrl-x ctrl-f（插入模式下使用命令） 文件名补全。</p>
+<p>ctrl-x ctrl-i（插入模式下使用命令） 包含的头文件。</p>
+<p>ctrl-x ctrl-]（插入模式下使用命令） ctags（将在下文中介绍）符号补全。</p>
+<p>ctrl-x ctrl-o（插入模式下使用命令） omni补全，需要设置omnifunc变量。</p>
+<hr>
+<p><strong>vim其他命令 （参考vi(vim)教程）</strong></p>
+<p>打开文件、保存、关闭文件：</p>
+<p>vi filename    &#x2F;&#x2F;打开filename文件</p>
+<p>:w    　　   &#x2F;&#x2F;保存文件</p>
+<p>:w vpser.net &#x2F;&#x2F;保存至vpser.net文件</p>
+<p>:q    　　  &#x2F;&#x2F;退出编辑器，如果文件已修改请使用下面的命令</p>
+<p>:q!    　　  &#x2F;&#x2F;退出编辑器，且不保存</p>
+<p>:wq         &#x2F;&#x2F;退出编辑器，且保存文件</p>
+<p>插入文本或行：</p>
+<p>a    &#x2F;&#x2F;在当前光标位置的右边添加文本</p>
+<p>i    &#x2F;&#x2F;在当前光标位置的左边添加文本</p>
+<p>A   &#x2F;&#x2F;在当前行的末尾位置添加文本</p>
+<p>I    &#x2F;&#x2F;在当前行的开始处添加文本(非空字符的行首)</p>
+<p>O   &#x2F;&#x2F;在当前行的上面新建一行</p>
+<p>o   &#x2F;&#x2F;在当前行的下面新建一行</p>
+<p>R   &#x2F;&#x2F;替换(覆盖)当前光标位置及后面的若干文本</p>
+<p>J   &#x2F;&#x2F;合并光标所在行及下一行为一行(依然在命令模式)</p>
+<p>移动光标：</p>
+<p>使用上下左右方向键</p>
+<p>命令模式下：h  向左、j  向下 、k  向上、l  向右。</p>
+<p>空格键 向右、Backspace  向左、Enter  移动到下一行首、- 移动到上一行首。</p>
+<p>删除：</p>
+<p>x     &#x2F;&#x2F;删除当前字符</p>
+<p>nx    &#x2F;&#x2F;删除从光标开始的n个字符</p>
+<p>dd    &#x2F;&#x2F;删除当前行</p>
+<p>ndd  &#x2F;&#x2F;向下删除当前行在内的n行</p>
+<p>u    &#x2F;&#x2F;撤销上一步操作</p>
+<p>U    &#x2F;&#x2F;撤销对当前行的所有操作</p>
+<p>搜索：</p>
+<p>&#x2F;vpser   &#x2F;&#x2F;向光标下搜索vpser字符串</p>
+<p>?vpser  &#x2F;&#x2F;向光标上搜索vpser字符串</p>
+<p>n      &#x2F;&#x2F;向下搜索前一个搜素动作</p>
+<p>N       &#x2F;&#x2F;向上搜索前一个搜索动作</p>
+<p>跳转：</p>
+<p>n+     &#x2F;&#x2F;向下跳n行</p>
+<p>n-     &#x2F;&#x2F;向上跳n行</p>
+<p>nG     &#x2F;&#x2F;跳到行号为n的行</p>
+<p>G      &#x2F;&#x2F;跳至文件的底部</p>
+<p>设置行号：</p>
+<p>:set  nu   &#x2F;&#x2F;显示行号</p>
+<p>:set nonu   &#x2F;&#x2F;取消显示行号</p>
+<p>复制：</p>
+<p>yy   &#x2F;&#x2F;将当前行复制到缓存区，也可以用 “ayy 复制，”a 为缓冲区，a也可以替换为a到z的任意字母，可以完成多个复制任务。</p>
+<p>nyy  &#x2F;&#x2F;将当前行向下n行复制到缓冲区，也可以用 “anyy 复制，”a 为缓冲区，a也可以替换为a到z的任意字母，可以完成多个复制任务。</p>
+<p>yw   &#x2F;&#x2F;复制从光标开始到词尾的字符。</p>
+<p>nyw  &#x2F;&#x2F;复制从光标开始的n个单词。</p>
+<p>y^    &#x2F;&#x2F;复制从光标到行首的内容。 </p>
+<p>y$    &#x2F;&#x2F;复制从光标到行尾的内容。</p>
+<p>p     &#x2F;&#x2F;粘贴剪切板里的内容在光标后，如果使用了前面的自定义缓冲区，建议使用”ap 进行粘贴。</p>
+<p>P     &#x2F;&#x2F;粘贴剪切板里的内容在光标前，如果使用了前面的自定义缓冲区，建议使用”aP 进行粘贴。</p>
+<p>替换：</p>
+<p>:s&#x2F;old&#x2F;new    &#x2F;&#x2F;用new替换行中首次出现的old</p>
+<p>:s&#x2F;old&#x2F;new&#x2F;g     &#x2F;&#x2F;用new替换行中所有的old</p>
+<p>:n,m s&#x2F;old&#x2F;new&#x2F;g   &#x2F;&#x2F;用new替换从n到m行里所有的old</p>
+<p>:%s&#x2F;old&#x2F;new&#x2F;g    &#x2F;&#x2F;用new替换当前文件里所有的old</p>
+<p>编辑其他资源:</p>
+<p>:e otherfilename   &#x2F;&#x2F;编辑文件名为otherfilename的文件。</p>
+<p>修改文件格式：</p>
+<p>:set fileformat&#x3D;unix  &#x2F;&#x2F;将文件修改为unix格式，如win下面的文本文件在linux下会出现^M。</p>
+</div><hr></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2024 By iMine</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
